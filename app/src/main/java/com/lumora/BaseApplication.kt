@@ -44,10 +44,6 @@ class BaseApplication : Application() {
             // Google Play Services not available on this device
         }
 
-        // Loads the native QuickJS .so; every QuickJSContext.create() call throws until this
-        // has run once (see com.lumora.plugin.js.JsPluginEngine).
-        com.whl.quickjs.android.QuickJSLoader.init()
-
         // Application context for the ported site-scraper stack (com.lumora.scraper) - its
         // network layer reads a bundled root certificate out of raw resources and shares the
         // WebView cookie store, both of which need a Context that no scraper call carries.

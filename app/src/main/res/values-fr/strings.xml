@@ -116,10 +116,8 @@
     <string name="filters">Filtres</string>
     <string name="privacy">Confidentialité</string>
     <string name="downloads">Téléchargements</string>
-    <string name="plugins">Plugins</string>
     <string name="enabled">Activé</string>
     <string name="update">Mettre à jour</string>
-    <string name="back_to_plugins">‹  Plugins</string>
     <string name="about">À propos</string>
     <string name="providers_description">Faites fonctionner plusieurs fournisseurs ensemble - activez ou désactivez chacun indépendamment</string>
     <string name="your_providers">VOS FOURNISSEURS</string>
@@ -162,16 +160,10 @@
     <string name="group_channels">Regrouper les chaînes en double</string>
     <string name="set_parental_pin">Définir le code PIN parental</string>
     <string name="clear_watch_history">Effacer l\'historique de visionnage</string>
-    <string name="plugins_description">De petits scripts qui ajoutent des fonctionnalités - trouver des fournisseurs, ou rechercher des flux. Rien ne s\'installe comme application séparée ; un script s\'exécute dans Lumora, et tout ce qu\'il propose n\'est utilisé que si vous le confirmez.</string>
-    <string name="add_a_plugin">AJOUTER UN PLUGIN</string>
     <string name="install_from_url">Ajouter depuis une URL</string>
     <string name="enter_apk_link">Entrez un lien de script de plugin</string>
     <string name="installed">INSTALLÉ</string>
-    <string name="no_plugins_installed">Aucun plugin installé - parcourez un magasin de plugins ci-dessous</string>
-    <string name="plugin_stores">MAGASINS DE PLUGINS</string>
-    <string name="add_plugin_store">+ Ajouter un magasin de plugins</string>
     <string name="browse">Parcourir</string>
-    <string name="no_plugin_stores">Aucun magasin de plugins ajouté</string>
     <string name="results">RÉSULTATS</string>
     <string name="version">Version</string>
     <string name="github">GitHub</string>

@@ -10,10 +10,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import com.lumora.model.Channel
 import com.lumora.model.MediaType
-import com.lumora.plugin.PluginSubtitle
+import com.lumora.model.SidecarSubtitle
 import com.lumora.util.cleanVodTitle
 import com.lumora.scraper.bridge.ScraperCatalog
-import com.lumora.scraper.bridge.ScraperSiteManifest
 import com.lumora.scraper.bridge.ScraperSiteStore
 import com.lumora.scraper.models.Video
 import kotlinx.coroutines.Job
@@ -53,8 +52,8 @@ internal fun MainActivity.scrapersUsable(): Boolean =
     ScraperSiteStore.activeProviders(this).isNotEmpty()
 
 /**
- * True when there is *some* way to find something to play without an IPTV provider - an installed
- * `stream_search` plugin, or the built-in site scrapers.
+ * True when there is *some* way to find something to play without an IPTV provider - the
+ * built-in site scrapers.
  *
  * This is the question the app's empty-state and chrome gates are really asking. They used to ask
  * only about plugins, from when a plugin was the only provider-less source; a scraper-only setup
@@ -62,7 +61,7 @@ internal fun MainActivity.scrapersUsable(): Boolean =
  * hidden, and no way to reach content it was perfectly able to play.
  */
 internal fun MainActivity.hasProviderlessSource(): Boolean =
-    enabledStreamSearchPlugin() != null || scrapersUsable()
+    scrapersUsable()
 
 /** "<site> · <host>" - the key the last-good-source memory is stored under. */
 private fun sourceKey(source: ScraperCatalog.Source) =
@@ -180,9 +179,8 @@ internal fun MainActivity.showScraperSourceDialog(
             isSeries = isSeries,
             season = season,
             episode = episode,
-            // The same signal enabledStreamSearchPlugin() uses to pick between plugins: the
-            // anime catalog stamps this prefix on its ids, and it is the only thing Lumora knows
-            // about a title's genre without another lookup.
+            // The anime catalog stamps this prefix on its ids, and it is the only thing
+            // Lumora knows about a title's genre without another lookup.
             isAnime = item.id.startsWith("anime:"),
             onProgress = { searched, total ->
                 runOnUiThread {
@@ -326,7 +324,7 @@ private fun MainActivity.playScraperVideo(
         ),
         externalSubtitles = video.subtitles.map { subtitle ->
             externalSubtitleFor(
-                PluginSubtitle(
+                SidecarSubtitle(
                     url = subtitle.file,
                     label = subtitle.label,
                     // The scrapers' Subtitle model carries a display label, not a code.
@@ -347,34 +345,6 @@ private fun MainActivity.playScraperVideo(
         mimeType = video.type?.takeIf { it.isNotBlank() } ?: hlsMimeIfLooksLikeHls(video.source),
     )
     detailReturnItem = item
-}
-
-/**
- * Applies the site list from an installed `scraper_sites` plugin script, if there is one.
- *
- * Lives here rather than in [ScraperSiteManifest] because getting a manifest means running the JS
- * plugin engine, which is the app's plugin layer - the scraper package only knows how to apply
- * one. A missing or broken script is not an error: the list bundled in assets was already applied
- * at startup and stays in force.
- */
-internal fun MainActivity.loadScraperSiteManifest() {
-    scope.launch {
-        val script = pluginScriptManager.getDiscoveredScripts()
-            .firstOrNull { it.enabled && it.supportsScraperSites }
-        if (script == null) {
-            // No script, or it was just switched off: the sites it authorised stop being
-            // queryable immediately. Without this they would keep running for the rest of the
-            // process and disabling the plugin would look like it had done nothing.
-            ScraperSiteManifest.clear()
-            return@launch
-        }
-        val json = jsPluginEngine.scraperSites(pluginScriptManager.readSource(script))
-        if (json == null) {
-            ScraperSiteManifest.clear()
-            return@launch
-        }
-        ScraperSiteManifest.applyJson(this@loadScraperSiteManifest, json)
-    }
 }
 
 /**

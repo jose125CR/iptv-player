@@ -237,7 +237,7 @@ class PosterGridAdapter(
          *  holder caches the whole Channel in `current` and hands that instance to
          *  onItemClick/onItemLongClick: skipping a rebind keeps the *old* instance, so any
          *  field the click path plays from has to count as content. Xtream URLs carry
-         *  credentials and Stalker/plugin items resolve through a token, so a catalog
+         *  credentials and Stalker items resolve through a command, so a catalog
          *  refresh really can change these under a stable id. */
         override fun areContentsTheSame(old: Channel, new: Channel): Boolean =
             old.name == new.name &&
@@ -246,8 +246,6 @@ class PosterGridAdapter(
                 old.mediaType == new.mediaType &&
                 old.url == new.url &&
                 old.stalkerCmd == new.stalkerCmd &&
-                old.pluginToken == new.pluginToken &&
-                old.pluginId == new.pluginId &&
                 old.sourceProviderId == new.sourceProviderId &&
                 old.streamUserAgent == new.streamUserAgent &&
                 old.avOffsetMs == new.avOffsetMs &&

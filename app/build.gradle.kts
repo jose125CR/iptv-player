@@ -118,13 +118,6 @@ android {
     }
 
     packaging {
-        jniLibs {
-            // Extract .so files to disk instead of loading them directly from the APK. The
-            // QuickJS wrapper's native libs are not PAGE-aligned on every ABI, so direct-from-apk
-            // loading can throw "not PAGE-aligned" on older devices (old Fire TV sticks); legacy
-            // extraction avoids the crash at the cost of a little install-time unpacking.
-            useLegacyPackaging = true
-        }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += setOf("META-INF/LICENSE*", "META-INF/NOTICE*")
@@ -173,8 +166,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
 
     // Rhino - runs the AAEncode-obfuscated JS that one extractor's host wraps its source list in
-    // (scraper/utils/AADecoder.java). QuickJS is already here for the plugin engine but its
-    // wrapper is bound to the plugin sandbox's lifecycle, not callable as a bare evaluator.
+    // (scraper/utils/AADecoder.java).
     implementation("org.mozilla:rhino:1.8.0")
 
     // LAN WebSocket bridge for the scraper's Cloudflare bypass: a TV that cannot clear a
@@ -195,12 +187,7 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
-    // In-process JS plugin engine - replaces the old Messenger/APK plugin protocol. Plain Java
-    // JNI wrapper (no Kotlin-version coupling, unlike Cash App's quickjs-android/Zipline line,
-    // which requires Kotlin 2.4+ and would have forced an unrelated toolchain bump here).
-    implementation("wang.harlon.quickjs:wrapper-android:3.2.3")
-
-    // HTML parsing for JS plugin host API and every com.lumora.scraper site provider.
+    // HTML parsing for every com.lumora.scraper site provider.
     // 1.21.x specifically: Elements.filter(NodeFilter) was removed there, and while it existed
     // it shadowed Kotlin's Iterable.filter as a member, so the many `elements.filter { ... }`
     // calls across the ported providers resolved to the NodeFilter overload and failed.
@@ -222,12 +209,4 @@ dependencies {
     // Tests
     testImplementation("junit:junit:4.13.2")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
-}
-
-// Passes -Dtest.quickjs.so through to the test JVM. wrapper-android's prebuilt native lib only
-// covers Android ABIs, so JsPluginEngineTest's real QuickJS execution needs a desktop build of
-// wrapper-java's native lib to run locally (see JsPluginEngineTest for the build steps) - a
-// no-op when the property isn't set.
-tasks.withType<Test>().configureEach {
-    systemProperty("test.quickjs.so", System.getProperty("test.quickjs.so") ?: "")
 }

@@ -114,10 +114,8 @@
     <string name="filters">Filter</string>
     <string name="privacy">Privasi</string>
     <string name="downloads">Unduhan</string>
-    <string name="plugins">Plugin</string>
     <string name="enabled">Diaktifkan</string>
     <string name="update">Perbarui</string>
-    <string name="back_to_plugins">‹  Plugin</string>
     <string name="about">Tentang</string>
     <string name="providers_description">Jalankan beberapa penyedia sekaligus - aktifkan atau nonaktifkan masing-masing secara independen</string>
     <string name="your_providers">PENYEDIA ANDA</string>
@@ -160,16 +158,10 @@
     <string name="group_channels">Kelompokkan saluran duplikat</string>
     <string name="set_parental_pin">Tetapkan PIN orang tua</string>
     <string name="clear_watch_history">Hapus riwayat tontonan</string>
-    <string name="plugins_description">Skrip kecil yang menambahkan fitur - menemukan penyedia, atau mencari streaming. Tidak ada yang diinstal sebagai aplikasi terpisah; skrip berjalan di dalam Lumora, dan apa pun yang diajukan hanya digunakan jika Anda mengonfirmasinya.</string>
-    <string name="add_a_plugin">TAMBAH PLUGIN</string>
     <string name="install_from_url">Tambah dari URL</string>
     <string name="enter_apk_link">Masukkan tautan skrip plugin</string>
     <string name="installed">TERPASANG</string>
-    <string name="no_plugins_installed">Tidak ada plugin yang terpasang - jelajahi toko plugin di bawah ini</string>
-    <string name="plugin_stores">TOKO PLUGIN</string>
-    <string name="add_plugin_store">+ Tambah toko plugin</string>
     <string name="browse">Jelajah</string>
-    <string name="no_plugin_stores">Tidak ada toko plugin yang ditambahkan</string>
     <string name="results">HASIL</string>
     <string name="version">Versi</string>
     <string name="github">GitHub</string>

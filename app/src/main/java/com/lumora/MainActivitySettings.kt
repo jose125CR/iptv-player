@@ -1426,12 +1426,11 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         R.id.navBackup to R.id.paneBackup,
         R.id.navEpg to R.id.paneEpg,
         R.id.navDownloads to R.id.paneDownloads,
-        R.id.navPlugins to R.id.panePlugins,
         R.id.navGeneral to R.id.paneGeneral,
         R.id.navAbout to R.id.paneAbout,
-        // Appended rather than slotted in next to Plugins, where it sits visually: selectSection()
-        // addresses these by list index, so inserting in the middle would silently renumber every
-        // section below it - including the hardcoded selectSection(7) the plugin rail rows use.
+        // Appended rather than slotted in where it sits visually: selectSection()
+        // addresses these by list index, so inserting in the middle would silently
+        // renumber every section below it.
         R.id.navSites to R.id.paneSites,
         // Same reason - appended, not slotted in above Sites where the rail shows it.
         R.id.navTrakt to R.id.paneTrakt
@@ -1446,13 +1445,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             row.isSelected = i == index
             pane.visibility = if (i == index) View.VISIBLE else View.GONE
         }
-        // A plugin's page is not one of these panes and would otherwise stay up underneath
-        // whichever section was just chosen. Selecting Plugins itself is handled by the
-        // rail's own listener, which opens either the list or a specific plugin's page.
-        openPluginId = null
-        dialogView.findViewById<View>(R.id.panePluginDetail)?.visibility = View.GONE
-        // Reachable from code, not just a rail click (e.g. onProviderAdded() jumping here
-        // after a plugin candidate is added) - without this the D-pad's focus is left on
+        // Reachable from code, not just a rail click (e.g. onProviderAdded() jumping here)
+        // - without this the D-pad's focus is left on
         // whatever view triggered the jump, which has often just been removed from the
         // tree by the same re-render, leaving nothing focused and the remote stuck.
         // With the rail collapsed the row is gone - leave focus where it is (the expand
@@ -1506,11 +1500,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         }
     }
     refreshDownloadsList()
-
-    wirePluginsPane(dialogView) { selectSection(1) }
-    // After wirePluginsPane: the child rows drive the pane through revealPluginInPane,
-    // with the plugin list itself left at its previous section.
-    wirePluginNavRows(dialogView) { selectSection(7) }
 
     wireScraperSettingsPane(dialogView)
 
@@ -1569,10 +1558,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     binding.emptyState.visibility = View.GONE
     dialog.setOnDismissListener {
         qrManager.stop()
-        // A discovery run only exists to fill in this pane - closing Settings unbinds the
-        // plugin rather than leaving another app's service bound with nowhere to report.
-        pluginDiscoveryJob?.cancel()
-        pluginDiscoveryJob = null
         // Same: a device-code poll is only meaningful while its code is on screen, and its
         // callbacks write into views that are about to be detached.
         traktSignInJob?.cancel()
@@ -1580,43 +1565,33 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         activeSettingsOverlay = null
         applyStatus()
         refreshIptvProviderList = {}
-        // Both close over views in the dismissed dialog - holding them past this leaks the
-        // whole inflated settings tree and would touch detached views on the next call.
-        revealPluginInPane = null
-        refreshPluginNavRows = null
-        closeOpenPluginPage = null
-        openPluginId = null
-        liveDiscoveryStatusView = null
-        liveDiscoveryCandidateList = null
-        liveDiscoveryPlugin = null
         // The tab bar and search are gated on there being something to browse, and
         // classifyAndShow() deliberately skips that check while this overlay is up (it
-        // would flip the chrome underneath the dialog). Adding a provider or switching a
-        // plugin on is exactly what changes the answer, so re-derive it here - on the
-        // non-empty path nothing else did, and the tab bar stayed hidden until the app was
-        // restarted. showEmptyState() runs it itself on the other branch.
+        // would flip the chrome underneath the dialog). Adding a provider is exactly what
+        // changes the answer, so re-derive it here - on the non-empty path nothing else
+        // did, and the tab bar stayed hidden until the app was restarted. showEmptyState()
+        // runs it itself on the other branch.
         //
-        // "Nothing to show" is the same question classifyAndShow() asks, and it counts an
-        // enabled stream_search plugin as content: a stream-search or anime plugin contributes no
-        // catalog entries of its own but makes Discover and Find Stream usable. Testing
-        // allChannels alone sent a plugin-only setup back to the "no provider" empty state
-        // the moment Settings closed, however many plugins had just been switched on.
-        val hasPlugin = hasProviderlessSource()
-        // Unticking the last provider (or the last plugin) has to take the tab bar and
-        // search back down, and land on the empty state - which is the only screen left
-        // with a way back into Settings. Asked of the enabled providers rather than of
-        // allChannels: disabling one drops its items, but a provider whose channels are
-        // still in memory from a cache load would otherwise keep the chrome up with
-        // nothing enabled behind it.
+        // "Nothing to show" is the same question classifyAndShow() asks, and it counts a
+        // provider-less source (the built-in site scrapers) as content: they contribute no
+        // catalog entries of their own but make Discover usable. Testing allChannels alone
+        // sent such a setup back to the "no provider" empty state the moment Settings
+        // closed.
+        val providerlessSource = hasProviderlessSource()
+        // Unticking the last provider has to take the tab bar and search back down, and
+        // land on the empty state - which is the only screen left with a way back into
+        // Settings. Asked of the enabled providers rather than of allChannels: disabling
+        // one drops its items, but a provider whose channels are still in memory from a
+        // cache load would otherwise keep the chrome up with nothing enabled behind it.
         // Saving a provider starts its fetch and leaves Settings open; closing before that
         // fetch lands used to read as "returned nothing" and put the empty state up, which
         // is the screen the user then sat on. An in-flight load has not returned anything
         // yet - let the tab render empty under the "Loading..." status and let the load's
         // own classifyAndShow fill it in.
         val loadInFlight = providerLoadJob?.isActive == true
-        if (!hasProviderEnabled() && !hasPlugin) {
+        if (!hasProviderEnabled() && !providerlessSource) {
             showEmptyState()
-        } else if (allChannels.isEmpty() && !hasPlugin && !loadInFlight) {
+        } else if (allChannels.isEmpty() && !providerlessSource && !loadInFlight) {
             // Enabled, but it returned nothing (fetch failed, or an empty catalogue).
             showEmptyState()
         } else {

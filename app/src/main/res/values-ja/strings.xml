@@ -114,10 +114,8 @@
     <string name="filters">フィルター</string>
     <string name="privacy">プライバシー</string>
     <string name="downloads">ダウンロード</string>
-    <string name="plugins">プラグイン</string>
     <string name="enabled">有効</string>
     <string name="update">更新</string>
-    <string name="back_to_plugins">‹  プラグイン</string>
     <string name="about">このアプリについて</string>
     <string name="providers_description">複数のプロバイダーを同時に実行 - それぞれ個別に有効または無効にできます</string>
     <string name="your_providers">マイプロバイダー</string>
@@ -160,16 +158,10 @@
     <string name="group_channels">重複チャンネルをグループ化</string>
     <string name="set_parental_pin">保護者用 PIN を設定</string>
     <string name="clear_watch_history">視聴履歴を消去</string>
-    <string name="plugins_description">機能を追加する小さなスクリプト - プロバイダーの検索やストリームの検索など。別のアプリとしてインストールされるものはありません。スクリプトは Lumora 内で実行され、提案された内容はすべて、確認した場合にのみ使用されます。</string>
-    <string name="add_a_plugin">プラグインを追加</string>
     <string name="install_from_url">URL から追加</string>
     <string name="enter_apk_link">プラグインスクリプトのリンクを入力</string>
     <string name="installed">インストール済み</string>
-    <string name="no_plugins_installed">プラグインがインストールされていません - 下のプラグインストアで閲覧してください</string>
-    <string name="plugin_stores">プラグインストア</string>
-    <string name="add_plugin_store">+ プラグインストアを追加</string>
     <string name="browse">閲覧</string>
-    <string name="no_plugin_stores">プラグインストアが追加されていません</string>
     <string name="results">結果</string>
     <string name="version">バージョン</string>
     <string name="github">GitHub</string>

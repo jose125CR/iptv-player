@@ -117,10 +117,8 @@
     <string name="filters">Filtre</string>
     <string name="privacy">Confidențialitate</string>
     <string name="downloads">Descărcări</string>
-    <string name="plugins">Pluginuri</string>
     <string name="enabled">Activat</string>
     <string name="update">Actualizează</string>
-    <string name="back_to_plugins">‹  Pluginuri</string>
     <string name="about">Despre</string>
     <string name="providers_description">Rulați mai mulți furnizori împreună - activați sau dezactivați fiecare independent</string>
     <string name="your_providers">FURNIZORII DVS.</string>
@@ -163,16 +161,10 @@
     <string name="group_channels">Grupează canalele duplicate</string>
     <string name="set_parental_pin">Setează codul PIN parental</string>
     <string name="clear_watch_history">Șterge istoricul de vizionare</string>
-    <string name="plugins_description">Scripturi mici care adaugă funcționalități - găsirea furnizorilor sau căutarea de fluxuri. Nimic nu se instalează ca aplicație separată; un script rulează în interiorul Lumora, iar orice propune este folosit doar dacă îl confirmați.</string>
-    <string name="add_a_plugin">ADĂUGĂ UN PLUGIN</string>
     <string name="install_from_url">Adaugă din URL</string>
     <string name="enter_apk_link">Introduceți un link către scriptul pluginului</string>
     <string name="installed">INSTALAT</string>
-    <string name="no_plugins_installed">Niciun plugin instalat - răsfoiți mai jos un magazin de pluginuri</string>
-    <string name="plugin_stores">MAGAZINE DE PLUGINURI</string>
-    <string name="add_plugin_store">+ Adaugă un magazin de pluginuri</string>
     <string name="browse">Răsfoiește</string>
-    <string name="no_plugin_stores">Nu s-au adăugat magazine de pluginuri</string>
     <string name="results">REZULTATE</string>
     <string name="version">Versiune</string>
     <string name="github">GitHub</string>

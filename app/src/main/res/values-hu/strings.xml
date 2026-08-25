@@ -115,10 +115,8 @@
     <string name="filters">Szűrők</string>
     <string name="privacy">Adatvédelem</string>
     <string name="downloads">Letöltések</string>
-    <string name="plugins">Bővítmények</string>
     <string name="enabled">Engedélyezve</string>
     <string name="update">Frissítés</string>
-    <string name="back_to_plugins">‹  Bővítmények</string>
     <string name="about">Névjegy</string>
     <string name="providers_description">Több szolgáltatót is futtathat együtt - mindegyiket egymástól függetlenül engedélyezheti vagy letilthatja</string>
     <string name="your_providers">AZ ÖN SZOLGÁLTATÓI</string>
@@ -161,16 +159,10 @@
     <string name="group_channels">Duplikált csatornák csoportosítása</string>
     <string name="set_parental_pin">Szülői PIN beállítása</string>
     <string name="clear_watch_history">Nézési előzmények törlése</string>
-    <string name="plugins_description">Kis szkriptek, amelyek funkciókat adnak hozzá - szolgáltatók keresése vagy streamelési források keresése. Semmi nem települ külön alkalmazásként; a szkript a Lumora belsejében fut, és amit javasol, az csak akkor kerül felhasználásra, ha Ön megerősíti.</string>
-    <string name="add_a_plugin">BŐVÍTMÉNY HOZZÁADÁSA</string>
     <string name="install_from_url">Hozzáadás URL-ről</string>
     <string name="enter_apk_link">Adja meg a bővítményszkript linkjét</string>
     <string name="installed">TELEPÍTVE</string>
-    <string name="no_plugins_installed">Nincs telepített bővítmény - lentebb böngésszen egy bővítményboltban</string>
-    <string name="plugin_stores">BŐVÍTMÉNYBOLTOK</string>
-    <string name="add_plugin_store">+ Bővítménybolt hozzáadása</string>
     <string name="browse">Böngészés</string>
-    <string name="no_plugin_stores">Nincs hozzáadva bővítménybolt</string>
     <string name="results">EREDMÉNYEK</string>
     <string name="version">Verzió</string>
     <string name="github">GitHub</string>

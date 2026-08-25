@@ -24,14 +24,6 @@
 -keep interface org.libtorrent4j.** { *; }
 -dontwarn org.libtorrent4j.**
 
-# NanoHTTPD (com.lumora.torrent.StreamHttpServer)
--keep class fi.iki.elonen.** { *; }
--dontwarn fi.iki.elonen.**
-
-# quickjs-wrapper - JNI callbacks (JSCallFunction implementations) resolved by class name.
--keep class com.whl.quickjs.wrapper.** { *; }
--dontwarn com.whl.quickjs.wrapper.**
-
 # ── com.lumora.scraper (ported site scrapers) ─────────────────────────────────
 
 # Rhino ships a java.beans-based JSON converter for desktop JVMs. Android has no

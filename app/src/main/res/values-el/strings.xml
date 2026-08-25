@@ -116,10 +116,8 @@
     <string name="filters">Φίλτρα</string>
     <string name="privacy">Απόρρητο</string>
     <string name="downloads">Λήψεις</string>
-    <string name="plugins">Πρόσθετα</string>
     <string name="enabled">Ενεργοποιημένο</string>
     <string name="update">Ενημέρωση</string>
-    <string name="back_to_plugins">‹  Πρόσθετα</string>
     <string name="about">Σχετικά</string>
     <string name="providers_description">Εκτελέστε πολλούς παρόχους μαζί - ενεργοποιήστε ή απενεργοποιήστε τον καθένα ανεξάρτητα</string>
     <string name="your_providers">ΟΙ ΠΑΡΟΧΟΙ ΣΑΣ</string>
@@ -164,16 +162,10 @@
     <string name="group_channels">Ομαδοποίηση διπλότυπων καναλιών</string>
     <string name="set_parental_pin">Ορισμός γονικού PIN</string>
     <string name="clear_watch_history">Εκκαθάριση ιστορικού παρακολούθησης</string>
-    <string name="plugins_description">Μικρά σενάρια που προσθέτουν λειτουργίες - εύρεση παρόχων ή αναζήτηση ροών. Τίποτα δεν εγκαθίσταται ως ξεχωριστή εφαρμογή· ένα σενάριο εκτελείται μέσα στη Lumora και οτιδήποτε προτείνει χρησιμοποιείται μόνο εάν το επιβεβαιώσετε.</string>
-    <string name="add_a_plugin">ΠΡΟΣΘΗΚΗ ΠΡΟΣΘΕΤΟΥ</string>
     <string name="install_from_url">Προσθήκη από URL</string>
     <string name="enter_apk_link">Εισαγάγετε έναν σύνδεσμο σεναρίου πρόσθετου</string>
     <string name="installed">ΕΓΚΑΤΕΣΤΗΜΕΝΟ</string>
-    <string name="no_plugins_installed">Δεν υπάρχουν εγκατεστημένα πρόσθετα - περιηγηθείτε σε ένα κατάστημα πρόσθετων παρακάτω</string>
-    <string name="plugin_stores">ΚΑΤΑΣΤΗΜΑΤΑ ΠΡΟΣΘΕΤΩΝ</string>
-    <string name="add_plugin_store">+ Προσθήκη καταστήματος πρόσθετων</string>
     <string name="browse">Περιήγηση</string>
-    <string name="no_plugin_stores">Δεν έχουν προστεθεί καταστήματα πρόσθετων</string>
     <string name="results">ΑΠΟΤΕΛΕΣΜΑΤΑ</string>
     <string name="version">Έκδοση</string>
     <string name="github">GitHub</string>

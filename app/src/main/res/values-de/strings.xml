@@ -117,10 +117,8 @@
     <string name="filters">Filter</string>
     <string name="privacy">Datenschutz</string>
     <string name="downloads">Downloads</string>
-    <string name="plugins">Plugins</string>
     <string name="enabled">Aktiviert</string>
     <string name="update">Aktualisieren</string>
-    <string name="back_to_plugins">‹  Plugins</string>
     <string name="about">Über</string>
     <string name="providers_description">Mehrere Anbieter gemeinsam nutzen - jeden einzeln aktivieren oder deaktivieren</string>
     <string name="your_providers">IHRE ANBIETER</string>
@@ -164,16 +162,10 @@
     <string name="group_channels">Doppelte Kanäle gruppieren</string>
     <string name="set_parental_pin">Jugendschutz-PIN festlegen</string>
     <string name="clear_watch_history">Wiedergabeverlauf löschen</string>
-    <string name="plugins_description">Kleine Skripte, die Funktionen hinzufügen - Anbieter finden oder nach Streams suchen. Nichts wird als separate App installiert; ein Skript läuft innerhalb von Lumora, und alles, was es vorschlägt, wird nur verwendet, wenn Sie es bestätigen.</string>
-    <string name="add_a_plugin">PLUGIN HINZUFÜGEN</string>
     <string name="install_from_url">Von URL hinzufügen</string>
     <string name="enter_apk_link">Plugin-Skript-Link eingeben</string>
     <string name="installed">INSTALLIERT</string>
-    <string name="no_plugins_installed">Keine Plugins installiert - unten einen Plugin-Shop durchstöbern</string>
-    <string name="plugin_stores">PLUGIN-SHOPS</string>
-    <string name="add_plugin_store">+ Plugin-Shop hinzufügen</string>
     <string name="browse">Durchsuchen</string>
-    <string name="no_plugin_stores">Keine Plugin-Shops hinzugefügt</string>
     <string name="results">ERGEBNISSE</string>
     <string name="version">Version</string>
     <string name="github">GitHub</string>

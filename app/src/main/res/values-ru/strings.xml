@@ -117,10 +117,8 @@
     <string name="filters">Фильтры</string>
     <string name="privacy">Конфиденциальность</string>
     <string name="downloads">Загрузки</string>
-    <string name="plugins">Плагины</string>
     <string name="enabled">Включено</string>
     <string name="update">Обновить</string>
-    <string name="back_to_plugins">‹  Плагины</string>
     <string name="about">О приложении</string>
     <string name="providers_description">Запускайте несколько провайдеров вместе - включайте или отключайте каждый независимо</string>
     <string name="your_providers">ВАШИ ПРОВАЙДЕРЫ</string>
@@ -163,16 +161,10 @@
     <string name="group_channels">Объединять дублирующиеся каналы</string>
     <string name="set_parental_pin">Задать родительский PIN-код</string>
     <string name="clear_watch_history">Очистить историю просмотров</string>
-    <string name="plugins_description">Небольшие скрипты, добавляющие функции - поиск провайдеров или потоков. Ничего не устанавливается как отдельное приложение; скрипт работает внутри Lumora, и всё, что он предлагает, используется только после вашего подтверждения.</string>
-    <string name="add_a_plugin">ДОБАВИТЬ ПЛАГИН</string>
     <string name="install_from_url">Добавить по URL</string>
     <string name="enter_apk_link">Введите ссылку на скрипт плагина</string>
     <string name="installed">УСТАНОВЛЕНО</string>
-    <string name="no_plugins_installed">Плагины не установлены - выберите магазин плагинов ниже</string>
-    <string name="plugin_stores">МАГАЗИНЫ ПЛАГИНОВ</string>
-    <string name="add_plugin_store">+ Добавить магазин плагинов</string>
     <string name="browse">Просмотреть</string>
-    <string name="no_plugin_stores">Магазины плагинов не добавлены</string>
     <string name="results">РЕЗУЛЬТАТЫ</string>
     <string name="version">Версия</string>
     <string name="github">GitHub</string>

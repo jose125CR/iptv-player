@@ -117,10 +117,8 @@
     <string name="filters">Фільтри</string>
     <string name="privacy">Конфіденційність</string>
     <string name="downloads">Завантаження</string>
-    <string name="plugins">Плагіни</string>
     <string name="enabled">Увімкнено</string>
     <string name="update">Оновити</string>
-    <string name="back_to_plugins">‹  Плагіни</string>
     <string name="about">Про застосунок</string>
     <string name="providers_description">Запускайте кілька постачальників разом - кожного можна вмикати або вимикати незалежно</string>
     <string name="your_providers">ВАШІ ПОСТАЧАЛЬНИКИ</string>
@@ -164,16 +162,10 @@
     <string name="group_channels">Групувати канали-дублікати</string>
     <string name="set_parental_pin">Встановити батьківський PIN</string>
     <string name="clear_watch_history">Очистити історію переглядів</string>
-    <string name="plugins_description">Невеликі скрипти, що додають функції - пошук постачальників або пошук стрімів. Нічого не встановлюється як окрема програма; скрипт працює всередині Lumora, і все, що він пропонує, використовується лише за вашим підтвердженням.</string>
-    <string name="add_a_plugin">ДОДАТИ ПЛАГІН</string>
     <string name="install_from_url">Додати з URL</string>
     <string name="enter_apk_link">Введіть посилання на скрипт плагіна</string>
     <string name="installed">ВСТАНОВЛЕНО</string>
-    <string name="no_plugins_installed">Плагіни не встановлено - перегляньте магазин плагінів нижче</string>
-    <string name="plugin_stores">МАГАЗИНИ ПЛАГІНІВ</string>
-    <string name="add_plugin_store">+ Додати магазин плагінів</string>
     <string name="browse">Переглянути</string>
-    <string name="no_plugin_stores">Магазини плагінів не додано</string>
     <string name="results">РЕЗУЛЬТАТИ</string>
     <string name="version">Версія</string>
     <string name="github">GitHub</string>

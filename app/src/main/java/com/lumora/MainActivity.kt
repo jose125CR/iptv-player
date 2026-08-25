@@ -54,11 +54,6 @@ import com.lumora.model.MediaType
 import com.lumora.model.Provider
 import com.lumora.model.IptvProviderConfig
 import com.lumora.pairing.QrPairingManager
-import com.lumora.plugin.DiscoveredProvider
-import com.lumora.plugin.js.JsPluginEngine
-import com.lumora.plugin.js.PluginScript
-import com.lumora.plugin.js.PluginScriptManager
-import com.lumora.plugin.js.PluginStoreManager
 import com.lumora.anime.AnimeCatalogClient
 import com.lumora.player.PlayerManager
 import com.lumora.player.PlayerTrackController
@@ -223,7 +218,7 @@ internal const val JELLYFIN_CATEGORY_ID = "__jellyfin__"
  *  can be configured at once, and "my Plex library" and "my Jellyfin library" are two
  *  different shelves to the person browsing, not one merged "own library". */
 internal const val PLEX_CATEGORY_ID = "__plex__"
-/** Series sidebar row for the plugin-gated anime catalog. Expandable: its children are the
+/** Series sidebar row for the anime catalog. Expandable: its children are the
  *  catalog's sections (Trending Now, Currently Airing, one per genre, ...). Built explicitly
  *  rather than derived from the channels' own category name, because anime titles carry a
  *  single "Anime" category and the sections they belong to overlap. */
@@ -341,9 +336,9 @@ class MainActivity : AppCompatActivity() {
     internal val trackController = PlayerTrackController()
     internal val qrManager by lazy { QrPairingManager(this) }
     internal var activeSettingsOverlay: FullScreenOverlay? = null
-    /** Set by showProviderSettings to its local renderIptvProviderList, so the plugin-discovery
-     *  pane (a sibling scope in the same settings screen) can refresh the provider list after it
-     *  adds a discovered provider - otherwise the new provider is saved but the list stays stale. */
+    /** Set by showProviderSettings to its local renderIptvProviderList, so other flows that
+     *  add a provider can refresh the list - otherwise the new provider is saved but the
+     *  list stays stale. */
     internal var refreshIptvProviderList: () -> Unit = {}
     internal var activeSearchOverlay: FullScreenOverlay? = null
     /** The Live TV tab's dropdown (Live TV / Catch Up) while it is open, so a pane switch
@@ -408,55 +403,10 @@ class MainActivity : AppCompatActivity() {
     internal var xtreamProviderConfigs: Map<String, IptvProviderConfig> = emptyMap()
     /** IptvProviderConfig id -> display name, for showing which provider an item came from. */
     internal var providerNamesById: Map<String, String> = emptyMap()
-    /** The in-flight plugin discovery run, if any - one at a time, cancelled when Settings closes. */
-    internal var pluginDiscoveryJob: Job? = null
-    /** The plugin whose page is open in Settings > Plugins, or null on the list. Held here
-     *  rather than on the views because the page is rebuilt from scratch on any change (enable,
-     *  update, remove, a discovery run's progress), and it has to know what it is showing. */
-    internal var openPluginId: String? = null
-    /** Returns from an open plugin page to the plugin list. Held so Back can go up one level
-     *  inside Settings instead of closing the whole overlay from two screens deep. */
-    internal var closeOpenPluginPage: (() -> Unit)? = null
-    /** The plugin whose run output the rows below belong to, and that output. Same reason as
-     *  above: a re-render must be able to put the results back where they were, so they live
-     *  outside the views. Cleared when a different plugin is run. */
-    internal var pluginDiscoveryPluginId: String? = null
-    internal var pluginDiscoveryStatus: String? = null
-    internal val pluginDiscoveryCandidates = mutableListOf<DiscoveredProvider>()
-    /** Candidate URLs already added as providers, so a re-render keeps showing "Added" rather
-     *  than offering to add the same one twice. */
-    internal val pluginDiscoveryAdded = mutableSetOf<String>()
-    /** The views of the currently-running plugin's results block, so a progress line or a new
-     *  candidate can be written straight into them. Re-rendering the whole pane per line would
-     *  rebuild every row - and every row is focusable, so it would also move the user's focus
-     *  mid-run. Null while nothing is running, or before the row exists. */
-    internal var liveDiscoveryStatusView: TextView? = null
-    internal var liveDiscoveryCandidateList: LinearLayout? = null
-    internal var liveDiscoveryPlugin: PluginScript? = null
-    /** Which plugin's row, and which view inside it, should take focus once the plugin list is
-     *  next rebuilt. Every interaction in that pane re-renders the whole list, which destroys
-     *  the view the user was on - without this, ticking Enabled dropped focus out of the
-     *  section entirely and there was no way to reach Run below it. */
-    internal var pluginFocusRequestId: String? = null
-    internal var pluginFocusRequestViewId: Int = View.NO_ID
-    /** Opens a plugin's section in the Plugins pane and puts focus on it. Set by
-     *  [wirePluginsPane] while the settings overlay is up, so the nav rail's plugin rows can
-     *  drive the pane. Null when settings isn't open. */
-    internal var revealPluginInPane: ((String) -> Unit)? = null
     /** What the last setStatus() asked for, kept because whether it can actually be shown
      *  depends on screen state that changes after the fact - see applyStatus(). */
     internal var statusText = ""
     internal var statusWanted = false
-    /** Whether the nav rail's Plugins row is showing its installed-plugin children. */
-    internal var navPluginsExpanded = false
-    /** Rebuilds those child rows - the pane calls it after anything that changes a plugin's
-     *  enabled state or removes one, so the rail doesn't go stale behind it. */
-    internal var refreshPluginNavRows: (() -> Unit)? = null
-    /** Installed JS plugin scripts - see PluginScriptManager. Discovered once at startup and
-     *  refreshed whenever Settings > Plugins is opened. */
-    internal val pluginScriptManager by lazy { PluginScriptManager(this, prefs) }
-    internal val pluginStoreManager by lazy { PluginStoreManager(prefs) }
-    internal val jsPluginEngine by lazy { JsPluginEngine() }
     /** The film/series whose detail page a VOD playback was started from, so backing out of the
      *  player returns to that poster rather than dumping the user in the grid they had to walk
      *  to reach it. Set right before showPlayerFor by every detail-originated play path, and
@@ -943,18 +893,6 @@ class MainActivity : AppCompatActivity() {
         // dispatch reads this flag, so setting it here is enough; it's untouched afterwards,
         // so navigating away and back behaves exactly as it always has.
         if (!hasProviderEnabled()) showingDiscover = true
-        // Cheap (no network) - just parses each script's PLUGIN manifest header - but async
-        // since it runs the JS engine, so kick it off early rather than on first use.
-        // loadSavedProvider()'s gate (see loadAllConfiguredProviders) checks enabledStreamSearchPlugin(),
-        // which reads this discovery's cached result - awaited here so a plugin-only setup
-        // (no traditional provider) isn't wrongly bounced to "Add a Provider" on cold start
-        // because that check ran against the still-empty pre-discovery cache.
-        val pluginDiscoveryOnStart = scope.launch {
-            pluginScriptManager.discoverScripts()
-            // Needs discovery to have run - it looks for an installed scraper_sites script, and
-            // supersedes the bundled site list BaseApplication already applied.
-            loadScraperSiteManifest()
-        }
         playerManager = PlayerManager(this)
         playerDiagnostics = PlayerDiagnostics(playerManager.getExoPlayer())
         playerManager.getExoPlayer().addAnalyticsListener(playerDiagnostics.getAnalyticsListener())
@@ -973,30 +911,17 @@ class MainActivity : AppCompatActivity() {
         setupPlayerControls()
         setupToolbar()
         loadDeadStreams()
-        // Shown immediately rather than waiting for loadSavedProvider(): that call sits behind
-        // pluginDiscoveryOnStart.join() below, which is real async work (runs the JS engine over
-        // every installed plugin's manifest header) - without this the screen was blank for that
-        // whole stretch, then jumped straight to content with no loading state ever having been
-        // visible, which read as the app hanging rather than working.
+        // Shown immediately rather than waiting for loadSavedProvider(): that call does real
+        // async work before anything renders - without this the screen was blank for that
+        // whole stretch, then jumped straight to content with no loading state ever having
+        // been visible, which read as the app hanging rather than working.
         //
         // contentRow has no android:visibility in the layout, so it inflates VISIBLE - applyStatus()
         // reads that as "a pane already owns the screen" and refuses to show the status row at
         // all until something else explicitly hides it first.
         binding.contentRow.visibility = View.GONE
         setStatus(getString(R.string.loading), visible = true)
-        // Serve the cached catalog without waiting for plugin discovery: the JS-engine
-        // scan of every installed script's manifest (discoverScripts) is real async work
-        // that used to gate loadSavedProvider() entirely, so a warm cache still spent
-        // seconds on "Loading..." before it could render. Discovery only matters for the
-        // plugin-only gate at the top of loadAllConfiguredProviders and the anime-cache
-        // re-check - both handled by the follow-up below.
-        scope.launch {
-            // A configured provider means the gate passes regardless of discovery, so the
-            // cache can render immediately. Plugin-only setups must wait for discovery's
-            // result or the gate would wrongly bounce them to "Add a Provider".
-            if (hasProviderConfigured()) loadSavedProvider()
-            else { pluginDiscoveryOnStart.join(); loadSavedProvider() }
-        }
+        scope.launch { loadSavedProvider() }
         requestNotificationPermissionIfNeeded()
         showCarDisclaimerIfProjected()
         pruneStoredEpg()
@@ -1259,10 +1184,7 @@ class MainActivity : AppCompatActivity() {
     /** Unwinds one level of navigation. Returns false when there's nothing left above the
      *  current screen, i.e. Back should leave the app. */
     private fun handleBackNavigation(): Boolean {
-        // A plugin's page is a level inside Settings, not a screen of its own - Back goes up to
-        // the plugin list first rather than dropping the user out of Settings entirely.
-        if (activeSettingsOverlay != null && openPluginId != null) closeOpenPluginPage?.invoke()
-        else if (activeSettingsOverlay != null) activeSettingsOverlay?.dismiss()
+        if (activeSettingsOverlay != null) activeSettingsOverlay?.dismiss()
         else if (activeSearchOverlay != null) activeSearchOverlay?.dismiss()
         else if (isPlayerVisible && isPlayerSideMenuOpen()) { closeSideMenu() }
         else if (isPlayerVisible) { hidePlayer(); restoreSearchIfPending() }

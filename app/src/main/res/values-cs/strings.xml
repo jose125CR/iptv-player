@@ -117,10 +117,8 @@
     <string name="filters">Filtry</string>
     <string name="privacy">Soukromí</string>
     <string name="downloads">Stažené soubory</string>
-    <string name="plugins">Pluginy</string>
     <string name="enabled">Povoleno</string>
     <string name="update">Aktualizovat</string>
-    <string name="back_to_plugins">‹  Pluginy</string>
     <string name="about">O aplikaci</string>
     <string name="providers_description">Spouštějte více poskytovatelů najednou - každého lze zapnout nebo vypnout nezávisle</string>
     <string name="your_providers">VAŠI POSKYTOVATELÉ</string>
@@ -163,16 +161,10 @@
     <string name="group_channels">Seskupit duplicitní kanály</string>
     <string name="set_parental_pin">Nastavit rodičovský PIN</string>
     <string name="clear_watch_history">Vymazat historii sledování</string>
-    <string name="plugins_description">Malé skripty, které přidávají funkce - hledání poskytovatelů nebo vyhledávání streamů. Nic se neinstaluje jako samostatná aplikace; skript běží uvnitř Lumory a cokoli navrhne, se použije pouze tehdy, pokud to potvrdíte.</string>
-    <string name="add_a_plugin">PŘIDAT PLUGIN</string>
     <string name="install_from_url">Přidat z URL</string>
     <string name="enter_apk_link">Zadejte odkaz na skript pluginu</string>
     <string name="installed">NAINSTALOVÁNO</string>
-    <string name="no_plugins_installed">Žádné pluginy nejsou nainstalované - níže procházejte obchod s pluginy</string>
-    <string name="plugin_stores">OBCHODY S PLUGINY</string>
-    <string name="add_plugin_store">+ Přidat obchod s pluginy</string>
     <string name="browse">Procházet</string>
-    <string name="no_plugin_stores">Žádné obchody s pluginy nejsou přidány</string>
     <string name="results">VÝSLEDKY</string>
     <string name="version">Verze</string>
     <string name="github">GitHub</string>

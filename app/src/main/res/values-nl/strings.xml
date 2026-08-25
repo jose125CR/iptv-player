@@ -116,10 +116,8 @@
     <string name="filters">Filters</string>
     <string name="privacy">Privacy</string>
     <string name="downloads">Downloads</string>
-    <string name="plugins">Plugins</string>
     <string name="enabled">Ingeschakeld</string>
     <string name="update">Bijwerken</string>
-    <string name="back_to_plugins">‹  Plugins</string>
     <string name="about">Over</string>
     <string name="providers_description">Voer meerdere providers samen uit - schakel elk afzonderlijk in of uit</string>
     <string name="your_providers">JOUW PROVIDERS</string>
@@ -163,16 +161,10 @@
     <string name="group_channels">Dubbele kanalen groeperen</string>
     <string name="set_parental_pin">Ouderlijke pincode instellen</string>
     <string name="clear_watch_history">Kijkgeschiedenis wissen</string>
-    <string name="plugins_description">Kleine scripts die functies toevoegen - providers vinden of zoeken naar streams. Er wordt niets als aparte app geïnstalleerd; een script draait binnen Lumora, en alles wat het voorstelt wordt alleen gebruikt als je het bevestigt.</string>
-    <string name="add_a_plugin">EEN PLUGIN TOEVOEGEN</string>
     <string name="install_from_url">Toevoegen vanaf URL</string>
     <string name="enter_apk_link">Voer een plugin-scriptlink in</string>
     <string name="installed">GEÏNSTALLEERD</string>
-    <string name="no_plugins_installed">Geen plugins geïnstalleerd - blader hieronder door een pluginwinkel</string>
-    <string name="plugin_stores">PLUGINWINKELS</string>
-    <string name="add_plugin_store">+ Een pluginwinkel toevoegen</string>
     <string name="browse">Bladeren</string>
-    <string name="no_plugin_stores">Geen pluginwinkels toegevoegd</string>
     <string name="results">RESULTATEN</string>
     <string name="version">Versie</string>
     <string name="github">GitHub</string>

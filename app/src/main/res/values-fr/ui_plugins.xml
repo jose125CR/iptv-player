@@ -1,54 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Plugins pane & stream search (MainActivityPlugins) -->
-    <string name="plug_public_streaming_content_title">Contenu de streaming public</string>
-    <string name="plug_public_streaming_content_message">Ces plugins recherchent du contenu sur des sites publics de streaming. Lumora n\'héberge, ne contrôle ni ne vérifie rien de ce qu\'ils trouvent — ce qu\'ils renvoient est entièrement hors du contrôle de cette application.\n\nRéservé à un usage éducatif et personnel. Vous êtes responsable du respect des lois qui s\'appliquent à vous.</string>
-    <string name="plug_i_agree">J\'accepte</string>
     <string name="plug_no_trailer_found">Aucune bande-annonce trouvée.</string>
-    <string name="plug_could_not_resolve_stream">Impossible de résoudre le flux</string>
-    <string name="plug_searching">Recherche…</string>
-    <string name="plug_find_stream_title">Trouver un flux — %1$s%2$s</string>
-    <string name="plug_loading_title">Chargement de %1$s…</string>
-    <string name="plug_result_count">%1$d résultat(s)</string>
-    <string name="plug_no_streams_found">Aucun flux trouvé</string>
-    <string name="plug_enter_valid_link">Saisissez un lien http(s) valide</string>
-    <string name="plug_couldnt_fetch_script">Impossible de récupérer ce script</string>
-    <string name="plug_added_label">Ajouté : %1$s</string>
-    <string name="plug_added_label_enable">Ajouté : %1$s - activez-le pour l\'utiliser</string>
-    <string name="plug_add_plugin_script_from_url">Ajouter un script de plugin depuis une URL</string>
-    <string name="plug_enter_plugin_script_message">Saisissez le lien vers un script de plugin Lumora (.js).</string>
-    <string name="plug_added">Ajouté</string>
-    <string name="plug_add_candidate_title">Ajouter %1$s ?</string>
-    <string name="plug_add_candidate_message">%1$s a trouvé ce fournisseur %2$s :\n\n%3$s\n\nL\'ajouter enregistre ces informations comme fournisseur dans Lumora.</string>
-    <string name="plug_starting_label">Démarrage de %1$s…</string>
-    <string name="plug_nothing_found">Rien trouvé</string>
-    <string name="plug_found_count">Trouvé : %1$d</string>
-    <string name="plug_enabled">Activé</string>
-    <string name="plug_disabled">Désactivé</string>
-    <string name="plug_provider_discovery">Découverte de fournisseurs</string>
-    <string name="plug_stream_search">Recherche de flux</string>
-    <string name="plug_running">En cours…</string>
-    <string name="plug_plugin_already_running">Un plugin est déjà en cours d\'exécution</string>
-    <string name="plug_enable_label_first">Activez d\'abord %1$s</string>
-    <string name="plug_updating">Mise à jour…</string>
-    <string name="plug_remove_label_title">Supprimer %1$s ?</string>
-    <string name="plug_remove_script_message">Cela supprime le script installé. Vous pourrez le réinstaller plus tard depuis une boutique de plugins ou son URL.</string>
-    <string name="plug_couldnt_download_label">Impossible de télécharger %1$s</string>
-    <string name="plug_updated_label">Mis à jour : %1$s</string>
-    <string name="plug_update_rejected">Mise à jour refusée : %1$s</string>
-    <string name="plug_not_in_plugin_store">%1$s n\'est dans aucune boutique de plugins configurée</string>
-    <string name="plug_couldnt_download_script">Impossible de télécharger ce script</string>
-    <string name="plug_couldnt_load_store">Impossible de charger cette boutique</string>
-    <string name="plug_no_scripts_listed">Aucun script répertorié</string>
-    <string name="plug_script_count">%1$d script(s)</string>
-    <string name="plug_install">Installer</string>
-    <string name="plug_installing">Installation…</string>
-    <string name="plug_updated">Mis à jour</string>
-    <string name="plug_installed">Installé</string>
-    <string name="plug_installed_label">%1$s installé</string>
-    <string name="plug_installed_label_enable">%1$s installé - activez-le pour l\'utiliser</string>
-    <string name="plug_add_plugin_store">Ajouter une boutique de plugins</string>
-    <string name="plug_add_plugin_store_message">Saisissez le lien vers le catalogue d\'une boutique de plugins (un petit fichier JSON répertoriant ses scripts).</string>
 
     <!-- Discover (TMDB browse) statuses (MainActivityDiscover) -->
     <string name="plug_discover_unavailable">Discover n\'est pas disponible (aucune clé TMDB configurée).</string>

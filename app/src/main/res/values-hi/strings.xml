@@ -115,10 +115,8 @@
     <string name="filters">फ़िल्टर</string>
     <string name="privacy">गोपनीयता</string>
     <string name="downloads">डाउनलोड</string>
-    <string name="plugins">प्लगइन</string>
     <string name="enabled">सक्षम</string>
     <string name="update">अपडेट</string>
-    <string name="back_to_plugins">‹  प्लगइन</string>
     <string name="about">इसके बारे में</string>
     <string name="providers_description">एक साथ कई प्रोवाइडर चलाएँ - प्रत्येक को स्वतंत्र रूप से सक्षम या अक्षम करें</string>
     <string name="your_providers">आपके प्रोवाइडर</string>
@@ -161,16 +159,10 @@
     <string name="group_channels">डुप्लिकेट चैनल समूहित करें</string>
     <string name="set_parental_pin">पैरेंटल PIN सेट करें</string>
     <string name="clear_watch_history">देखने का इतिहास साफ़ करें</string>
-    <string name="plugins_description">छोटी स्क्रिप्ट जो सुविधाएँ जोड़ती हैं - प्रोवाइडर खोजना, या स्ट्रीम खोजना। कोई भी चीज़ अलग ऐप के रूप में इंस्टॉल नहीं होती; एक स्क्रिप्ट Lumora के भीतर चलती है, और उसके द्वारा प्रस्तावित कोई भी चीज़ केवल तभी उपयोग होती है जब आप उसकी पुष्टि करते हैं।</string>
-    <string name="add_a_plugin">प्लगइन जोड़ें</string>
     <string name="install_from_url">URL से जोड़ें</string>
     <string name="enter_apk_link">प्लगइन स्क्रिप्ट लिंक दर्ज करें</string>
     <string name="installed">इंस्टॉल किया हुआ</string>
-    <string name="no_plugins_installed">कोई प्लगइन इंस्टॉल नहीं है - नीचे प्लगइन स्टोर ब्राउज़ करें</string>
-    <string name="plugin_stores">प्लगइन स्टोर</string>
-    <string name="add_plugin_store">+ प्लगइन स्टोर जोड़ें</string>
     <string name="browse">ब्राउज़ करें</string>
-    <string name="no_plugin_stores">कोई प्लगइन स्टोर नहीं जोड़ा गया</string>
     <string name="results">परिणाम</string>
     <string name="version">संस्करण</string>
     <string name="github">GitHub</string>

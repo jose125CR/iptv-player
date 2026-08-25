@@ -25,7 +25,6 @@ import com.lumora.model.Provider
 import com.lumora.model.ProviderType
 import com.lumora.model.IptvProviderConfig
 import com.lumora.data.IptvProviderStore
-import com.lumora.plugin.ResolveResult
 import com.lumora.player.PlayerManager
 import com.lumora.player.VideoAspectFrameLayout
 import com.lumora.util.extractLeadingTag
@@ -566,16 +565,13 @@ internal fun MainActivity.cycleAspectMode() {
  *  resume prompt - the user just answered that question by switching mid-playback.
  *
  *  [externalSubtitles] are sidecar tracks a caller already resolved (the Find Stream
- *  dialog); [pluginStreamAlreadyResolved] marks that same caller's URL as freshly resolved,
- *  so the plugin branch below doesn't resolve it a second time. [audio] is the stream's
- *  audio category hint ("sub"/"dub") when the caller knows it - the player prefers the
- *  matching audio track and gates sidecar subtitles on it. */
+ *  dialog). [audio] is the stream's audio category hint ("sub"/"dub") when the caller
+ *  knows it - the player prefers the matching audio track and gates sidecar subtitles on it. */
 internal fun MainActivity.showPlayerFor(
     channel: Channel,
     resumeFromMs: Long? = null,
     preferredVersionId: String? = null,
     externalSubtitles: List<PlayerManager.ExternalSubtitle> = emptyList(),
-    pluginStreamAlreadyResolved: Boolean = false,
     audio: String? = null,
     /** Set only by the scraper path - see PlayerManager.playUrl's parameter of the same name. */
     maintainTokenQuery: String? = null,
@@ -840,45 +836,6 @@ internal fun MainActivity.showPlayerFor(
             reportPlexStart(itemId, resolved, startAt)
             loadPlexPlaybackExtras(itemId)
         }
-        // A plugin-resolved stream cannot be replayed from the URL it was saved with: the
-        // CDN signs it with an expiry in the path and gates it behind request headers the
-        // URL alone doesn't carry, so a Continue Watching tile replaying yesterday's URL
-        // 403s twice over. Re-run the plugin's resolve() for a fresh URL, headers and
-        // subtitle tracks instead - that's also what makes resuming an anime episode land
-        // on the same episode rather than the series' first one.
-        !pluginStreamAlreadyResolved && !startVersion.pluginToken.isNullOrBlank() -> scope.launch {
-            val startAt = resumeFromMs ?: 0L
-            val plugin = pluginScriptManager.getDiscoveredScripts()
-                .firstOrNull { it.enabled && it.id == startVersion.pluginId }
-            val resolved = when {
-                plugin == null -> ResolveResult.Failed(getString(R.string.play_plugin_disabled_message))
-                else -> jsPluginEngine.resolve(
-                    pluginScriptManager.readSource(plugin),
-                    startVersion.pluginToken,
-                    null,
-                    startVersion.episodeNum
-                )
-            }
-            if (nowPlayingChannel?.id != channel.id) return@launch
-            binding.playerSubtitle.visibility = View.GONE
-            when (resolved) {
-                is ResolveResult.Ready -> playerManager.playUrl(
-                    resolved.url,
-                    startVersion.streamUserAgent,
-                    subtitles = resolved.subtitles.map(::externalSubtitleFor),
-                    startPositionMs = startAt,
-                    headers = resolved.headers.ifEmpty { null },
-                    // The fresh resolve may know the audio category even when the original
-                    // caller didn't (or better), so its hint wins.
-                    audio = resolved.audio ?: audio,
-                    preferAudioLanguage = startVersion.mediaType != MediaType.LIVE
-                )
-                is ResolveResult.Failed -> {
-                    binding.bufferingSpinner.visibility = View.GONE
-                    Toast.makeText(this@showPlayerFor, resolved.message, Toast.LENGTH_LONG).show()
-                }
-            }
-        }
         else -> {
             playerManager.playUrl(
                 startVersion.url,
@@ -1091,7 +1048,7 @@ internal fun isContainerParsingError(error: PlaybackException): Boolean =
 internal fun MainActivity.retryCurrentVodStream(channel: Channel, error: PlaybackException): Boolean {
     if (vodRetryAttempt >= VOD_RETRY_DELAYS_MS.size) return false
     if (!isRetryablePlaybackError(error)) return false
-    // What is actually playing, not channel.url: a plugin/scraper/Stalker stream was resolved
+    // What is actually playing, not channel.url: a scraper/Stalker stream was resolved
     // at play time and the Channel itself carries no usable URL.
     val stream = playerManager.lastResolvedStream?.takeIf { it.url.isNotBlank() } ?: return false
     val scheme = runCatching { android.net.Uri.parse(stream.url).scheme }.getOrNull()?.lowercase()
@@ -1738,7 +1695,7 @@ internal fun MainActivity.hidePlayer() {
     mainHandler.removeCallbacks(upNextTickRunnable)
     playerManager.stop()
     sleepTimer.stop()
-    // A plugin-served stream (Find Stream) is a plain URL handed to the player, so there is
+    // A Find Stream source is a plain URL handed to the player, so there is
     // nothing to tear down here.
     if (isCastManagerReady) castManager.stopCasting()
     if (activeTab == 0) {

@@ -258,8 +258,8 @@ internal fun MainActivity.selectTab(index: Int) {
     updateCatchupTabVisibility()
 
     // Series/Films with no IPTV/Jellyfin provider: the catalog these tabs normally browse
-    // is empty, but a plugin can still resolve a stream for a TMDB title, so fall back to
-    // Discover's own catalog instead of an empty category sidebar.
+    // is empty, but the built-in site scrapers can still resolve a stream for a TMDB title,
+    // so fall back to Discover's own catalog instead of an empty category sidebar.
     if (index != 0 && !hasProviderEnabled() && hasProviderlessSource()) {
         showDiscoverBackedCatalogTab(index)
         return
@@ -416,7 +416,7 @@ internal suspend fun MainActivity.loadSeriesContent(
     val stalkerConfig = stalkerConfigFor(item)
     return when {
         // Anime catalog: build a flat episode list from the total episode count
-        // carried on the Channel. Each episode click triggers a plugin stream search
+        // carried on the Channel. Each episode click triggers a Find Stream search
         // for that specific episode (see showContentDetail's onEpisodeClick).
         item.id.startsWith(AnimeCatalogClient.ID_PREFIX) -> {
             val epCount = item.episodeNum?.coerceAtLeast(1) ?: 12
@@ -734,12 +734,9 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
             // User-initiated play - see playItem for why the suppression flag is cleared here.
             skipResumePrompt = false
             hideContentDetail()
-            // Anime items have no direct stream URL — route through plugin.
+            // Anime items have no direct stream URL - search the sources for this episode.
             if (item.id.startsWith(AnimeCatalogClient.ID_PREFIX)) {
-                val plugin = enabledStreamSearchPlugin(item)
-                if (plugin != null) {
-                    showStreamSearchDialog(plugin, item, season = null, episode = chosen.episodeNum)
-                }
+                showFindStreamDialog(item, season = null, episode = chosen.episodeNum)
             } else if (chosen.url.isBlank()) {
                 // A TMDB-built episode placeholder (see tmdbSeasonsFor) - there is no stream
                 // until one is found for this specific episode.
@@ -997,11 +994,11 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
         // "Play"/"Resume" alone didn't say *which* episode - with several seasons in
         // play this was a guessing game before committing to it.
         val tag = if (seasonNum != null && target.episodeNum != null) "S${seasonNum}E${target.episodeNum}" else null
-        // A TMDB-built placeholder (see tmdbSeasonsFor / mergeMissingEpisodesFromTmdb) has no
-        // stream behind it. Saying "Play" there promises something the button cannot do - it
-        // opened the player on a blank URL and failed - so it says what it will actually do:
-        // search the sources first, then play what comes back.
-        val mustFind = target.url.isBlank() && !item.id.startsWith(AnimeCatalogClient.ID_PREFIX)
+        // A TMDB-built placeholder or an anime episode (see tmdbSeasonsFor / the anime
+        // catalog) has no stream behind it. Saying "Play" there promises something the
+        // button cannot do - it opened the player on a blank URL and failed - so it says
+        // what it will actually do: search the sources first, then play what comes back.
+        val mustFind = target.url.isBlank()
         val verb = when {
             mustFind -> R.string.list_find_and_play
             selection.isResume -> R.string.list_resume
@@ -1016,15 +1013,9 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
             // User-initiated play - see playItem for why the suppression flag is cleared here.
             skipResumePrompt = false
             hideContentDetail()
-            // Anime items route through the plugin instead of direct playback.
-            if (item.id.startsWith(AnimeCatalogClient.ID_PREFIX)) {
-                val plugin = enabledStreamSearchPlugin(item)
-                if (plugin != null) {
-                    showStreamSearchDialog(plugin, item, season = null, episode = target.episodeNum)
-                }
-            } else if (mustFind) {
-                // Same route the episode rows take for a placeholder - searched under the
-                // series name with the season/episode pair, never the episode's own title.
+            if (mustFind) {
+                // Searched under the series name with the season/episode pair, never the
+                // episode's own title.
                 showFindStreamDialog(item, seasonNum?.toIntOrNull(), target.episodeNum)
             } else {
                 currentIndex = -1
@@ -1179,7 +1170,7 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
                 // button is still the one thing anyone presses on this screen, so it stays and
                 // says what it will do - search the sources, then play what resolves - instead
                 // of hiding and leaving the screen with no obvious action. Hidden only when
-                // there is no way to find anything either (no plugin, no scrapers enabled).
+                // there is no way to find anything either (no scraper sites enabled).
                 val playable = item.url.isNotBlank() || versions.any { it.url.isNotBlank() }
                 val mustFind = !playable && canFindStream(item)
                 playButtonLabel.text = when {

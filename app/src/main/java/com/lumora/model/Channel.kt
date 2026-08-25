@@ -48,7 +48,7 @@ data class Channel(
     // IptvProviderConfig this channel came from - playback needs the *source* provider's
     // header, not whichever IPTV provider happens to be first/active.
     val streamUserAgent: String? = null,
-    // Extra HTTP request headers the stream URL needs - e.g. a plugin-resolved anime CDN that
+    // Extra HTTP request headers the stream URL needs - e.g. a resolved CDN that
     // hotlink-protects its playlist behind a Referer. Applied by PlayerManager alongside the UA.
     val streamHeaders: Map<String, String>? = null,
     // Which configured source this item came from: an IptvProviderConfig.id for Xtream, or a
@@ -68,15 +68,6 @@ data class Channel(
     // with sourceProviderId (the portal's IptvProviderConfig id) so the play step can
     // re-auth against the right portal. Null for everything that already has a direct url.
     val stalkerCmd: String? = null,
-    // A stream_search plugin's opaque resolve token, for items whose playable URL is produced by
-    // a plugin rather than stored anywhere. Those URLs are short-lived (the anime CDN signs them
-    // with an expiry in the path) and need request headers the URL alone doesn't carry, so a
-    // Continue Watching tile cannot replay the URL it was saved with - it has to re-run
-    // resolve(). Paired with pluginId so the *same* script resolves it again, and with
-    // episodeNum, which resolve() needs to pick the right episode.
-    val pluginToken: String? = null,
-    // PluginScript.id of the script that produced pluginToken. Null for everything else.
-    val pluginId: String? = null,
     // Xtream `tv_archive` (0/1): the panel keeps a rolling recording of this channel, so a
     // programme that already aired can be played back from the archive. Live channels only,
     // and only Xtream reports it - M3U/Stalker/Jellyfin leave it false.

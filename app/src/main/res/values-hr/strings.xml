@@ -116,10 +116,8 @@
     <string name="filters">Filtri</string>
     <string name="privacy">Privatnost</string>
     <string name="downloads">Preuzimanja</string>
-    <string name="plugins">Dodaci</string>
     <string name="enabled">Omogućeno</string>
     <string name="update">Ažuriraj</string>
-    <string name="back_to_plugins">‹  Dodaci</string>
     <string name="about">O aplikaciji</string>
     <string name="providers_description">Pokrenite više pružatelja zajedno - svaki uključite ili isključite neovisno</string>
     <string name="your_providers">VAŠI PRUŽATELJI</string>
@@ -162,16 +160,10 @@
     <string name="group_channels">Grupiraj duplikate kanala</string>
     <string name="set_parental_pin">Postavi roditeljski PIN</string>
     <string name="clear_watch_history">Očisti povijest gledanja</string>
-    <string name="plugins_description">Mali skripti koji dodaju značajke - pronalaženje pružatelja ili traženje tokova. Ništa se ne instalira kao zasebna aplikacija; skripta se izvodi unutar Lumore, a sve što predloži koristi se samo ako to potvrdite.</string>
-    <string name="add_a_plugin">DODAJ DODATAK</string>
     <string name="install_from_url">Dodaj s URL-a</string>
     <string name="enter_apk_link">Unesite poveznicu skripte dodatka</string>
     <string name="installed">INSTALIRANO</string>
-    <string name="no_plugins_installed">Nema instaliranih dodataka - pregledajte trgovinu dodataka u nastavku</string>
-    <string name="plugin_stores">TRGOVINE DODATAKA</string>
-    <string name="add_plugin_store">+ Dodaj trgovinu dodataka</string>
     <string name="browse">Pregledaj</string>
-    <string name="no_plugin_stores">Nema dodanih trgovina dodataka</string>
     <string name="results">REZULTATI</string>
     <string name="version">Verzija</string>
     <string name="github">GitHub</string>

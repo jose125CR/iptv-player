@@ -114,10 +114,8 @@
     <string name="filters">筛选</string>
     <string name="privacy">隐私</string>
     <string name="downloads">下载</string>
-    <string name="plugins">插件</string>
     <string name="enabled">已启用</string>
     <string name="update">更新</string>
-    <string name="back_to_plugins">‹  插件</string>
     <string name="about">关于</string>
     <string name="providers_description">同时运行多个提供商 - 可分别启用或禁用每个提供商</string>
     <string name="your_providers">我的提供商</string>
@@ -160,16 +158,10 @@
     <string name="group_channels">合并重复频道</string>
     <string name="set_parental_pin">设置家长 PIN 码</string>
     <string name="clear_watch_history">清除观看历史</string>
-    <string name="plugins_description">添加功能的小型脚本 - 查找提供商或搜索流。无需安装为独立应用；脚本在 Lumora 内部运行，其提出的任何内容仅在您确认后才会使用。</string>
-    <string name="add_a_plugin">添加插件</string>
     <string name="install_from_url">从 URL 添加</string>
     <string name="enter_apk_link">输入插件脚本链接</string>
     <string name="installed">已安装</string>
-    <string name="no_plugins_installed">未安装插件 - 请在下方浏览插件商店</string>
-    <string name="plugin_stores">插件商店</string>
-    <string name="add_plugin_store">+ 添加插件商店</string>
     <string name="browse">浏览</string>
-    <string name="no_plugin_stores">尚未添加插件商店</string>
     <string name="results">结果</string>
     <string name="version">版本</string>
     <string name="github">GitHub</string>

@@ -117,10 +117,8 @@
     <string name="filters">Filtry</string>
     <string name="privacy">Prywatność</string>
     <string name="downloads">Pobrane</string>
-    <string name="plugins">Wtyczki</string>
     <string name="enabled">Włączone</string>
     <string name="update">Aktualizuj</string>
-    <string name="back_to_plugins">‹  Wtyczki</string>
     <string name="about">O aplikacji</string>
     <string name="providers_description">Uruchamiaj wielu dostawców jednocześnie - włączaj lub wyłączaj każdego niezależnie</string>
     <string name="your_providers">TWOI DOSTAWCY</string>
@@ -164,16 +162,10 @@
     <string name="group_channels">Grupuj zduplikowane kanały</string>
     <string name="set_parental_pin">Ustaw kod PIN rodzicielski</string>
     <string name="clear_watch_history">Wyczyść historię oglądania</string>
-    <string name="plugins_description">Małe skrypty dodające funkcje - znajdowanie dostawców lub wyszukiwanie strumieni. Nic nie instaluje się jako osobna aplikacja; skrypt działa wewnątrz Lumory, a wszystko, co proponuje, jest używane tylko wtedy, gdy to potwierdzisz.</string>
-    <string name="add_a_plugin">DODAJ WTYKĘ</string>
     <string name="install_from_url">Dodaj z URL</string>
     <string name="enter_apk_link">Wpisz link do skryptu wtyczki</string>
     <string name="installed">ZAINSTALOWANE</string>
-    <string name="no_plugins_installed">Nie zainstalowano wtyczek - przeglądaj sklep z wtyczkami poniżej</string>
-    <string name="plugin_stores">SKLEPY Z WTYKAMI</string>
-    <string name="add_plugin_store">+ Dodaj sklep z wtyczkami</string>
     <string name="browse">Przeglądaj</string>
-    <string name="no_plugin_stores">Nie dodano sklepów z wtyczkami</string>
     <string name="results">WYNIKI</string>
     <string name="version">Wersja</string>
     <string name="github">GitHub</string>

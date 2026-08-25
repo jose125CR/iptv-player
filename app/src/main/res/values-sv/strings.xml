@@ -116,10 +116,8 @@
     <string name="filters">Filter</string>
     <string name="privacy">Integritet</string>
     <string name="downloads">Nedladdningar</string>
-    <string name="plugins">Plugins</string>
     <string name="enabled">Aktiverad</string>
     <string name="update">Uppdatera</string>
-    <string name="back_to_plugins">‹  Plugins</string>
     <string name="about">Om</string>
     <string name="providers_description">Kör flera leverantörer tillsammans - aktivera eller inaktivera var och en oberoende</string>
     <string name="your_providers">DINA LEVERANTÖRER</string>
@@ -162,16 +160,10 @@
     <string name="group_channels">Gruppera dubblettkanaler</string>
     <string name="set_parental_pin">Ställ in föräldrakod</string>
     <string name="clear_watch_history">Rensa visningshistorik</string>
-    <string name="plugins_description">Små skript som lägger till funktioner - hitta leverantörer eller söka efter strömmar. Inget installeras som en separat app; ett skript körs inuti Lumora, och allt det föreslår används bara om du bekräftar det.</string>
-    <string name="add_a_plugin">LÄGG TILL ETT PLUGIN</string>
     <string name="install_from_url">Lägg till från URL</string>
     <string name="enter_apk_link">Ange en pluginskriptlänk</string>
     <string name="installed">INSTALLERAD</string>
-    <string name="no_plugins_installed">Inga plugins installerade - bläddra i en pluginbutik nedan</string>
-    <string name="plugin_stores">PLUGINBUTIKER</string>
-    <string name="add_plugin_store">+ Lägg till en pluginbutik</string>
     <string name="browse">Bläddra</string>
-    <string name="no_plugin_stores">Inga pluginbutiker tillagda</string>
     <string name="results">RESULTAT</string>
     <string name="version">Version</string>
     <string name="github">GitHub</string>

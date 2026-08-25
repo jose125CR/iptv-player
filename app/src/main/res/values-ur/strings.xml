@@ -115,10 +115,8 @@
     <string name="filters">فلٹرز</string>
     <string name="privacy">رازداری</string>
     <string name="downloads">ڈاؤن لوڈز</string>
-    <string name="plugins">پلگ انز</string>
     <string name="enabled">فعال</string>
     <string name="update">اپ ڈیٹ</string>
-    <string name="back_to_plugins">‹  پلگ انز</string>
     <string name="about">تعارف</string>
     <string name="providers_description">متعدد فراہم کنندگان کو ساتھ چلائیں - ہر ایک کو الگ سے فعال یا غیر فعال کریں</string>
     <string name="your_providers">آپ کے فراہم کنندگان</string>
@@ -161,16 +159,10 @@
     <string name="group_channels">ڈپلیکیٹ چینلز کو گروپ کریں</string>
     <string name="set_parental_pin">پیرنٹل PIN مقرر کریں</string>
     <string name="clear_watch_history">دیکھنے کی تاریخ صاف کریں</string>
-    <string name="plugins_description">چھوٹے اسکرپٹس جو خصوصیات شامل کرتے ہیں - فراہم کنندگان تلاش کرنا، یا اسٹریمز تلاش کرنا۔ کوئی چیز الگ ایپ کے طور پر انسٹال نہیں ہوتی؛ ایک اسکرپٹ Lumora کے اندر چلتا ہے، اور جو کچھ یہ تجویز کرتا ہے وہ صرف آپ کی تصدیق پر استعمال ہوتا ہے۔</string>
-    <string name="add_a_plugin">پلگ ان شامل کریں</string>
     <string name="install_from_url">URL سے شامل کریں</string>
     <string name="enter_apk_link">پلگ ان اسکرپٹ کا لنک درج کریں</string>
     <string name="installed">انسٹال شدہ</string>
-    <string name="no_plugins_installed">کوئی پلگ ان انسٹال نہیں - نیچے پلگ ان اسٹور براؤز کریں</string>
-    <string name="plugin_stores">پلگ ان اسٹورز</string>
-    <string name="add_plugin_store">+ پلگ ان اسٹور شامل کریں</string>
     <string name="browse">براؤز کریں</string>
-    <string name="no_plugin_stores">کوئی پلگ ان اسٹور شامل نہیں</string>
     <string name="results">نتائج</string>
     <string name="version">ورژن</string>
     <string name="github">GitHub</string>

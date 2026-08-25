@@ -119,10 +119,8 @@
     <string name="filters">عوامل التصفية</string>
     <string name="privacy">الخصوصية</string>
     <string name="downloads">التنزيلات</string>
-    <string name="plugins">الإضافات</string>
     <string name="enabled">مفعّل</string>
     <string name="update">تحديث</string>
-    <string name="back_to_plugins">‹  الإضافات</string>
     <string name="about">حول</string>
     <string name="providers_description">شغّل عدة مزوّدين معاً - فعّل أو عطّل كل واحد على حدة</string>
     <string name="your_providers">المزوّدون لديك</string>
@@ -165,16 +163,10 @@
     <string name="group_channels">تجميع القنوات المكررة</string>
     <string name="set_parental_pin">تعيين رمز PIN للرقابة الأبوية</string>
     <string name="clear_watch_history">مسح سجل المشاهدة</string>
-    <string name="plugins_description">نصوص برمجية صغيرة تضيف ميزات - البحث عن مزوّدين أو عن بث. لا يُثبَّت أي شيء كتطبيق منفصل؛ يعمل النص داخل Lumora، وأي شيء يقترحه لا يُستخدم إلا إذا أكدته.</string>
-    <string name="add_a_plugin">أضف إضافة</string>
     <string name="install_from_url">إضافة من رابط</string>
     <string name="enter_apk_link">أدخل رابط نص الإضافة</string>
     <string name="installed">مثبّتة</string>
-    <string name="no_plugins_installed">لم يتم تثبيت أي إضافة - تصفح متجر إضافات أدناه</string>
-    <string name="plugin_stores">متاجر الإضافات</string>
-    <string name="add_plugin_store">+ إضافة متجر إضافات</string>
     <string name="browse">تصفح</string>
-    <string name="no_plugin_stores">لم تتم إضافة أي متجر إضافات</string>
     <string name="results">النتائج</string>
     <string name="version">الإصدار</string>
     <string name="github">GitHub</string>

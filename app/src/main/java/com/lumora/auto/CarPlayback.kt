@@ -34,10 +34,10 @@ class CarPlayback(private val context: Context) {
     val isPlaying: Boolean get() = player.isPlaying
 
     /**
-     * Live channels that can be played from a URL alone. Stalker commands, plugin tokens and
-     * the media servers' negotiated streams (Jellyfin, Plex) all need a round trip through
-     * code that lives in the Activity, so they are left out rather than offered as rows that
-     * fail on tap. Plex additionally has no live channels at all - see MainActivityPlex.
+     * Live channels that can be played from a URL alone. Stalker commands and the media
+     * servers' negotiated streams (Jellyfin, Plex) need a round trip through code that lives
+     * in the Activity, so they are left out rather than offered as rows that fail on tap.
+     * Plex additionally has no live channels at all - see MainActivityPlex.
      *
      * Synchronized: Media-browse callbacks now load this on background threads, and concurrent
      * calls must not double-read the disk cache or interleave writes to [channels].
@@ -47,7 +47,7 @@ class CarPlayback(private val context: Context) {
         val cached = ChannelCache.load(context).orEmpty()
         channels = cached.filter {
             it.mediaType == MediaType.LIVE && it.url.isNotBlank() &&
-                it.stalkerCmd.isNullOrBlank() && it.pluginToken.isNullOrBlank()
+                it.stalkerCmd.isNullOrBlank()
         }
         return channels
     }

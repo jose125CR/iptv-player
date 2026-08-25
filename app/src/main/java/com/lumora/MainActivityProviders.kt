@@ -383,17 +383,17 @@ internal suspend fun MainActivity.persistCatalog(channels: List<Channel>) = with
     ChannelCache.save(this@persistCatalog, channels + resurrect)
 }
 
-/** Drops catalog items that only exist because a plugin supplied them, once that plugin
- *  is gone or switched off.
- *
- *  The anime catalog is fetched by the stream_search plugin, and its items are written to
- *  the flat cache like everything else - but unlike a provider's channels they carry no
- *  sourceProviderId, so the enabled-provider filter passes them straight through. Disabling
- *  the plugin therefore left its titles (and the Anime sidebar row built from them) on
- *  screen until the cache happened to be rewritten by a network refresh. A fresh fetch
- *  already skips them; this is the cached cold-start path saying the same thing. */
+/** True when the anime catalog can be offered at all. Its titles have no stream of their
+ *  own - they were resolved at play time by an installed `stream_search` plugin, and those
+ *  are gone - so until the catalog's remaining plumbing is removed alongside the rest of
+ *  the provider-less sourcing, it stays off entirely. */
+internal fun MainActivity.animeCatalogAvailable(): Boolean = false
+
+/** Same rule applied to the flat cache: anime rows written before this are dropped rather
+ *  than left on screen (and building the Anime sidebar row) when the catalog is off. A
+ *  fresh fetch already skips them; this is the cached cold-start path saying the same thing. */
 internal fun MainActivity.dropDisabledPluginContent(channels: List<Channel>): List<Channel> {
-    if (enabledAnimePlugin() != null) return channels
+    if (animeCatalogAvailable()) return channels
     return channels.filterNot { it.id.startsWith(AnimeCatalogClient.ID_PREFIX) }
 }
 
@@ -499,7 +499,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 visible = true
             )
         }
-        val animeDeferred = if (enabledAnimePlugin() != null) {
+        val animeDeferred = if (animeCatalogAvailable()) {
             // fetchAnimeChannels does synchronous OkHttp calls, and this loader coroutine
             // runs on Main - the Dispatchers.IO hop mirrors the sequential version below.
             async { withContext(Dispatchers.IO) { fetchAnimeChannels() } }

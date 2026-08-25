@@ -39,7 +39,6 @@
     <string name="play_video_label">Video: %1$s</string>
     <string name="play_initial_fallback">?</string>
     <string name="play_couldnt_open_title">Couldn\'t open this title</string>
-    <string name="play_plugin_disabled_message">The plugin that played this is no longer enabled</string>
     <string name="play_switching_alt_quality">Switching to alternate quality…</string>
     <!-- Automatic failover on a film/episode after its retries are spent - the user did not
          ask for a source change, so the toast says one is happening. -->

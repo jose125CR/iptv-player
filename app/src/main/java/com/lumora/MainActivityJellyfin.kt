@@ -14,7 +14,7 @@ import com.lumora.model.Channel
 import com.lumora.model.MediaServerConfig
 import com.lumora.model.Provider
 import com.lumora.model.ProviderType
-import com.lumora.plugin.PluginSubtitle
+import com.lumora.model.SidecarSubtitle
 import com.lumora.player.PlayerManager
 import com.lumora.util.normalizeServerUrl
 import com.lumora.util.qualifiedMediaItemId
@@ -255,10 +255,10 @@ internal fun MainActivity.externalSubtitlesFor(resolved: JellyfinProvider.Resolv
         )
     }
 
-/** A plugin's sidecar subtitle URL carries no codec metadata the way a Jellyfin MediaStream
+/** A sidecar subtitle URL carries no codec metadata the way a Jellyfin MediaStream
  *  does, so the format is taken from the file extension (query string stripped - these URLs
  *  are often signed). WebVTT is the fallback: it's what every source seen so far serves. */
-internal fun MainActivity.externalSubtitleFor(subtitle: PluginSubtitle): PlayerManager.ExternalSubtitle {
+internal fun MainActivity.externalSubtitleFor(subtitle: SidecarSubtitle): PlayerManager.ExternalSubtitle {
     val path = subtitle.url.substringBefore('?').substringBefore('#')
     val mime = when {
         path.endsWith(".srt", ignoreCase = true) -> androidx.media3.common.MimeTypes.APPLICATION_SUBRIP

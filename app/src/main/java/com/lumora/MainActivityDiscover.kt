@@ -12,7 +12,6 @@ import com.lumora.cache.RecentlyPlayedStore
 import com.lumora.model.Channel
 import com.lumora.model.ContentShelf
 import com.lumora.model.MediaType
-import com.lumora.plugin.js.PluginScript
 import com.lumora.parser.XtreamClient
 import com.lumora.util.cleanVodTitle
 import com.lumora.util.isAdultCategory
@@ -105,8 +104,8 @@ internal fun MainActivity.showDiscoverSearchOverlay() {
         status.visibility = View.VISIBLE
         searchJob = scope.launch {
             val results = tmdbClient.search(query)
-            // Same gate as loadDiscover(): with no stream-search plugin or scraper enabled a
-            // TMDB-only title is a dead tile, so only titles the library already carries are
+            // Same gate as loadDiscover(): with no scraper sites enabled a TMDB-only title
+            // is a dead tile, so only titles the library already carries are
             // offered. Matching is the slow step, so it only runs when it decides something.
             val pluginEnabled = hasProviderlessSource()
             val visible = if (pluginEnabled) results else withContext(Dispatchers.Default) {
@@ -582,9 +581,7 @@ internal fun MainActivity.normalizeMatchTitle(title: String): String =
  * Fetches the show's seasons from TMDB, then lets the user pick season → episode.
  *
  * [onPick] receives the chosen season/episode, or nulls when there is nothing to choose from
- * (no TMDB id, or TMDB has no season data) and the title has to be searched whole. Takes a
- * callback rather than a [PluginScript] because both stream sources need this same picker - an
- * installed plugin and the built-in site scrapers - and only the step after it differs.
+ * (no TMDB id, or TMDB has no season data) and the title has to be searched whole.
  */
 internal fun MainActivity.showSeriesEpisodePicker(
     item: Channel,
@@ -632,9 +629,7 @@ internal fun MainActivity.onHomeItemClick(channel: Channel) {
             currentIndex = filmList.indexOf(channel)
             showPlayerFor(channel)
             // Back out to the film's own poster, same as playing it from its detail page.
-            // Not for a plugin-resolved entry: its id is a resolve token, not a catalog
-            // item, so there is no detail page to return it to.
-            if (channel.pluginToken == null) detailReturnItem = channel
+            detailReturnItem = channel
         }
         MediaType.SERIES -> {
             // An episode tile (Continue Watching, Next Up, or a synthesized up-next tile)

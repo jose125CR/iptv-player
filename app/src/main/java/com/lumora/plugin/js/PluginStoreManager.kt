@@ -8,14 +8,15 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 
 /**
- * Tracks which plugin stores are configured (the default one plus any the user added) and can
- * fetch a store's catalog / download one of its scripts. Doesn't touch script storage itself -
- * installing a fetched script goes through [PluginScriptManager.installScript].
+ * Tracks which plugin stores are configured (only ones the user has added - none ship
+ * preconfigured) and can fetch a store's catalog / download one of its scripts. Doesn't
+ * touch script storage itself - installing a fetched script goes through
+ * [PluginScriptManager.installScript].
  *
  * Catalog schema (a small static JSON file, e.g. `scripts/index.json` in a plugin repo):
  * ```json
  * {
- *   "name": "Lumora Plugins",
+ *                   "name": "Example Plugins",
  *   "scripts": [
  *     {
  *       "id": "anime.senshi",
@@ -35,22 +36,16 @@ class PluginStoreManager(
     private val prefs: SharedPreferences,
     private val httpClient: OkHttpClient = OkHttpClient(),
 ) {
-    fun storeUrls(): List<PluginStore> {
-        val custom = customStoreUrls()
-        val stores = mutableListOf(PluginStore(url = DEFAULT_STORE_URL, name = "Lumora Plugins", removable = false))
-        custom.filterNot { it == DEFAULT_STORE_URL }.forEach { stores.add(PluginStore(url = it, name = null, removable = true)) }
-        return stores
-    }
+    fun storeUrls(): List<PluginStore> =
+        customStoreUrls().map { PluginStore(url = it, name = null, removable = true) }
 
     fun addStore(url: String) {
-        if (url == DEFAULT_STORE_URL) return
         val current = customStoreUrls().toMutableSet()
         current.add(url)
         prefs.edit().putStringSet(PREF_STORE_URLS, current).apply()
     }
 
     fun removeStore(url: String) {
-        if (url == DEFAULT_STORE_URL) return
         val current = customStoreUrls().toMutableSet()
         current.remove(url)
         prefs.edit().putStringSet(PREF_STORE_URLS, current).apply()
@@ -120,6 +115,5 @@ class PluginStoreManager(
 
     companion object {
         private const val PREF_STORE_URLS = "plugin_store_urls"
-        const val DEFAULT_STORE_URL = "https://raw.githubusercontent.com/disclosurez/Lumora-Plugins/master/scripts/index.json"
     }
 }

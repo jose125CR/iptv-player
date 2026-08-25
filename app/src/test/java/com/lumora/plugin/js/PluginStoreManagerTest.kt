@@ -6,7 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -48,28 +47,22 @@ private class FakeSharedPreferences : SharedPreferences {
 class PluginStoreManagerTest {
 
     @Test
-    fun `default store is always present and not removable`() {
+    fun `no stores are configured by default`() {
         val manager = PluginStoreManager(FakeSharedPreferences())
-        val stores = manager.storeUrls()
-        assertEquals(1, stores.size)
-        assertEquals(PluginStoreManager.DEFAULT_STORE_URL, stores[0].url)
-        assertFalse(stores[0].removable)
+        assertTrue(manager.storeUrls().isEmpty())
     }
 
     @Test
-    fun `added stores are listed and removable, default cannot be removed`() {
+    fun `added stores are listed and removable`() {
         val manager = PluginStoreManager(FakeSharedPreferences())
         manager.addStore("https://example.com/plugins/index.json")
         var stores = manager.storeUrls()
-        assertEquals(2, stores.size)
+        assertEquals(1, stores.size)
         assertTrue(stores.any { it.url == "https://example.com/plugins/index.json" && it.removable })
-
-        manager.removeStore(PluginStoreManager.DEFAULT_STORE_URL)
-        assertEquals(2, manager.storeUrls().size) // no-op, default survives
 
         manager.removeStore("https://example.com/plugins/index.json")
         stores = manager.storeUrls()
-        assertEquals(1, stores.size)
+        assertEquals(0, stores.size)
     }
 
     @Test

@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Σειρές</string>
     <string name="films_tab">Ταινίες</string>
-    <string name="discover_tab">Ανακάλυψη</string>
     <string name="downloads_tab">Λήψεις</string>
     <string name="no_provider_configured">Δεν έχει διαμορφωθεί πάροχος</string>
     <string name="press_settings_to_add_playlist">Πατήστε Ρυθμίσεις για να προσθέσετε μια διεύθυνση URL λίστας αναπαραγωγής</string>
@@ -233,7 +232,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - αναζήτηση Ανακάλυψης (TMDB) -->
-    <string name="discover_search_hint">Αναζήτηση ταινιών &amp; σειρών…</string>
 
 
 

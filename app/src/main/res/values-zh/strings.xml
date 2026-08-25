@@ -70,7 +70,6 @@
     </plurals>
     <string name="series_tab">剧集</string>
     <string name="films_tab">电影</string>
-    <string name="discover_tab">发现</string>
     <string name="downloads_tab">下载</string>
     <string name="no_provider_configured">未配置提供商</string>
     <string name="press_settings_to_add_playlist">打开设置以添加播放列表 URL</string>
@@ -227,7 +226,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - 发现（TMDB）搜索 -->
-    <string name="discover_search_hint">搜索电影和剧集…</string>
 
 
 

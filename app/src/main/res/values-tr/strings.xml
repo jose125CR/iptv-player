@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Diziler</string>
     <string name="films_tab">Filmler</string>
-    <string name="discover_tab">Keşfet</string>
     <string name="downloads_tab">İndirilenler</string>
     <string name="no_provider_configured">Sağlayıcı yapılandırılmamış</string>
     <string name="press_settings_to_add_playlist">Oynatma listesi URL\'si eklemek için Ayarlar\'a basın</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - Keşfet (TMDB) araması -->
-    <string name="discover_search_hint">Filmlerde &amp; dizilerde ara…</string>
 
 
 

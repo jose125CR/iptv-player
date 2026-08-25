@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">सीरीज़</string>
     <string name="films_tab">फ़िल्में</string>
-    <string name="discover_tab">खोजें</string>
     <string name="downloads_tab">डाउनलोड</string>
     <string name="no_provider_configured">कोई प्रोवाइडर कॉन्फ़िगर नहीं है</string>
     <string name="press_settings_to_add_playlist">प्लेलिस्ट URL जोड़ने के लिए सेटिंग्स दबाएँ</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - डिस्कवर (TMDB) खोज -->
-    <string name="discover_search_hint">फ़िल्में और सीरीज़ खोजें…</string>
 
 
 

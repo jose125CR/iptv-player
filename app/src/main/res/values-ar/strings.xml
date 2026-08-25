@@ -75,7 +75,6 @@
     </plurals>
     <string name="series_tab">المسلسلات</string>
     <string name="films_tab">الأفلام</string>
-    <string name="discover_tab">اكتشف</string>
     <string name="downloads_tab">التنزيلات</string>
     <string name="no_provider_configured">لم يتم إعداد أي مزوّد</string>
     <string name="press_settings_to_add_playlist">اضغط الإعدادات لإضافة رابط قائمة تشغيل</string>
@@ -232,7 +231,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - بحث اكتشف (TMDB) -->
-    <string name="discover_search_hint">ابحث في الأفلام والمسلسلات…</string>
 
 
 

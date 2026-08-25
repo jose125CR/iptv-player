@@ -299,11 +299,11 @@ internal suspend fun MainActivity.rebuildCategoriesForActiveTab(): List<Category
  *  buildCategoriesForActiveTab() rescans every channel in the tab (brand clustering in
  *  particular is O(channel count)), so on a large catalog that's real time saved. */
 internal fun MainActivity.submitCategories(categories: List<CategoryFilter>) {
-    // Home, Discover and Downloads are not categorized tabs and have no sidebar. Every
+    // Home and Downloads are not categorized tabs and have no sidebar. Every
     // caller here is asynchronous, so any of them can land after the user has left the tab
     // the categories were built for - and the sidebar must not reappear over a pane that
     // never had one.
-    val onCategorizedTab = !showingHome && !showingDiscover && !showingDownloads && !showingCatchup
+    val onCategorizedTab = !showingHome && !showingDownloads && !showingCatchup
     // Collapse composes on top of the tab-context decision here - this is the
     // single canonical re-show point for the rail, so the collapsed pref applies
     // everywhere a tab is (re)built (tab switch, category rebuild, catalog refresh).
@@ -332,7 +332,6 @@ private fun MainActivity.chromeLabelPills(): List<Triple<View, Int, Int>> = list
     Triple(binding.tabLive, R.id.tabLiveLabelGroup, R.id.tabLiveLabel),
     Triple(binding.tabSeries, R.id.tabSeriesLabel, R.id.tabSeriesLabel),
     Triple(binding.tabFilms, R.id.tabFilmsLabel, R.id.tabFilmsLabel),
-    Triple(binding.tabDiscover, R.id.tabDiscoverLabel, R.id.tabDiscoverLabel),
     Triple(binding.tabDownloads, R.id.tabDownloadsLabel, R.id.tabDownloadsLabel),
     Triple(binding.btnSearch, R.id.btnSearchLabel, R.id.btnSearchLabel),
 )
@@ -1416,8 +1415,7 @@ internal fun MainActivity.applyStatus() {
     val slotTaken = activeSettingsOverlay != null || activeSearchOverlay != null ||
         isPlayerVisible || isContentDetailVisible ||
         binding.contentRow.visibility == View.VISIBLE ||
-        binding.homeContent.visibility == View.VISIBLE ||
-        binding.discoverContent.visibility == View.VISIBLE
+        binding.homeContent.visibility == View.VISIBLE
     val show = statusWanted && !slotTaken
     binding.statusRow.visibility = if (show) View.VISIBLE else View.GONE
     // In-progress messages ("Loading...", "Connecting...") get a spinner; final
@@ -1435,21 +1433,19 @@ internal fun MainActivity.setupTabs() {
     // dropdown (Live TV / Catch Up), which is where Catch Up now lives. With no archive
     // channels there is nothing to drop down, so the tab stays a plain tab.
     binding.tabLive.setOnClickListener {
-        val onLiveSection = (activeTab == 0 && !showingHome && !showingDiscover && !showingDownloads) || showingCatchup
+        val onLiveSection = (activeTab == 0 && !showingHome && !showingDownloads) || showingCatchup
         if (onLiveSection && catchupChannels().isNotEmpty()) showLiveTabMenu()
         else selectTab(0)
     }
     binding.tabSeries.setOnClickListener { selectTab(1) }
     binding.tabFilms.setOnClickListener { selectTab(2) }
-    binding.tabDiscover.setOnClickListener { showingHome = false; selectDiscover() }
     binding.tabDownloads.setOnClickListener { showingHome = false; selectDownloads() }
-    setupDiscover()
     // D-pad focus moving between tabs leaves a stale sliver of the previous tab's
     // rounded-border background behind on some TV-stick GPUs - the view's own
     // self-invalidate on unfocus doesn't always clear it. Forcing the whole bar to
     // redraw on every focus change is a blunt but reliable fix.
     val invalidateBarOnFocus = View.OnFocusChangeListener { _, _ -> binding.tabBar.invalidate() }
-    for (tv in listOf(binding.tabHome, binding.tabLive, binding.tabSeries, binding.tabFilms, binding.tabDiscover, binding.tabDownloads)) {
+    for (tv in listOf(binding.tabHome, binding.tabLive, binding.tabSeries, binding.tabFilms, binding.tabDownloads)) {
         tv.onFocusChangeListener = invalidateBarOnFocus
     }
     // Hide tab bar + search until an enabled provider exists
@@ -1458,7 +1454,7 @@ internal fun MainActivity.setupTabs() {
 }
 
 internal fun MainActivity.updateTabStyles(selected: View) {
-    for (tv in listOf(binding.tabHome, binding.tabLive, binding.tabSeries, binding.tabFilms, binding.tabDiscover, binding.tabDownloads)) {
+    for (tv in listOf(binding.tabHome, binding.tabLive, binding.tabSeries, binding.tabFilms, binding.tabDownloads)) {
         val isSelected = tv === selected
         tv.isSelected = isSelected
         val (labelId, iconId, indicatorId) = when (tv.id) {
@@ -1466,7 +1462,6 @@ internal fun MainActivity.updateTabStyles(selected: View) {
             R.id.tabSeries -> Triple(R.id.tabSeriesLabel, R.id.tabSeriesIcon, R.id.tabSeriesIndicator)
             R.id.tabFilms -> Triple(R.id.tabFilmsLabel, R.id.tabFilmsIcon, R.id.tabFilmsIndicator)
             R.id.tabHome -> Triple(R.id.tabHomeLabel, R.id.tabHomeIcon, R.id.tabHomeIndicator)
-            R.id.tabDiscover -> Triple(R.id.tabDiscoverLabel, R.id.tabDiscoverIcon, R.id.tabDiscoverIndicator)
             R.id.tabDownloads -> Triple(R.id.tabDownloadsLabel, R.id.tabDownloadsIcon, R.id.tabDownloadsIndicator)
             else -> continue
         }
@@ -1491,10 +1486,8 @@ internal fun MainActivity.selectHome() {
     activeSearchOverlay?.dismiss()
     showingHome = true
     showingDownloads = false
-    showingDiscover = false
     hideCatchup()
     releaseLivePreview()
-    binding.discoverContent.visibility = View.GONE
     binding.contentRow.visibility = View.GONE
     binding.homeContent.visibility = View.VISIBLE
     // Search on Home is only useful with something to search; with no enabled provider
@@ -1523,10 +1516,8 @@ internal fun MainActivity.selectDownloads() {
     activeSettingsOverlay?.dismiss()
     activeSearchOverlay?.dismiss()
     showingDownloads = true
-    showingDiscover = false
     hideCatchup()
     releaseLivePreview()
-    binding.discoverContent.visibility = View.GONE
     binding.contentRow.visibility = View.VISIBLE
     binding.homeContent.visibility = View.GONE
     binding.homeSearchBar.visibility = View.GONE
@@ -1600,11 +1591,10 @@ internal fun MainActivity.closeSideMenu() {
 }
 
 /** The side-menu row for the section currently on screen - mirrors the top tab bar:
- *  Home / Discover / Downloads own their panes; Live / Series / Films are the three
+ *  Home / Downloads own their panes; Live / Series / Films are the three
  *  categorized tabs (activeTab). */
 internal fun MainActivity.activeSideMenuRow(): View = when {
     showingHome -> binding.navHome
-    showingDiscover -> binding.navDiscover
     showingDownloads -> binding.navDownloads
     else -> listOf(binding.navLive, binding.navSeries, binding.navFilms)[activeTab.coerceIn(0, 2)]
 }
@@ -1617,7 +1607,7 @@ internal fun MainActivity.updateSideMenuSelection(): View {
     val active = activeSideMenuRow()
     for (row in listOf(
         binding.navHome, binding.navLive, binding.navSeries,
-        binding.navFilms, binding.navDiscover, binding.navDownloads
+        binding.navFilms, binding.navDownloads
     )) {
         row.isSelected = row === active
     }
@@ -1627,7 +1617,7 @@ internal fun MainActivity.updateSideMenuSelection(): View {
 internal fun MainActivity.clearSideMenuSelection() {
     for (row in listOf(
         binding.navHome, binding.navLive, binding.navSeries,
-        binding.navFilms, binding.navDiscover, binding.navDownloads
+        binding.navFilms, binding.navDownloads
     )) {
         row.isSelected = false
     }

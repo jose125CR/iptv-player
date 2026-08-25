@@ -73,7 +73,6 @@
     </plurals>
     <string name="series_tab">Seriály</string>
     <string name="films_tab">Filmy</string>
-    <string name="discover_tab">Objevovat</string>
     <string name="downloads_tab">Stažené</string>
     <string name="no_provider_configured">Není nakonfigurován žádný poskytovatel</string>
     <string name="press_settings_to_add_playlist">Stiskněte Nastavení a přidejte URL playlistu</string>
@@ -230,7 +229,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - vyhledávání v Objevovat (TMDB) -->
-    <string name="discover_search_hint">Hledat filmy a seriály…</string>
 
 
 

@@ -73,7 +73,6 @@
     </plurals>
     <string name="series_tab">Сериалы</string>
     <string name="films_tab">Фильмы</string>
-    <string name="discover_tab">Обзор</string>
     <string name="downloads_tab">Загрузки</string>
     <string name="no_provider_configured">Провайдер не настроен</string>
     <string name="press_settings_to_add_playlist">Нажмите «Настройки», чтобы добавить URL плейлиста</string>
@@ -231,7 +230,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml — поиск «Обзор» (TMDB) -->
-    <string name="discover_search_hint">Поиск фильмов и сериалов…</string>
 
 
 

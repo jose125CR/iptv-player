@@ -55,7 +55,7 @@ internal fun MainActivity.catchupCategories(): List<Pair<String, List<Channel>>>
 /** Catch Up hangs off the Live TV tab as a dropdown, so all this has to keep current is
  *  the caret that advertises it - shown only when some enabled provider actually reports
  *  archive channels, since a dropdown with one dead entry reads as a broken tab. Called
- *  after every pane switch (selectTab/selectHome/selectDiscover/selectDownloads/
+ *  after every pane switch (selectTab/selectHome/selectDownloads/
  *  selectCatchup), since none of those otherwise touch it. */
 internal fun MainActivity.updateCatchupTabVisibility() {
     val hasArchive = catchupChannels().isNotEmpty()
@@ -108,10 +108,8 @@ internal fun MainActivity.selectCatchup() {
     activeSearchOverlay?.dismiss()
     showingCatchup = true
     showingHome = false
-    showingDiscover = false
     showingDownloads = false
     releaseLivePreview()
-    binding.discoverContent.visibility = View.GONE
     binding.homeContent.visibility = View.GONE
     binding.homeSearchBar.visibility = View.GONE
     binding.downloadsContent.visibility = View.GONE

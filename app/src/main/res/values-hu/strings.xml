@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Sorozatok</string>
     <string name="films_tab">Filmek</string>
-    <string name="discover_tab">Felfedezés</string>
     <string name="downloads_tab">Letöltések</string>
     <string name="no_provider_configured">Nincs szolgáltató beállítva</string>
     <string name="press_settings_to_add_playlist">Nyomja meg a Beállításokat egy lejátszási lista URL hozzáadásához</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - Felfedezés (TMDB) keresés -->
-    <string name="discover_search_hint">Filmek és sorozatok keresése…</string>
 
 
 

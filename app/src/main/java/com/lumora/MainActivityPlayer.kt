@@ -106,7 +106,6 @@ internal fun MainActivity.setupPlayerControls() {
     binding.navLive.setOnClickListener { onSideMenuSectionRowClicked(0) }
     binding.navSeries.setOnClickListener { onSideMenuSectionRowClicked(1) }
     binding.navFilms.setOnClickListener { onSideMenuSectionRowClicked(2) }
-    binding.navDiscover.setOnClickListener { closeSideMenu(); hidePlayer(); showingHome = false; selectDiscover() }
     binding.navDownloads.setOnClickListener { closeSideMenu(); hidePlayer(); showingHome = false; selectDownloads() }
     // Settings lives behind the browse screen's gear button, which the player covers -
     // this is the only way into it without backing out of playback by hand.

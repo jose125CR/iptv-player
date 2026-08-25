@@ -3,14 +3,7 @@
     <!-- Plugins pane & stream search (MainActivityPlugins) -->
     <string name="plug_no_trailer_found">No trailer found.</string>
 
-    <!-- Discover (TMDB browse) statuses (MainActivityDiscover) -->
     <string name="plug_discover_unavailable">Discover is unavailable (no TMDB key configured).</string>
-    <string name="plug_couldnt_load_titles">Couldn\'t load titles. Check your connection.</string>
-    <string name="plug_loading_trending">Loading trending…</string>
-    <string name="plug_searching_query">Searching \"%1$s\"…</string>
-    <string name="plug_no_results_for">No results for \"%1$s\".</string>
-    <string name="plug_loading_series">Loading series…</string>
-    <string name="plug_loading_movies">Loading movies…</string>
 
     <!-- Provider loading statuses (MainActivityProviders) -->
     <string name="plug_connecting_to">Connecting to %1$s...</string>

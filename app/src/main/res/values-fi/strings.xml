@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Sarjat</string>
     <string name="films_tab">Elokuvat</string>
-    <string name="discover_tab">Tutki</string>
     <string name="downloads_tab">Lataukset</string>
     <string name="no_provider_configured">Palveluntarjoajaa ei ole määritetty</string>
     <string name="press_settings_to_add_playlist">Paina Asetukset lisätäksesi soittolistan URL-osoitteen</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - Tutki (TMDB) -haku -->
-    <string name="discover_search_hint">Hae elokuvia &amp; sarjoja…</string>
 
 
 

@@ -70,7 +70,6 @@
     </plurals>
     <string name="series_tab">시리즈</string>
     <string name="films_tab">영화</string>
-    <string name="discover_tab">발견</string>
     <string name="downloads_tab">다운로드</string>
     <string name="no_provider_configured">구성된 제공업체 없음</string>
     <string name="press_settings_to_add_playlist">재생목록 URL을 추가하려면 설정을 누르세요</string>
@@ -227,7 +226,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - 발견(TMDB) 검색 -->
-    <string name="discover_search_hint">영화 &amp; 시리즈 검색…</string>
 
 
 

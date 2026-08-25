@@ -83,7 +83,7 @@ internal fun MainActivity.setBrowseTabsVisible(visible: Boolean) {
     val vis = if (visible) View.VISIBLE else View.GONE
     for (tab in listOf(
         binding.tabHome, binding.tabLive, binding.tabSeries,
-        binding.tabFilms, binding.tabDiscover, binding.tabDownloads, binding.btnSearch,
+        binding.tabFilms, binding.tabDownloads, binding.btnSearch,
     )) {
         tab.visibility = vis
     }
@@ -191,18 +191,18 @@ internal fun MainActivity.applySimpleModeUi() {
     // (with no providers the empty state owns the screen and selectTab would fight it).
     val chromeUp = hasProviderEnabled()
     if (simple) {
-        // Series/Films/Discover/Downloads/Search go; Live TV and Home stay. Catch Up
+        // Series/Films/Downloads/Search go; Live TV and Home stay. Catch Up
         // stays reachable through its own chip, gated below same as normal mode.
         setBrowseTabsVisible(false)
         binding.tabLive.visibility = if (chromeUp) View.VISIBLE else View.GONE
         binding.tabHome.visibility = if (chromeUp) View.VISIBLE else View.GONE
         if (chromeUp) updateCatchupTabVisibility()
-        // Series/Films/Discover/Downloads are unreachable now - land back on Live instead
+        // Series/Films/Downloads are unreachable now - land back on Live instead
         // of leaving a hidden pane on screen. Home is a legitimate destination, left alone.
-        if (chromeUp && !showingHome && (showingDiscover || showingDownloads || activeTab == 1 || activeTab == 2)) {
+        if (chromeUp && !showingHome && (showingDownloads || activeTab == 1 || activeTab == 2)) {
             if (!showingCatchup) selectTab(0)
         }
-        // Live <-> Home <-> Settings: the tabs between them (Series/Films/Discover/Search/
+        // Live <-> Home <-> Settings: the tabs between them (Series/Films/Search/
         // Downloads) are all GONE, and an unrouted nextFocusId pointing at a GONE view eats
         // the D-pad press rather than skipping it.
         binding.tabLive.nextFocusLeftId = R.id.tabLive
@@ -216,41 +216,19 @@ internal fun MainActivity.applySimpleModeUi() {
             // above put both back, so re-apply their own rules.
             if (isTv) binding.tabDownloads.visibility = View.GONE
             updateCatchupTabVisibility()
-            updateDiscoverTabVisibility()
             updateProviderOnlyTabsVisibility()
         }
-        // Back to the full-row chain: Live -> Series -> Films -> Home -> Discover.
+        // Back to the full-row chain: Live -> Series -> Films -> Home.
         binding.tabLive.nextFocusLeftId = R.id.tabDownloads
         binding.tabLive.nextFocusRightId = R.id.tabSeries
     }
     updateChromeFocusChain()
 }
 
-/** Discover (TMDB browse) is only useful once there's nothing else to browse: with an
- *  IPTV or Jellyfin provider enabled and no plugin, its own catalog covers Movies/Series
- *  and Discover would just be a second, disconnected way in - but a plugin (stream_search
- *  or scraper_sites) is Discover's own way of finding something to play, so it stays even
- *  once a provider exists (the startup chooser's "Both" pairs an IPTV/Jellyfin provider
- *  with public streaming plugins on purpose - a provider must not switch the plugins'
- *  entry point off). Also re-points its neighbors' D-pad targets, which have to skip the
- *  tab while it is GONE - a nextFocus onto a GONE view resolves to nothing and the press
- *  is silently eaten. */
-internal fun MainActivity.updateDiscoverTabVisibility() {
-    val available = !hasProviderEnabled()
-    binding.tabDiscover.visibility = if (available) View.VISIBLE else View.GONE
-    binding.btnSearch.nextFocusLeftId = if (available) R.id.tabDiscover else R.id.tabFilms
-    // The tab vanishing under the user (a provider enabled while they are in Discover)
-    // must not leave the pane on screen with no way back to it.
-    if (!available && showingDiscover) selectTab(0)
-}
-
 /** Home/Live are provider catalog views with nothing to show once there's no IPTV/Jellyfin
  *  provider - Live has no channels and Home's shelves are built from the same catalog.
- *  Series/Films are different: with a plugin enabled they still have something to browse,
- *  Discover's own TMDB catalog (see showDiscoverBackedCatalogTab), so they only disappear
- *  alongside Home/Live when there is truly nothing at all. Runs after
- *  updateDiscoverTabVisibility(), whose focus-chain fix it overrides where it would
- *  otherwise point at a tab this function just hid. */
+ *  Series/Films go with them: without Discover or the plugins there is nothing else to
+ *  browse, so with no provider enabled the empty state owns the screen. */
 internal fun MainActivity.updateProviderOnlyTabsVisibility() {
     val providerAvailable = hasProviderEnabled()
     val catalogVis = if (providerAvailable) View.VISIBLE else View.GONE
@@ -264,11 +242,11 @@ internal fun MainActivity.updateProviderOnlyTabsVisibility() {
         binding.tabSeries.nextFocusLeftId = R.id.tabLive
         binding.tabFilms.nextFocusRightId = R.id.tabHome
     } else {
-        binding.tabDiscover.nextFocusLeftId = R.id.tabDiscover
         // The tabs vanishing under the user (every provider disabled while on one of
-        // them) must not leave the pane on screen with no way back to it.
-        val strandedOnHiddenTab = !showingDiscover && !showingDownloads && !showingCatchup
-        if (showingHome || strandedOnHiddenTab) selectDiscover()
+        // them) must not leave the pane on screen with no way out. Downloads (phone)
+        // is a legitimate destination, left alone; anything else has nothing left to
+        // browse, so the empty state owns the screen.
+        if (!showingDownloads) showEmptyState()
     }
 }
 

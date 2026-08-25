@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Series</string>
     <string name="films_tab">Films</string>
-    <string name="discover_tab">Ontdekken</string>
     <string name="downloads_tab">Downloads</string>
     <string name="no_provider_configured">Geen provider geconfigureerd</string>
     <string name="press_settings_to_add_playlist">Druk op Instellingen om een afspeellijst-URL toe te voegen</string>
@@ -232,7 +231,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - zoeken in Ontdekken (TMDB) -->
-    <string name="discover_search_hint">Zoek films &amp; series…</string>
 
 
 

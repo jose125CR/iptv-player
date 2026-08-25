@@ -70,7 +70,6 @@
     </plurals>
     <string name="series_tab">シリーズ</string>
     <string name="films_tab">映画</string>
-    <string name="discover_tab">発見</string>
     <string name="downloads_tab">ダウンロード</string>
     <string name="no_provider_configured">プロバイダーが設定されていません</string>
     <string name="press_settings_to_add_playlist">設定を押してプレイリスト URL を追加</string>
@@ -228,7 +227,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - 発見（TMDB）検索 -->
-    <string name="discover_search_hint">映画とシリーズを検索…</string>
 
 
 

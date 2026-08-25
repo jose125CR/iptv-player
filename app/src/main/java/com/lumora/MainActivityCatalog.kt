@@ -79,11 +79,11 @@ internal suspend fun MainActivity.classifyAndShow(preserveUi: Boolean = false) {
         updateTopChromeVisibility()
         if (preserveUi) {
             // Surgical refresh of the current tab: the fresh data above already landed in
-            // every adapter, but instead of the selectTab/selectHome/selectDiscover dispatch
+            // every adapter, but instead of the selectTab/selectHome dispatch
             // (which resets scroll, position and focus) only the pane actually on screen is
             // re-fed in place. The hasContent branch set contentRow visible for the
-            // categorized layout, so the panes that own the slot outright (Home, Discover)
-            // put it back before their own refresh.
+            // categorized layout, so the pane that owns the slot outright (Home)
+            // puts it back before its own refresh.
             if (showingHome) {
                 binding.contentRow.visibility = View.GONE
                 // Home's own panes, not just the shelf data: whatever hid them is the
@@ -94,16 +94,12 @@ internal suspend fun MainActivity.classifyAndShow(preserveUi: Boolean = false) {
                 binding.homeContent.visibility = View.VISIBLE
                 binding.homeSearchBar.visibility = if (hasProviderEnabled()) View.VISIBLE else View.GONE
                 homeShelfAdapter.submitList(buildHomeShelves())
-            } else if (showingDiscover) {
-                // Discover owns the slot and has no catalog chrome to refresh - the
-                // refreshed catalog is picked up when the user switches back.
-                binding.contentRow.visibility = View.GONE
             } else if (!showingDownloads) {
                 scope.launch {
                     // Guard mirrors selectTab's: the category build is seconds' work on a
                     // large catalog, and the user can leave this tab while it runs - never
                     // land the sidebar over a pane that moved in.
-                    if (showingHome || showingDiscover || showingDownloads) {
+                    if (showingHome || showingDownloads) {
                         setStatus("", visible = false)
                         return@launch
                     }
@@ -152,7 +148,7 @@ internal suspend fun MainActivity.classifyAndShow(preserveUi: Boolean = false) {
             // against the new map.
             lastFocusedLiveChannel = liveChannels.firstOrNull { it.id == lastFocusedLiveChannel?.id }
         } else {
-            if (showingHome) selectHome() else if (showingDiscover) selectDiscover() else selectTab(activeTab)
+            if (showingHome) selectHome() else selectTab(activeTab)
         }
     } else {
         showEmptyState()
@@ -188,7 +184,6 @@ internal fun MainActivity.classifyAndShowLiveFirst() {
             updateTopChromeVisibility()
             when {
                 showingHome -> selectHome()
-                showingDiscover -> selectDiscover()
                 activeTab == 0 -> selectTab(activeTab)
                 // Guard: user already moved to another tab - live side only, no selectTab.
                 else -> Unit

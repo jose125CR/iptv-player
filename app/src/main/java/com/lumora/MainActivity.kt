@@ -459,11 +459,10 @@ class MainActivity : AppCompatActivity() {
     // load routes on this flag (see the tail of classifyAndShow).
     internal var showingHome = false
     internal var showingDownloads = false
-    internal var showingDiscover = false
     /** Catch Up is a pane of its own rather than a fourth catalogue tab: it browses the
      *  same live channels through a different axis (time), and every tab-indexed path
      *  (activeTab 0/1/2, its prefs, its category rail) would otherwise need a fourth case
-     *  that means nothing. Mirrors showingHome/showingDiscover/showingDownloads. */
+     *  that means nothing. Mirrors showingHome/showingDownloads. */
     internal var showingCatchup = false
     internal var catchupStage = CatchupStage.CHANNELS
     internal var catchupChannel: Channel? = null
@@ -798,20 +797,6 @@ class MainActivity : AppCompatActivity() {
         onItemLongClick = { item -> toggleFavoriteVodItem(item) }
     ) { item -> playItem(item) }
     internal val tmdbClient = com.lumora.data.remote.tmdb.TmdbClient()
-    /** Discover tile id -> short badge naming the sources that already carry the title.
-     *  Filled by loadDiscover() off the main thread; empty means "not in your library". */
-    internal var discoverLibrarySources: Map<String, String> = emptyMap()
-    internal val discoverGridAdapter = com.lumora.adapter.PosterGridAdapter(
-        badgeFor = { item -> discoverLibrarySources[item.id]?.let { it to R.color.primary } }
-    ) { item -> onDiscoverItemClick(item) }
-    internal var discoverSearchJob: Job? = null
-    /** Badge pass for the Discover grid - cancelled when a new search replaces the tiles. */
-    internal var discoverBadgeJob: Job? = null
-    /** Which of Discover's filter chips is active - null is the default "Trending" chip
-     *  (also what a submitted search runs under). Movies/Series switch the grid from
-     *  trending/week's thin mixed list to the same paginated Popular ranking the
-     *  no-provider Series/Films tabs use (see MainActivityDiscover.loadDiscoverByType). */
-    internal var discoverTypeFilter: com.lumora.model.MediaType? = null
     internal var providerLoadJob: Job? = null
     internal val categoryAdapter = CategoryAdapter(
         onCategoryClick = { category -> onCategorySelected(category) },
@@ -873,11 +858,6 @@ class MainActivity : AppCompatActivity() {
         // cascade, and the override here also covers fresh installs and restored backups).
         applyUiLanguageOverride(uiLanguageCode())
         tmdbClient.languageTag = tmdbLanguageTagFor(uiLanguageCode())
-        // With no IPTV/Jellyfin provider, Live/Series/Films have nothing to show - land on
-        // Discover (TMDB browse) instead of the usual Live tab. classifyAndShow's first-paint
-        // dispatch reads this flag, so setting it here is enough; it's untouched afterwards,
-        // so navigating away and back behaves exactly as it always has.
-        if (!hasProviderEnabled()) showingDiscover = true
         playerManager = PlayerManager(this)
         playerDiagnostics = PlayerDiagnostics(playerManager.getExoPlayer())
         playerManager.getExoPlayer().addAnalyticsListener(playerDiagnostics.getAnalyticsListener())
@@ -929,13 +909,10 @@ class MainActivity : AppCompatActivity() {
             ContextCompat.registerReceiver(this, downloadCompleteReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED)
         } else {
             // Downloads stays View.GONE on TV. In the merged chrome row the XML chain already
-            // exits the tabs into the button cluster (Discover -> Search pill), so only the
+            // exits the tabs into the button cluster (Films -> Search pill), so only the
             // left end needs fixing: Live's LEFT would target the GONE Downloads tab and eat
             // the press - stop it there instead of wrapping into a hidden tab.
             binding.tabLive.nextFocusLeftId = View.NO_ID
-            // Same in the side menu: Discover's DOWN would land on the GONE Downloads row
-            // and stop the walk short of Settings.
-            binding.navDiscover.nextFocusDownId = R.id.navSettings
         }
 
         onBackPressedDispatcher.addCallback(this, backCallback)
@@ -1194,7 +1171,6 @@ class MainActivity : AppCompatActivity() {
     /** The list filling the content area of whatever section is on screen. */
     private fun activeContentList(): RecyclerView = when {
         showingCatchup -> binding.catchupCategoryList
-        showingDiscover -> binding.discoverGrid
         showingDownloads -> binding.downloadsContent
         activeTab == 1 -> binding.seriesContent
         activeTab == 2 -> binding.filmsContent
@@ -1216,7 +1192,7 @@ class MainActivity : AppCompatActivity() {
         // programme list is showing, Back walks the crumb back up rather than leaving.
         if (showingCatchup && catchupStage != CatchupStage.CATEGORIES) return false
         if (!isListAtTop(activeContentList())) return false
-        if (showingCatchup || showingDiscover || showingDownloads) return true
+        if (showingCatchup || showingDownloads) return true
         // Collapsed rail (or a tab whose sidebar is otherwise hidden) has nothing to scroll
         // to - the content list alone decides "top" then. Without this guard, a GONE
         // RecyclerView keeps stale child geometry and can report a mid-list scroll position.
@@ -1240,7 +1216,7 @@ class MainActivity : AppCompatActivity() {
         content.scrollToPosition(0)
         // No rail to focus when the sidebar is hidden (collapsed / Downloads-style) - focus
         // the content instead, same as the non-categorized panes below.
-        if (showingCatchup || showingDiscover || showingDownloads || binding.categorySidebar.visibility != View.VISIBLE) {
+        if (showingCatchup || showingDownloads || binding.categorySidebar.visibility != View.VISIBLE) {
             focusFirstItemWhenReady(content)
             return
         }
@@ -1252,7 +1228,7 @@ class MainActivity : AppCompatActivity() {
      *  rather than its shelves. Live TV is excluded on purpose - it always has a row
      *  selected (see selectTab), so there's no shelf level there to go back up to. */
     private fun isTabDrilledIn(): Boolean =
-        !showingHome && !showingDiscover && !showingDownloads && !showingCatchup && activeTab != 0 &&
+        !showingHome && !showingDownloads && !showingCatchup && activeTab != 0 &&
             (selectedShelfItems != null || selectedRowId != null ||
                 selectedCategoryIds != null || selectedBrandChannelIds != null)
 

@@ -70,7 +70,6 @@
     </plurals>
     <string name="series_tab">Serial</string>
     <string name="films_tab">Film</string>
-    <string name="discover_tab">Jelajah</string>
     <string name="downloads_tab">Unduhan</string>
     <string name="no_provider_configured">Tidak ada penyedia yang dikonfigurasi</string>
     <string name="press_settings_to_add_playlist">Tekan Pengaturan untuk menambahkan URL daftar putar</string>
@@ -227,7 +226,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - pencarian Jelajah (TMDB) -->
-    <string name="discover_search_hint">Cari film &amp; serial…</string>
 
 
 

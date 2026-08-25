@@ -1545,11 +1545,10 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // openIptvForm()/closeIptvForm() above for how that gets set per add/edit.
     // Hide whatever the active tab is showing so it doesn't render doubled-up behind
     // Settings in the same weight=1 slot - restored on dismiss below. That includes
-    // Home's search bar and the Discover pane, which sit outside homeContent/contentRow
-    // and so used to stay on screen above Settings as if they belonged to it.
+    // Home's search bar, which sits outside homeContent/contentRow and so used to stay
+    // on screen above Settings as if it belonged to it.
     binding.homeContent.visibility = View.GONE
     binding.homeSearchBar.visibility = View.GONE
-    binding.discoverContent.visibility = View.GONE
     binding.contentRow.visibility = View.GONE
     binding.emptyState.visibility = View.GONE
     dialog.setOnDismissListener {
@@ -1590,7 +1589,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         } else {
             binding.emptyState.visibility = View.GONE
             updateTopChromeVisibility()
-            if (showingHome) selectHome() else if (showingDiscover) selectDiscover() else if (showingDownloads) selectDownloads() else selectTab(activeTab)
+            if (showingHome) selectHome() else if (showingDownloads) selectDownloads() else selectTab(activeTab)
         }
     }
     activeSettingsOverlay = dialog

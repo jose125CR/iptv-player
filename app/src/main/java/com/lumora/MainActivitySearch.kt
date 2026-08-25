@@ -201,7 +201,6 @@ internal fun MainActivity.showSearchDialog(initialQuery: String? = null) {
     if (tabBarWasVisible) binding.tabBar.visibility = View.GONE
     binding.homeContent.visibility = View.GONE
     binding.homeSearchBar.visibility = View.GONE
-    binding.discoverContent.visibility = View.GONE
     binding.contentRow.visibility = View.GONE
     binding.emptyState.visibility = View.GONE
 
@@ -254,7 +253,7 @@ internal fun MainActivity.showSearchDialog(initialQuery: String? = null) {
         activeSearchOverlay = null
         if (tabBarWasVisible) binding.tabBar.visibility = View.VISIBLE
         applyStatus()
-        if (showingHome) selectHome() else if (showingDiscover) selectDiscover() else if (showingDownloads) selectDownloads() else selectTab(activeTab)
+        if (showingHome) selectHome() else if (showingDownloads) selectDownloads() else selectTab(activeTab)
     }
     activeSearchOverlay = overlay
     applyStatus()

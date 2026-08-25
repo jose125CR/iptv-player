@@ -77,7 +77,7 @@
                     android:translationX="@dimen/toolbar_brand_translate_x"
                     android:translationY="@dimen/toolbar_brand_translate_y" />
 
-                <!-- Tab scroller: Home | Live | Series | Films | Discover (+ Downloads on
+                <!-- Tab scroller: Home | Live | Series | Films (+ Downloads on
                      phones) with D-pad focus (pill segmented control). weight=1 makes it
                      flexible: it takes everything the brand doesn't, so on TV the tabs
                      render full-size right next to the icon and on a ~360dp portrait phone
@@ -327,7 +327,7 @@
                 android:paddingTop="@dimen/tab_padding_vertical"
                 android:paddingBottom="@dimen/tab_padding_vertical"
                 android:nextFocusLeft="@id/tabFilms"
-                android:nextFocusRight="@id/tabDiscover"
+                android:nextFocusRight="@id/btnSearch"
                 android:stateListAnimator="@animator/focus_scale_flat"
                 android:layerType="none">
 
@@ -366,59 +366,6 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/tabDiscover"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="3dp"
-                android:background="@drawable/bg_tab_item"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/tab_padding_horizontal"
-                android:paddingTop="@dimen/tab_padding_vertical"
-                android:paddingBottom="@dimen/tab_padding_vertical"
-                android:nextFocusLeft="@id/tabHome"
-                android:nextFocusRight="@id/btnSearch"
-                android:stateListAnimator="@animator/focus_scale_flat"
-                android:layerType="none">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:id="@+id/tabDiscoverIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_discover"
-                        android:tint="@color/text_secondary" />
-
-                    <TextView
-                        android:id="@+id/tabDiscoverLabel"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:ellipsize="end"
-                        android:fontFamily="@font/inter_medium"
-                        android:maxLines="1"
-                        android:text="@string/discover_tab"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/tab_text" />
-                </LinearLayout>
-
-                <View
-                    android:id="@+id/tabDiscoverIndicator"
-                    android:layout_width="24dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/tab_indicator"
-                    android:visibility="gone" />
-            </LinearLayout>
-
             <!-- Search: an exact copy of the tab items, id btnSearch. It isn't a tab - it
                  opens the search overlay - so it never renders the selected state or the
                  indicator (updateTabStyles never touches it and the indicator stays GONE),
@@ -439,7 +386,7 @@
                 android:paddingHorizontal="@dimen/tab_padding_horizontal"
                 android:paddingTop="@dimen/tab_padding_vertical"
                 android:paddingBottom="@dimen/tab_padding_vertical"
-                android:nextFocusLeft="@id/tabDiscover"
+                android:nextFocusLeft="@id/tabHome"
                 android:nextFocusRight="@id/btnSettings"
                 android:stateListAnimator="@animator/focus_scale_flat"
                 android:layerType="none">
@@ -794,185 +741,6 @@
             android:clipToPadding="false"
             android:paddingHorizontal="16dp"
             android:visibility="gone" />
-
-        <!-- Discover: TMDB browse/search for titles outside the provider catalog, played via a
-             stream-search plugin. Its own pane (like Downloads) - no category sidebar. -->
-        <LinearLayout
-            android:id="@+id/discoverContent"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp"
-            android:visibility="gone">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <!-- The field is a fake input: it's the discover search overlay's trigger,
-                     not a real text box. Focusable + clickable so D-pad and touch both
-                     reach it, with focus_scale_flat like the Home search bar; clicking it
-                     opens dialog_discover_search.xml (the platform IME is never involved,
-                     so the inner EditText stays non-focusable). The trailing chevron reads
-                     as "opens something". -->
-                <LinearLayout
-                    android:id="@+id/discoverSearchField"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_input"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusUp="@id/tabDiscover"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="14dp"
-                    android:paddingVertical="12dp"
-                    android:stateListAnimator="@animator/focus_scale_flat">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/ic_search"
-                        android:tint="@color/text_secondary" />
-
-                    <EditText
-                        android:id="@+id/discoverSearchInput"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@null"
-                        android:focusable="false"
-                        android:focusableInTouchMode="false"
-                        android:hint="@string/discover_search_hint"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:textColor="@color/text_primary"
-                        android:textColorHint="@color/text_secondary" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginStart="8dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_chevron_right"
-                        android:tint="@color/text_tertiary" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/discoverSearchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusUp="@id/tabDiscover"
-                    android:nextFocusDown="@id/discoverFilterSeries"
-                    android:fontFamily="@font/inter_medium"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="12dp"
-                    android:stateListAnimator="@animator/focus_scale"
-                    android:text="@string/search"
-                    android:textColor="@color/text_primary" />
-            </LinearLayout>
-
-            <!-- Type filter: Trending (default, also what a submitted search runs under),
-                 Movies, Series - same season-chip lookalike as the search overlay's own
-                 result-type row. Movies/Series switch the grid to TMDB's paginated Popular
-                 ranking for that type instead of trending/week's thin mixed list (see
-                 loadDiscoverByType). Selection is applied in code (isSelected), not XML. -->
-            <LinearLayout
-                android:id="@+id/discoverFilterRow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/discoverFilterAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/search_chip_gap"
-                    android:background="@drawable/bg_season_chip"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusUp="@id/discoverSearchField"
-                    android:nextFocusLeft="@id/discoverFilterAll"
-                    android:nextFocusRight="@id/discoverFilterMovies"
-                    android:fontFamily="@font/inter_medium"
-                    android:paddingHorizontal="18dp"
-                    android:paddingVertical="10dp"
-                    android:stateListAnimator="@animator/focus_scale"
-                    android:text="@string/search_filter_all"
-                    android:textColor="@color/season_chip_text"
-                    android:textSize="@dimen/text_body_s" />
-
-                <TextView
-                    android:id="@+id/discoverFilterMovies"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/search_chip_gap"
-                    android:background="@drawable/bg_season_chip"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusUp="@id/discoverSearchField"
-                    android:nextFocusLeft="@id/discoverFilterAll"
-                    android:nextFocusRight="@id/discoverFilterSeries"
-                    android:fontFamily="@font/inter_medium"
-                    android:paddingHorizontal="18dp"
-                    android:paddingVertical="10dp"
-                    android:stateListAnimator="@animator/focus_scale"
-                    android:text="@string/search_filter_films"
-                    android:textColor="@color/season_chip_text"
-                    android:textSize="@dimen/text_body_s" />
-
-                <TextView
-                    android:id="@+id/discoverFilterSeries"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_season_chip"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:nextFocusUp="@id/discoverSearchButton"
-                    android:nextFocusLeft="@id/discoverFilterMovies"
-                    android:nextFocusRight="@id/discoverFilterSeries"
-                    android:fontFamily="@font/inter_medium"
-                    android:paddingHorizontal="18dp"
-                    android:paddingVertical="10dp"
-                    android:stateListAnimator="@animator/focus_scale"
-                    android:text="@string/search_filter_series"
-                    android:textColor="@color/season_chip_text"
-                    android:textSize="@dimen/text_body_s" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/discoverStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:textColor="@color/text_secondary"
-                android:visibility="gone" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/discoverGrid"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:clipChildren="false"
-                android:clipToPadding="false" />
-        </LinearLayout>
 
         <!-- Settings: content added/removed at runtime by showProviderSettings(). Lives here
              (rather than covering the whole screen) so the toolbar + tab bar above stay
@@ -2382,11 +2150,11 @@
             </LinearLayout>
 
             <!-- App navigation: the same destinations as the top chrome (Home / Live TV /
-                 Series / Movies / Discover, + Downloads on phones, + Settings). The
+                 Series / Movies, + Downloads on phones, + Settings). The
                  currently-open section's row carries the selected state (brand_muted fill +
                  primary border via bg_select_item), set in Kotlin when the menu opens and
                  cleared on close. Focus chain: close -> Home -> Live -> Series -> Movies ->
-                 Discover -> Downloads -> Settings -> close (wraps). Every row uses the
+                 Downloads -> Settings -> close (wraps). Every row uses the
                  side_menu_* metrics so the whole list fits without scrolling. -->
             <LinearLayout
                 android:id="@+id/navHome"
@@ -2519,7 +2287,7 @@
                 android:focusable="true"
                 android:gravity="center_vertical"
                 android:nextFocusUp="@id/navSeries"
-                android:nextFocusDown="@id/navDiscover"
+                android:nextFocusDown="@id/navDownloads"
                 android:orientation="horizontal"
                 android:paddingHorizontal="10dp"
                 android:stateListAnimator="@animator/focus_scale">
@@ -2552,42 +2320,7 @@
                     android:tint="@color/text_tertiary" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/navDiscover"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/side_menu_row_height"
-                android:layout_marginTop="2dp"
-                android:background="@drawable/bg_select_item"
-                android:clickable="true"
-                android:focusable="true"
-                android:gravity="center_vertical"
-                android:nextFocusUp="@id/navFilms"
-                android:nextFocusDown="@id/navDownloads"
-                android:orientation="horizontal"
-                android:paddingHorizontal="10dp"
-                android:stateListAnimator="@animator/focus_scale">
-
-                <ImageView
-                    android:layout_width="@dimen/side_menu_icon"
-                    android:layout_height="@dimen/side_menu_icon"
-                    android:src="@drawable/ic_discover"
-                    android:tint="@color/text_secondary" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/inter_medium"
-                    android:maxLines="1"
-                    android:text="@string/discover_tab"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/side_menu_text" />
-            </LinearLayout>
-
-            <!-- Downloads is a mobile-only section (mirrors tabDownloads; stays GONE on TV).
-                 While gone, Discover's nextFocusDown is retargeted to Settings in Kotlin. -->
+            <!-- Downloads is a mobile-only section (mirrors tabDownloads; stays GONE on TV). -->
             <LinearLayout
                 android:id="@+id/navDownloads"
                 android:layout_width="match_parent"
@@ -2597,7 +2330,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center_vertical"
-                android:nextFocusUp="@id/navDiscover"
+                android:nextFocusUp="@id/navFilms"
                 android:nextFocusDown="@id/navSettings"
                 android:orientation="horizontal"
                 android:paddingHorizontal="10dp"

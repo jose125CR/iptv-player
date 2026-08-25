@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">سیریز</string>
     <string name="films_tab">فلمیں</string>
-    <string name="discover_tab">دریافت کریں</string>
     <string name="downloads_tab">ڈاؤن لوڈز</string>
     <string name="no_provider_configured">کوئی فراہم کنندہ ترتیب شدہ نہیں</string>
     <string name="press_settings_to_add_playlist">پلے لسٹ کا URL شامل کرنے کے لیے ترتیبات دبائیں</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - دریافت کریں (TMDB) تلاش -->
-    <string name="discover_search_hint">فلمیں اور سیریز تلاش کریں…</string>
 
 
 

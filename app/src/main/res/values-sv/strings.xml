@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Serier</string>
     <string name="films_tab">Filmer</string>
-    <string name="discover_tab">Upptäck</string>
     <string name="downloads_tab">Nedladdningar</string>
     <string name="no_provider_configured">Ingen leverantör konfigurerad</string>
     <string name="press_settings_to_add_playlist">Tryck på Inställningar för att lägga till en spellista-URL</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - sökning i Upptäck (TMDB) -->
-    <string name="discover_search_hint">Sök filmer &amp; serier…</string>
 
 
 

@@ -192,7 +192,6 @@ internal fun MainActivity.selectTab(index: Int) {
     activeSearchOverlay?.dismiss()
     activeTab = index
     showingDownloads = false
-    showingDiscover = false
     hideCatchup()
     // Owned here rather than by each caller. Every tab-bar handler already paired
     // "showingHome = false" with this call, so any *other* entry point (the launch
@@ -200,7 +199,6 @@ internal fun MainActivity.selectTab(index: Int) {
     // that routes on it then bounced back to Home, tearing the guide and its live
     // preview down again right after they were built.
     showingHome = false
-    binding.discoverContent.visibility = View.GONE
     binding.contentRow.visibility = View.VISIBLE
     binding.homeContent.visibility = View.GONE
     binding.homeSearchBar.visibility = View.GONE
@@ -223,7 +221,7 @@ internal fun MainActivity.selectTab(index: Int) {
     }
 
     updateTabStyles(listOf(binding.tabLive, binding.tabSeries, binding.tabFilms)[index])
-    // Every flag the Catch Up chip's gate reads (activeTab/showingHome/showingDiscover/
+    // Every flag the Catch Up chip's gate reads (activeTab/showingHome/
     // showingDownloads/showingCatchup) is already final at this point in the function.
     updateCatchupTabVisibility()
 
@@ -260,9 +258,8 @@ internal fun MainActivity.selectTab(index: Int) {
         // buildCategoriesForActiveTab() is seconds' work on a large catalog, and the user
         // is free to leave the tab while it runs. Everything below puts the category
         // sidebar and the content row back on screen unconditionally, so landing late
-        // dropped this tab's sidebar on top of whatever the user had moved to - most
-        // visibly Discover, which has no sidebar of its own to overwrite it.
-        if (activeTab != index || showingHome || showingDiscover || showingDownloads) {
+        // dropped this tab's sidebar on top of whatever the user had moved to.
+        if (activeTab != index || showingHome || showingDownloads) {
             setStatus("", visible = false)
             return@launch
         }
@@ -1256,7 +1253,6 @@ internal fun MainActivity.showEpgSourceListDialog() {
 internal fun MainActivity.restoreTabFocus() {
     val target = when {
         showingHome -> binding.tabHome
-        showingDiscover -> binding.tabDiscover
         showingDownloads -> binding.tabDownloads
         activeTab == 0 -> binding.tabLive
         activeTab == 1 -> binding.tabSeries

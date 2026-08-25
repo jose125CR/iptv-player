@@ -71,7 +71,6 @@
     </plurals>
     <string name="series_tab">Serier</string>
     <string name="films_tab">Filmer</string>
-    <string name="discover_tab">Oppdag</string>
     <string name="downloads_tab">Nedlastinger</string>
     <string name="no_provider_configured">Ingen leverandør konfigurert</string>
     <string name="press_settings_to_add_playlist">Trykk på Innstillinger for å legge til en spilleliste-URL</string>
@@ -229,7 +228,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - Oppdag-søk (TMDB) -->
-    <string name="discover_search_hint">Søk i filmer &amp; serier…</string>
 
 
 

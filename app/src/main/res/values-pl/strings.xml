@@ -73,7 +73,6 @@
     </plurals>
     <string name="series_tab">Seriale</string>
     <string name="films_tab">Filmy</string>
-    <string name="discover_tab">Odkrywaj</string>
     <string name="downloads_tab">Pobrane</string>
     <string name="no_provider_configured">Nie skonfigurowano dostawcy</string>
     <string name="press_settings_to_add_playlist">Naciśnij Ustawienia, aby dodać URL listy odtwarzania</string>
@@ -231,7 +230,6 @@
     <string name="keyboard_abc">ABC</string>
 
     <!-- activity_main.xml / dialog_discover_search.xml - wyszukiwanie w Odkrywaj (TMDB) -->
-    <string name="discover_search_hint">Szukaj filmów &amp; seriali…</string>
 
 
 

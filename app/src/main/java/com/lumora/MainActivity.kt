@@ -951,10 +951,6 @@ class MainActivity : AppCompatActivity() {
         // because that check ran against the still-empty pre-discovery cache.
         val pluginDiscoveryOnStart = scope.launch {
             pluginScriptManager.discoverScripts()
-            // Opt-in only (Settings > Plugins). Ahead of loadScraperSiteManifest() so a
-            // scraper_sites update fetched here is the one that gets applied below, not one
-            // launch later.
-            autoUpdateInstalledPluginsIfEnabled()
             // Needs discovery to have run - it looks for an installed scraper_sites script, and
             // supersedes the bundled site list BaseApplication already applied.
             loadScraperSiteManifest()
@@ -1004,7 +1000,8 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermissionIfNeeded()
         showCarDisclaimerIfProjected()
         pruneStoredEpg()
-        checkAndPromptUpdate()
+        // Update check disabled for this fork - it must never offer or download a newer Lumora.
+        // checkAndPromptUpdate()
         // Reconcile with Trakt once a launch. Rate-limited inside to six hours, and a no-op
         // unless the account is connected with watched sync on, so this is a prefs read in
         // every other case. Writes only to WatchedStore, which is keyed by title rather than

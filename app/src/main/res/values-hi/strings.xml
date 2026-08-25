@@ -83,7 +83,6 @@
     <string name="overview">अवलोकन</string>
     <string name="cast">कलाकार</string>
     <string name="play">चलाएँ</string>
-    <string name="find_stream">खोजें और चलाएँ</string>
     <string name="trailer">ट्रेलर</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">स्लीप</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - डिस्कवर (TMDB) खोज -->
     <string name="discover_search_hint">फ़िल्में और सीरीज़ खोजें…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - टीवी पर चैलेंज WebView के ऊपर दिखाया
-         जाता है, जहाँ कोई पॉइंटर नहीं होता और चेकबॉक्स को वर्चुअल कर्सर से दबाना पड़ता है। -->
-    <string name="bypass_tv_instructions">कर्सर को चेकबॉक्स पर ले जाएँ\nऔर अनलॉक करने के लिए OK दबाएँ</string>
 
-    <!-- MainActivityScraper - स्रोत पिकर। TMDB बताता है कि क्या मौजूद है; साइटों से केवल पूछा
-         जाता है कि इसे कौन स्ट्रीम कर सकता है, और होस्ट इतनी बार बंद होते हैं कि एक का
-         विफल होना आम बात है। -->
-    <string name="scraper_dialog_title">स्ट्रीम खोजें \u2014 %1$s</string>
-    <string name="scraper_finding_sources">स्रोत खोजे जा रहे हैं\u2026</string>
-    <string name="scraper_searching_sites">साइटें खोजी जा रही हैं\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s खोला जा रहा है\u2026</string>
-    <string name="scraper_source_failed">%1$s काम नहीं किया \u2014 कोई दूसरा स्रोत आज़माएँ</string>
-    <string name="scraper_no_sources">इस शीर्षक के लिए कोई स्रोत नहीं मिला</string>
-    <string name="scraper_pick_manually">एक स्रोत चुनें</string>
-    <string name="scraper_attempt_detail">%1$s के माध्यम से \u00b7 प्रयास %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d स्रोत</item>
-        <item quantity="other">%1$d स्रोत</item>
-    </plurals>
 
     <!-- MainActivitySettings - स्ट्रीमिंग-साइट स्रोत। -->
-    <string name="scraper_settings_title">स्ट्रीमिंग साइटें</string>
-    <string name="scraper_settings_subtitle">सार्वजनिक स्ट्रीमिंग साइटें जिनसे स्ट्रीम खोजें खींच सकता है। ब्राउज़िंग डिस्कवर पर ही रहती है \u2014 इनसे केवल पूछा जाता है कि आपके द्वारा पहले चुने गए शीर्षक को कौन स्ट्रीम कर सकता है।</string>
-    <string name="scraper_enabled_title">स्ट्रीमिंग साइटें उपयोग करें</string>
-    <string name="scraper_enabled_subtitle">डिस्कवर शीर्षकों पर स्ट्रीम खोजें की पेशकश करता है</string>
-    <string name="scraper_sites_header">खोजने के लिए साइटें</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">आपके ISP के बजाय एन्क्रिप्टेड रिज़ॉल्वर के माध्यम से साइट डोमेन हल करता है</string>
-    <string name="scraper_doh_system">सिस्टम DNS</string>
-    <string name="scraper_extra_buffering_title">अतिरिक्त बफ़रिंग</string>
-    <string name="scraper_extra_buffering_subtitle">उन होस्ट के लिए जो बर्स्ट में डिलीवर करते हैं, 5 मिनट तक आगे बफ़र करता है। अधिक मेमोरी उपयोग करता है; पुनः आरंभ के बाद लागू होता है</string>
     <string name="category_newest">नवीनतम</string>
     <string name="category_continue_watching">देखना जारी रखें</string>
     <string name="category_other">अन्य</string>
     <string name="category_all">सभी</string>
-    <string name="category_anime">एनीमे</string>
     <string name="category_collapse_categories">श्रेणियाँ संक्षिप्त करें</string>
     <string name="category_favourites">पसंदीदा</string>
     <string name="category_group_into_categories">श्रेणियों में समूहित करें</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">हाल ही में चलाए गए</string>
     <string name="category_favourite_channels">पसंदीदा चैनल</string>
     <string name="ui_not_driving_continue">मैं गाड़ी नहीं चला रहा - जारी रखें</string>
-    <string name="list_find_and_play">खोजें और चलाएँ</string>
     <string name="list_season_number">सीज़न %1$d</string>
 </resources>

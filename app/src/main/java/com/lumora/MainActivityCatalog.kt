@@ -51,11 +51,7 @@ internal suspend fun MainActivity.classifyAndShow(preserveUi: Boolean = false) {
     seriesVersions = derived.seriesVersions
     seriesShelves = derived.seriesShelves
 
-    // Discover (TMDB browsing) and the Find Stream flow need no provider-sourced channels
-    // at all - gating the whole content area on allChannels alone trapped a setup whose
-    // only source was the built-in site scrapers (which contribute no catalog entries)
-    // behind the "No provider configured" empty state for no reason.
-    val hasContent = allChannels.isNotEmpty() || hasProviderlessSource()
+    val hasContent = allChannels.isNotEmpty()
 
     // Adapters are safe to (re)bind under an open overlay - only the visible screen
     // must not be, since it lives behind the overlay. Bind first, then swap visibility
@@ -172,7 +168,7 @@ internal fun MainActivity.classifyAndShowLiveFirst() {
         withContext(Dispatchers.Default) { deriveLiveHalf(allChannels) }
         // Mirror of classifyAndShow()'s first-paint bind block, live side only - the
         // other tabs' adapters and shelves belong to their own render path.
-        val hasContent = allChannels.isNotEmpty() || hasProviderlessSource()
+        val hasContent = allChannels.isNotEmpty()
         if (hasContent) {
             // Mirror of classifyAndShow()'s adapter-bind block (all five, not just the
             // live side): on warm/stale-cache starts this is the only bind that runs, so
@@ -414,11 +410,10 @@ internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivi
     val filmHidden = getHiddenCategories(2)
     val seriesPinned = getPinnedCategories(1)
     val seriesHidden = getHiddenCategories(1)
-    val animeSectionsSnapshot = animeSections
     val filmCategoryRows = buildCategoryRows(
         list = films, versionsById = versions, tab = 2,
         pinned = filmPinned, hiddenIds = filmHidden, expanded = emptySet(),
-        animeSections = emptyList(), useClassicLayout = false, favoriteChannelIds = emptySet(),
+        useClassicLayout = false, favoriteChannelIds = emptySet(),
         categorize = categorizeVod
     )
     // The old buildShelves() count-sorting is gone - shelf order IS the sidebar's row
@@ -458,7 +453,7 @@ internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivi
     val seriesCategoryRows = buildCategoryRows(
         list = series, versionsById = seriesVers, tab = 1,
         pinned = seriesPinned, hiddenIds = seriesHidden, expanded = emptySet(),
-        animeSections = animeSectionsSnapshot, useClassicLayout = false, favoriteChannelIds = emptySet(),
+        useClassicLayout = false, favoriteChannelIds = emptySet(),
         categorize = categorizeVod
     )
     // Newest stays pinned at the top of the poster, above the sidebar-derived category

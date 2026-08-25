@@ -388,10 +388,7 @@ class TmdbClient {
             .map { it.trim() }
             .filter { it.isNotBlank() }
 
-        /** First usable key, or "" if none are configured. For callers outside this client that
-         *  take a bare key string rather than going through [request] - notably the ported
-         *  scraper stack's own TMDB layer (com.lumora.scraper.utils.TMDb3), which has no
-         *  rotation of its own and would otherwise need a second key baked in. */
+        /** First usable key, or "" if none are configured. */
         fun firstKeyOrEmpty(): String = KEYS.firstOrNull() ?: ""
 
         /** Trailing "S05" / "Season 2" / "S01E03" / "3rd Season" / "Complete Series" - how

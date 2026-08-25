@@ -85,7 +85,6 @@
     <string name="overview">Обзор</string>
     <string name="cast">В ролях</string>
     <string name="play">Воспроизвести</string>
-    <string name="find_stream">Найти и воспроизвести</string>
     <string name="trailer">Трейлер</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Сон</string>
@@ -234,44 +233,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml — поиск «Обзор» (TMDB) -->
     <string name="discover_search_hint">Поиск фильмов и сериалов…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver — показывается над WebView с проверкой на TV,
-         где нет указателя и по флажку нужно попадать виртуальным курсором. -->
-    <string name="bypass_tv_instructions">НАВЕДИТЕ КУРСОР НА ФЛАЖОК\nИ НАЖМИТЕ OK, ЧТОБЫ РАЗБЛОКИРОВАТЬ</string>
 
-    <!-- MainActivityScraper — выбор источника. TMDB говорит, что существует; сайты спрашивают
-         только о том, кто может стримить, а хосты умирают достаточно часто, чтобы сбой был
-         обычным делом. -->
-    <string name="scraper_dialog_title">Найти поток \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Поиск источников\u2026</string>
-    <string name="scraper_searching_sites">Поиск на сайтах\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Открытие %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s не сработал \u2014 попробуйте другой источник</string>
-    <string name="scraper_no_sources">Для этого названия источники не найдены</string>
-    <string name="scraper_pick_manually">Выбрать источник</string>
-    <string name="scraper_attempt_detail">через %1$s \u00b7 попытка %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d источник</item>
-        <item quantity="few">%1$d источника</item>
-        <item quantity="many">%1$d источников</item>
-        <item quantity="other">%1$d источников</item>
-    </plurals>
 
     <!-- MainActivitySettings — источники на сайтах стриминга. -->
-    <string name="scraper_settings_title">Стриминговые сайты</string>
-    <string name="scraper_settings_subtitle">Публичные стриминговые сайты, с которых «Найти поток» может брать источники. Просмотр остаётся в «Обзор» \u2014 у них спрашивают только, кто может стримить уже выбранное вами название.</string>
-    <string name="scraper_enabled_title">Использовать стриминговые сайты</string>
-    <string name="scraper_enabled_subtitle">Предлагать «Найти поток» для названий из «Обзор»</string>
-    <string name="scraper_sites_header">Сайты для поиска</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Разрешает домены сайтов через зашифрованный резолвер вместо DNS вашего провайдера</string>
-    <string name="scraper_doh_system">Системный DNS</string>
-    <string name="scraper_extra_buffering_title">Дополнительная буферизация</string>
-    <string name="scraper_extra_buffering_subtitle">Буферизует до 5 минут вперёд для сайтов, отдающих контент порциями. Использует больше памяти; применяется после перезапуска</string>
     <string name="category_newest">Новинки</string>
     <string name="category_continue_watching">Продолжить просмотр</string>
     <string name="category_other">Другое</string>
     <string name="category_all">Все</string>
-    <string name="category_anime">Аниме</string>
     <string name="category_collapse_categories">Свернуть категории</string>
     <string name="category_favourites">Избранное</string>
     <string name="category_group_into_categories">Группировать по категориям</string>
@@ -280,6 +248,5 @@
     <string name="category_recently_played">Недавно воспроизведённые</string>
     <string name="category_favourite_channels">Избранные каналы</string>
     <string name="ui_not_driving_continue">Я не за рулём - продолжить</string>
-    <string name="list_find_and_play">Найти и воспроизвести</string>
     <string name="list_season_number">Сезон %1$d</string>
 </resources>

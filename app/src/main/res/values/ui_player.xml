@@ -48,7 +48,6 @@
     <string name="play_channel_version_title">Channel Version</string>
     <string name="play_no_other_versions_title">No other versions of this title</string>
     <string name="play_version_title">Version</string>
-    <string name="play_find_and_play">Find &amp; Play…</string>
     <string name="play_no_other_versions_series">No other versions of this series</string>
     <string name="play_series_version_title">Series Version</string>
     <string name="play_loading_version">Loading %1$s…</string>

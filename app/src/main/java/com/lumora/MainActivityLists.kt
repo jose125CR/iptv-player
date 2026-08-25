@@ -24,7 +24,6 @@ import com.lumora.cache.FavoritesStore
 import com.lumora.cache.PlaybackPositionStore
 import com.lumora.model.Channel
 import com.lumora.model.MediaType
-import com.lumora.anime.AnimeCatalogClient
 import com.lumora.parser.XtreamClient
 import com.lumora.util.cleanVodTitle
 import com.lumora.util.extractLeadingTag
@@ -41,41 +40,12 @@ import java.util.Locale
 //
 // Extracted from MainActivity.kt; see that file's header.
 /** Kicks off a system DownloadManager job for a movie or single episode; no-op if already queued/downloaded. */
-/**
- * The show behind an episode row, for anything that has to search by title.
- *
- * A TMDB episode placeholder carries the series name in `categoryName` (see `tmdbSeasonsFor`)
- * and its own episode title in `name`; its id is the series id with an `:sNeN` suffix. Both are
- * rewound here so a search runs as "Reacher" + S01E01 rather than for the episode's title, which
- * no site indexes. Anything that is not recognisably an episode is returned untouched.
- */
-private fun MainActivity.seriesItemForEpisode(channel: Channel): Channel {
-    val seriesName = channel.categoryName?.takeIf { it.isNotBlank() } ?: return channel
-    if (channel.episodeNum == null || !channel.id.contains(":s")) return channel
-    return channel.copy(name = seriesName, id = channel.id.substringBefore(":s"))
-}
-
 internal fun MainActivity.downloadItem(channel: Channel) {
     if (channel.id.isBlank()) return
-    // Used to return silently when there was no URL, which is every Discover and scraper item - so the button did nothing at all and said nothing about why.
-    // No URL yet (a Discover title, or a TMDB episode placeholder): find a source first and
-    // download whatever that resolves to, rather than telling the user to go and play it.
+    // A title with no URL behind it has nothing to download and no way left to find a
+    // source (the site scrapers are gone) - say so rather than doing nothing at all.
     if (channel.url.isBlank()) {
-        if (!canFindStream(channel)) {
-            Toast.makeText(this, getString(R.string.list_no_source_available), Toast.LENGTH_LONG).show()
-            return
-        }
-        val season = channel.id.substringAfterLast(":s", "").substringBefore("e").toIntOrNull()
-        // Search under the *series* name, never the episode row's own.
-        //
-        // A TMDB episode placeholder is named for its episode ("E01 · Welcome to Margrave"), and
-        // handing that to the scrapers searched every site for that phrase - which matches
-        // nothing anywhere, so the download silently found no source at all. The season/episode
-        // pair below is what identifies the episode; the title has to be the show. This is what
-        // the play path already does by passing the series item rather than the episode.
-        showFindStreamDialog(seriesItemForEpisode(channel), season, channel.episodeNum) { resolved ->
-            downloadItem(resolved)
-        }
+        Toast.makeText(this, getString(R.string.list_no_source_available), Toast.LENGTH_LONG).show()
         return
     }
     // HLS cannot be fetched as one file - it needs its segments pulled into a cache the player
@@ -257,14 +227,6 @@ internal fun MainActivity.selectTab(index: Int) {
     // showingDownloads/showingCatchup) is already final at this point in the function.
     updateCatchupTabVisibility()
 
-    // Series/Films with no IPTV/Jellyfin provider: the catalog these tabs normally browse
-    // is empty, but the built-in site scrapers can still resolve a stream for a TMDB title,
-    // so fall back to Discover's own catalog instead of an empty category sidebar.
-    if (index != 0 && !hasProviderEnabled() && hasProviderlessSource()) {
-        showDiscoverBackedCatalogTab(index)
-        return
-    }
-
     selectedCategoryIds = null
     selectedBrandChannelIds = null
     selectedRowId = null
@@ -415,26 +377,6 @@ internal suspend fun MainActivity.loadSeriesContent(
     )
     val stalkerConfig = stalkerConfigFor(item)
     return when {
-        // Anime catalog: build a flat episode list from the total episode count
-        // carried on the Channel. Each episode click triggers a Find Stream search
-        // for that specific episode (see showContentDetail's onEpisodeClick).
-        item.id.startsWith(AnimeCatalogClient.ID_PREFIX) -> {
-            val epCount = item.episodeNum?.coerceAtLeast(1) ?: 12
-            val episodes = (1..epCount).map { epNum ->
-                Channel(
-                    id = "${item.id}:ep$epNum",
-                    name = "Episode $epNum",
-                    url = "",
-                    posterUrl = item.posterUrl,
-                    backdropUrl = item.backdropUrl,
-                    mediaType = MediaType.SERIES,
-                    episodeNum = epNum,
-                    categoryName = item.categoryName,
-                    group = item.group
-                )
-            }
-            itemDetails to listOf("Season 1" to episodes)
-        }
         item.isJellyfin -> {
             val cfg = jellyfinConfigFor(item)
             val jellyfin = jellyfinClientOrConnect(cfg)
@@ -625,7 +567,6 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
     ).joinToString("  ·  ")
     itemsList.layoutManager = LinearLayoutManager(this)
     loadDetailImage(item.posterUrl ?: item.logoUrl, backdrop)
-    wireFindStreamButton(item)
     wireTrailerButton(item)
 
     // Series version chips. A film's versions are alternate streams of one thing, so its
@@ -734,19 +675,15 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
             // User-initiated play - see playItem for why the suppression flag is cleared here.
             skipResumePrompt = false
             hideContentDetail()
-            // Anime items have no direct stream URL - search the sources for this episode.
-            if (item.id.startsWith(AnimeCatalogClient.ID_PREFIX)) {
-                showFindStreamDialog(item, season = null, episode = chosen.episodeNum)
-            } else if (chosen.url.isBlank()) {
-                // A TMDB-built episode placeholder (see tmdbSeasonsFor) - there is no stream
-                // until one is found for this specific episode.
-                val season = chosen.id.substringAfterLast(":s").substringBefore("e").toIntOrNull()
-                showFindStreamDialog(item, season, chosen.episodeNum)
+            if (chosen.url.isBlank()) {
+                // Nothing behind this episode and no way left to find a source (the site
+                // scrapers are gone) - say so rather than opening a player that can't play.
+                Toast.makeText(this, getString(R.string.list_no_source_available), Toast.LENGTH_LONG).show()
             } else {
                 currentIndex = if (isSeries) -1 else filmList.indexOf(item)
                 // Auto-advance walks this queue on its own, with no user press to check - an
-                // episode that hasn't aired would end the run in a Find Stream dialog for
-                // something that doesn't exist, so it never enters the queue.
+                // episode that hasn't aired would end the run in the player on nothing, so it
+                // never enters the queue.
                 val queue = if (isSeries) itemAdapter.currentList.filterNot { isUnreleasedEpisode(it) } else emptyList()
                 showPlayerFor(chosen)
                 detailReturnItem = item
@@ -994,16 +931,7 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
         // "Play"/"Resume" alone didn't say *which* episode - with several seasons in
         // play this was a guessing game before committing to it.
         val tag = if (seasonNum != null && target.episodeNum != null) "S${seasonNum}E${target.episodeNum}" else null
-        // A TMDB-built placeholder or an anime episode (see tmdbSeasonsFor / the anime
-        // catalog) has no stream behind it. Saying "Play" there promises something the
-        // button cannot do - it opened the player on a blank URL and failed - so it says
-        // what it will actually do: search the sources first, then play what comes back.
-        val mustFind = target.url.isBlank()
-        val verb = when {
-            mustFind -> R.string.list_find_and_play
-            selection.isResume -> R.string.list_resume
-            else -> R.string.play
-        }
+        val verb = if (selection.isResume) R.string.list_resume else R.string.play
         playButtonLabel.text = listOfNotNull(getString(verb), tag).joinToString(" ")
         playButton.visibility = View.VISIBLE
         // Landing focus on Play once the screen opens; refocus=false on watch-toggle
@@ -1013,10 +941,10 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
             // User-initiated play - see playItem for why the suppression flag is cleared here.
             skipResumePrompt = false
             hideContentDetail()
-            if (mustFind) {
-                // Searched under the series name with the season/episode pair, never the
-                // episode's own title.
-                showFindStreamDialog(item, seasonNum?.toIntOrNull(), target.episodeNum)
+            if (target.url.isBlank()) {
+                // Nothing behind this episode and no way left to find a source (the site
+                // scrapers are gone) - say so rather than opening a player that can't play.
+                Toast.makeText(this, getString(R.string.list_no_source_available), Toast.LENGTH_LONG).show()
             } else {
                 currentIndex = -1
                 // Full cross-season chain behind the chosen episode, so it keeps
@@ -1166,30 +1094,18 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
                 val filmProgress = filmKey.takeIf { it.isNotBlank() }
                     ?.let { PlaybackPositionStore.get(this@showContentDetail, it) }
                     ?.takeIf { !it.isNearComplete && it.positionMs > 0 }
-                // A title opened from Discover that no library carries has no URL to play. The
-                // button is still the one thing anyone presses on this screen, so it stays and
-                // says what it will do - search the sources, then play what resolves - instead
-                // of hiding and leaving the screen with no obvious action. Hidden only when
-                // there is no way to find anything either (no scraper sites enabled).
                 val playable = item.url.isNotBlank() || versions.any { it.url.isNotBlank() }
-                val mustFind = !playable && canFindStream(item)
                 playButtonLabel.text = when {
-                    mustFind -> getString(R.string.list_find_and_play)
                     filmProgress != null -> getString(R.string.list_resume)
                     else -> getString(R.string.play)
                 }
-                playButton.visibility = if (playable || mustFind) View.VISIBLE else View.GONE
-                if (playable || mustFind) playButton.requestFocus()
-                else binding.detailFindStreamButton.takeIf { it.visibility == View.VISIBLE }
-                    ?.requestFocus()
+                playButton.visibility = if (playable) View.VISIBLE else View.GONE
+                if (playable) playButton.requestFocus()
+                else binding.detailBackButton.requestFocus()
                 playButton.setOnClickListener {
                     // User-initiated play - see playItem for why the suppression flag is cleared here.
                     skipResumePrompt = false
                     hideContentDetail()
-                    if (mustFind) {
-                        showFindStreamDialog(item)
-                        return@setOnClickListener
-                    }
                     currentIndex = filmList.indexOf(item)
                     showPlayerFor(versions.first())
                     detailReturnItem = item

@@ -82,7 +82,6 @@
     <string name="overview">개요</string>
     <string name="cast">출연진</string>
     <string name="play">재생</string>
-    <string name="find_stream">찾기 &amp; 재생</string>
     <string name="trailer">예고편</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">절전</string>
@@ -230,41 +229,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - 발견(TMDB) 검색 -->
     <string name="discover_search_hint">영화 &amp; 시리즈 검색…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - TV에서 챌린지 WebView 위에 표시됩니다.
-         포인터가 없어 가상 커서로 체크박스를 선택해야 합니다. -->
-    <string name="bypass_tv_instructions">체크박스 위로 커서를 이동한 다음\nOK를 눌러 잠금 해제</string>
 
-    <!-- MainActivityScraper - 소스 선택기입니다. TMDB는 어떤 콘텐츠가 존재하는지 알려주고,
-         사이트에는 누가 스트리밍할 수 있는지만 질문합니다. 호스트는 자주 죽기 때문에 하나가
-         실패하는 것은 일상입니다. -->
-    <string name="scraper_dialog_title">스트림 찾기 \u2014 %1$s</string>
-    <string name="scraper_finding_sources">소스 찾는 중\u2026</string>
-    <string name="scraper_searching_sites">사이트 검색 중\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s 여는 중\u2026</string>
-    <string name="scraper_source_failed">%1$s가 작동하지 않았습니다 \u2014 다른 소스를 시도하세요</string>
-    <string name="scraper_no_sources">이 제목에 대한 소스를 찾을 수 없습니다</string>
-    <string name="scraper_pick_manually">소스 선택</string>
-    <string name="scraper_attempt_detail">%1$s 경유 \u00b7 시도 %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="other">소스 %1$d개</item>
-    </plurals>
 
     <!-- MainActivitySettings - 스트리밍 사이트 소스. -->
-    <string name="scraper_settings_title">스트리밍 사이트</string>
-    <string name="scraper_settings_subtitle">스트림 찾기가 참조할 수 있는 공개 스트리밍 사이트. 탐색은 발견 탭에 유지됩니다 \u2014 사이트는 이미 선택한 제목을 누가 스트리밍할 수 있는지에 대해서만 질문을 받습니다.</string>
-    <string name="scraper_enabled_title">스트리밍 사이트 사용</string>
-    <string name="scraper_enabled_subtitle">발견 탭의 제목에 스트림 찾기를 제공</string>
-    <string name="scraper_sites_header">검색할 사이트</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">ISP의 리졸버 대신 암호화된 리졸버를 통해 사이트 도메인을 확인합니다</string>
-    <string name="scraper_doh_system">시스템 DNS</string>
-    <string name="scraper_extra_buffering_title">추가 버퍼링</string>
-    <string name="scraper_extra_buffering_subtitle">버스트로 전송하는 호스트를 위해 최대 5분까지 미리 버퍼링합니다. 더 많은 메모리를 사용하며, 재시작 후 적용됩니다</string>
     <string name="category_newest">최신</string>
     <string name="category_continue_watching">계속 시청</string>
     <string name="category_other">기타</string>
     <string name="category_all">전체</string>
-    <string name="category_anime">애니메이션</string>
     <string name="category_collapse_categories">카테고리 접기</string>
     <string name="category_favourites">즐겨찾기</string>
     <string name="category_group_into_categories">카테고리로 그룹화</string>
@@ -273,6 +244,5 @@
     <string name="category_recently_played">최근 재생</string>
     <string name="category_favourite_channels">즐겨찾는 채널</string>
     <string name="ui_not_driving_continue">운전 중이 아닙니다 - 계속</string>
-    <string name="list_find_and_play">찾아서 재생</string>
     <string name="list_season_number">시즌 %1$d</string>
 </resources>

@@ -16,7 +16,6 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.datasource.ResolvingDataSource
-import androidx.media3.exoplayer.DefaultLoadControl
 import com.lumora.player.playback.AvOffsetManager
 import com.lumora.player.playback.AvOffsetRenderersFactory
 import java.util.concurrent.CopyOnWriteArrayList
@@ -42,27 +41,7 @@ class PlayerManager(
             true /* handleAudioFocus */
         )
         .apply {
-            // Only deviates from Media3's defaults when the user has asked for it. The scraper
-            // providers stream from third-party embed hosts that deliver in bursts and stall
-            // between them, and Media3's default 50s ceiling is not enough headroom to ride that
-            // out - but a 5-minute buffer is a lot of RAM to hold on the budget TV sticks this
-            // app targets, so it is not the default.
-            //
-            // A LoadControl can only be set when the player is built, so this is read once at
-            // construction: toggling the setting takes effect on the next app start, which is
-            // what the settings row says.
-            if (isExtraBufferingEnabled(context)) {
-                setLoadControl(
-                    DefaultLoadControl.Builder()
-                        .setBufferDurationsMs(
-                            DefaultLoadControl.DEFAULT_MIN_BUFFER_MS,
-                            EXTRA_MAX_BUFFER_MS,
-                            DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_MS,
-                            DefaultLoadControl.DEFAULT_BUFFER_FOR_PLAYBACK_AFTER_REBUFFER_MS,
-                        )
-                        .build()
-                )
-            }
+            // Media3's defaults throughout.
         }
         .build()
         .also { it.setHandleAudioBecomingNoisy(true) }
@@ -663,20 +642,6 @@ class PlayerManager(
     }
 
     companion object {
-        /** Pref key for the extra-buffering toggle, shared with the scraper settings screen. */
-        const val PREF_EXTRA_BUFFERING = "player_extra_buffering"
-
-        /**
-         * 5 minutes, matching what the upstream scraper app used. Deliberately far above
-         * Media3's 50s default: this exists for hosts that deliver in bursts, and a ceiling
-         * that only covers one burst does not help.
-         */
-        private const val EXTRA_MAX_BUFFER_MS = 300_000
-
-        fun isExtraBufferingEnabled(context: Context): Boolean =
-            context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
-                .getBoolean(PREF_EXTRA_BUFFERING, false)
-
         /** Track labels that say the track is forced, in the forms sources actually write it
          *  ("Forced", "English [Forced]", "en-forced"). Word-bounded so "unforced" and
          *  "reinforced" don't match. */

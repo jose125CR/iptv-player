@@ -82,7 +82,6 @@
     <string name="overview">概要</string>
     <string name="cast">キャスト</string>
     <string name="play">再生</string>
-    <string name="find_stream">検索して再生</string>
     <string name="trailer">予告編</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">スリープ</string>
@@ -231,40 +230,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - 発見（TMDB）検索 -->
     <string name="discover_search_hint">映画とシリーズを検索…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - TV のチャレンジ WebView の上に表示されます。
-         ポインターがなく、チェックボックスは仮想カーソルで操作する必要があります。 -->
-    <string name="bypass_tv_instructions">カーソルをチェックボックスに移動し\nOK を押してロックを解除</string>
 
-    <!-- MainActivityScraper - ソースピッカー。TMDB は何が存在するかを示し、サイトには誰が
-         ストリーミングできるかのみ問い合わせます。ホストは頻繁に消滅するため、1つ失敗するのは日常的です。 -->
-    <string name="scraper_dialog_title">ストリームを検索 \u2014 %1$s</string>
-    <string name="scraper_finding_sources">ソースを検索中\u2026</string>
-    <string name="scraper_searching_sites">サイトを検索中\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s を開いています\u2026</string>
-    <string name="scraper_source_failed">%1$s は機能しませんでした \u2014 別のソースをお試しください</string>
-    <string name="scraper_no_sources">このタイトルのソースが見つかりません</string>
-    <string name="scraper_pick_manually">ソースを選択</string>
-    <string name="scraper_attempt_detail">%1$s 経由 \u00b7 試行 %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="other">%1$d 個のソース</item>
-    </plurals>
 
     <!-- MainActivitySettings - ストリーミングサイトのソース。 -->
-    <string name="scraper_settings_title">ストリーミングサイト</string>
-    <string name="scraper_settings_subtitle">「ストリームを検索」が取得できるパブリックストリーミングサイト。ブラウジングは「発見」に留まります \u2014 これらのサイトは、すでに選択したタイトルを誰がストリーミングできるかのみ問い合わせられます。</string>
-    <string name="scraper_enabled_title">ストリーミングサイトを使用</string>
-    <string name="scraper_enabled_subtitle">「発見」のタイトルに「ストリームを検索」を提供</string>
-    <string name="scraper_sites_header">検索するサイト</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">ISP の代わりに暗号化リゾルバーでサイトのドメインを解決します</string>
-    <string name="scraper_doh_system">システム DNS</string>
-    <string name="scraper_extra_buffering_title">追加バッファリング</string>
-    <string name="scraper_extra_buffering_subtitle">バースト配信するホスト向けに最大 5 分先までバッファリングします。メモリを多く使用します。再起動後に適用されます</string>
     <string name="category_newest">最新</string>
     <string name="category_continue_watching">視聴を続ける</string>
     <string name="category_other">その他</string>
     <string name="category_all">すべて</string>
-    <string name="category_anime">アニメ</string>
     <string name="category_collapse_categories">カテゴリを折りたたむ</string>
     <string name="category_favourites">お気に入り</string>
     <string name="category_group_into_categories">カテゴリにグループ化</string>
@@ -273,6 +245,5 @@
     <string name="category_recently_played">最近再生</string>
     <string name="category_favourite_channels">お気に入りチャンネル</string>
     <string name="ui_not_driving_continue">運転していません - 続行</string>
-    <string name="list_find_and_play">検索して再生</string>
     <string name="list_season_number">シーズン %1$d</string>
 </resources>

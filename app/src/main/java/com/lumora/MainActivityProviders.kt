@@ -12,7 +12,6 @@ import com.lumora.model.IptvProviderConfig
 import com.lumora.model.MediaServerConfig
 import com.lumora.data.IptvProviderStore
 import com.lumora.data.MediaServerStore
-import com.lumora.anime.AnimeCatalogClient
 import com.lumora.parser.M3uParser
 import com.lumora.parser.XtreamClient
 import com.lumora.util.normalizeServerUrl
@@ -62,13 +61,12 @@ internal fun MainActivity.hasProviderConfigured(): Boolean =
 internal fun MainActivity.hasProviderEnabled(): Boolean =
     IptvProviderStore.load(prefs).any { it.enabled } || mediaServers().any { it.enabled }
 
-/** Search and the tab bar are useful once there's either an enabled provider to browse, or
- *  an enabled stream_search plugin to find content through (Discover/anime tabs, Find
- *  Stream) - with neither, they point at nothing, so hide them and leave just the Settings
- *  button as the way in. The empty state carries its own Settings/Demo actions. Settings and
- *  refresh stay visible so the user can always get back to configuring one. */
+/** Search and the tab bar are useful once there's an enabled provider to browse - with none,
+ *  they point at nothing, so hide them and leave just the Settings button as the way in.
+ *  The empty state carries its own Settings/Demo actions. Settings and refresh stay visible
+ *  so the user can always get back to configuring one. */
 internal fun MainActivity.updateTopChromeVisibility() {
-    val enabled = hasProviderEnabled() || hasProviderlessSource()
+    val enabled = hasProviderEnabled()
     if (!enabled) binding.homeSearchBar.visibility = View.GONE
     // Every tab/search visibility rule now lives in applySimpleModeUi() - it recomputes the
     // same "is there anything to browse" flag, and it must have the last word anyway.
@@ -191,7 +189,7 @@ internal fun MainActivity.applySimpleModeUi() {
     // Chrome up = something to browse, so the tab bar would be showing in normal mode.
     // Simple mode hides it regardless; the flag still gates the forced tab switch below
     // (with no providers the empty state owns the screen and selectTab would fight it).
-    val chromeUp = hasProviderEnabled() || hasProviderlessSource()
+    val chromeUp = hasProviderEnabled()
     if (simple) {
         // Series/Films/Discover/Downloads/Search go; Live TV and Home stay. Catch Up
         // stays reachable through its own chip, gated below same as normal mode.
@@ -238,7 +236,7 @@ internal fun MainActivity.applySimpleModeUi() {
  *  tab while it is GONE - a nextFocus onto a GONE view resolves to nothing and the press
  *  is silently eaten. */
 internal fun MainActivity.updateDiscoverTabVisibility() {
-    val available = !hasProviderEnabled() || hasProviderlessSource()
+    val available = !hasProviderEnabled()
     binding.tabDiscover.visibility = if (available) View.VISIBLE else View.GONE
     binding.btnSearch.nextFocusLeftId = if (available) R.id.tabDiscover else R.id.tabFilms
     // The tab vanishing under the user (a provider enabled while they are in Discover)
@@ -255,11 +253,10 @@ internal fun MainActivity.updateDiscoverTabVisibility() {
  *  otherwise point at a tab this function just hid. */
 internal fun MainActivity.updateProviderOnlyTabsVisibility() {
     val providerAvailable = hasProviderEnabled()
-    val pluginAvailable = hasProviderlessSource()
     val catalogVis = if (providerAvailable) View.VISIBLE else View.GONE
     binding.tabHome.visibility = catalogVis
     binding.tabLive.visibility = catalogVis
-    val seriesFilmsVis = if (providerAvailable || pluginAvailable) View.VISIBLE else View.GONE
+    val seriesFilmsVis = catalogVis
     binding.tabSeries.visibility = seriesFilmsVis
     binding.tabFilms.visibility = seriesFilmsVis
     if (providerAvailable) {
@@ -267,18 +264,10 @@ internal fun MainActivity.updateProviderOnlyTabsVisibility() {
         binding.tabSeries.nextFocusLeftId = R.id.tabLive
         binding.tabFilms.nextFocusRightId = R.id.tabHome
     } else {
-        binding.tabDiscover.nextFocusLeftId = if (pluginAvailable) R.id.tabFilms else R.id.tabDiscover
-        if (pluginAvailable) {
-            // Home/Live/Catchup are gone, so the row is just Series -> Films -> Discover.
-            binding.tabSeries.nextFocusLeftId = R.id.tabSeries
-            binding.tabFilms.nextFocusRightId = R.id.tabDiscover
-        }
+        binding.tabDiscover.nextFocusLeftId = R.id.tabDiscover
         // The tabs vanishing under the user (every provider disabled while on one of
-        // them) must not leave the pane on screen with no way back to it. Series/Films
-        // stay reachable with a plugin enabled, so only Home/Live losing their tab (or
-        // every tab, with no plugin either) needs the bounce.
-        val strandedOnHiddenTab = !showingDiscover && !showingDownloads && !showingCatchup &&
-            (activeTab == 0 || !pluginAvailable)
+        // them) must not leave the pane on screen with no way back to it.
+        val strandedOnHiddenTab = !showingDiscover && !showingDownloads && !showingCatchup
         if (showingHome || strandedOnHiddenTab) selectDiscover()
     }
 }
@@ -383,19 +372,11 @@ internal suspend fun MainActivity.persistCatalog(channels: List<Channel>) = with
     ChannelCache.save(this@persistCatalog, channels + resurrect)
 }
 
-/** True when the anime catalog can be offered at all. Its titles have no stream of their
- *  own - they were resolved at play time by an installed `stream_search` plugin, and those
- *  are gone - so until the catalog's remaining plumbing is removed alongside the rest of
- *  the provider-less sourcing, it stays off entirely. */
-internal fun MainActivity.animeCatalogAvailable(): Boolean = false
-
-/** Same rule applied to the flat cache: anime rows written before this are dropped rather
- *  than left on screen (and building the Anime sidebar row) when the catalog is off. A
- *  fresh fetch already skips them; this is the cached cold-start path saying the same thing. */
-internal fun MainActivity.dropDisabledPluginContent(channels: List<Channel>): List<Channel> {
-    if (animeCatalogAvailable()) return channels
-    return channels.filterNot { it.id.startsWith(AnimeCatalogClient.ID_PREFIX) }
-}
+/** Caches written by older builds can still carry rows from the removed anime catalog
+ *  (ids prefixed "anime:" - metadata-only titles that had no stream of their own). Drop
+ *  them rather than leaving dead tiles on screen; a fresh fetch never produces them. */
+internal fun MainActivity.stripLegacyAnimeRows(channels: List<Channel>): List<Channel> =
+    channels.filterNot { it.id.startsWith("anime:") }
 
 /** True when the cached catalog is old enough to be worth re-fetching. A missing stamp
  *  counts as stale so a cache written by an older build refreshes once, then follows
@@ -412,13 +393,10 @@ internal fun MainActivity.isCatalogStale(): Boolean {
  *  settings change, where showing stale content would be actively wrong) and re-fetches
  *  from the network(s) directly. */
 internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = false) {
-    // A stream_search plugin (anime catalog, Discover/Find Stream) still has work to do here
-    // even with zero traditional providers configured - bailing out before reaching the
-    // anime-catalog fetch below meant a plugin-only setup never populated anything.
-    //
-    // With neither, classifyAndShow's own hasContent check lands on showEmptyState() - the
-    // first-run chooser - rather than auto-opening Settings unasked on a fresh install.
-    if (!hasProviderConfigured() && !hasProviderlessSource()) { scope.launch { classifyAndShow() }; return }
+    // With nothing configured, classifyAndShow's own hasContent check lands on
+    // showEmptyState() - the first-run chooser - rather than auto-opening Settings
+    // unasked on a fresh install.
+    if (!hasProviderConfigured()) { scope.launch { classifyAndShow() }; return }
     // Raised for the cached path too: reading and re-deriving a big catalog still takes
     // a few seconds, and with no status up the app just looks frozen.
     setStatus(getString(R.string.loading), visible = true)
@@ -462,7 +440,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 } else {
                     cached.filter { isTypeAllowed(it, typeGates, serverGates) }
                 }
-                cached = dropDisabledPluginContent(cached)
+                cached = stripLegacyAnimeRows(cached)
                 // Paint the cached catalog immediately (Live first, films/series in background),
                 // then only hit the network when the cache is stale - a non-stale cache returns
                 // here; a stale one falls through and refreshes silently under the content.
@@ -499,11 +477,6 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 visible = true
             )
         }
-        val animeDeferred = if (animeCatalogAvailable()) {
-            // fetchAnimeChannels does synchronous OkHttp calls, and this loader coroutine
-            // runs on Main - the Dispatchers.IO hop mirrors the sequential version below.
-            async { withContext(Dispatchers.IO) { fetchAnimeChannels() } }
-        } else null
         // Fetched concurrently, not one after another - they used to run sequentially, so
         // a single dead/slow provider (up to PROVIDER_FETCH_TIMEOUT_MS - a Stalker portal
         // alone walks up to 200 live pages plus 50 each of VOD and series, each with its own
@@ -575,10 +548,6 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 is FetchResult.Failure -> errors += result.message
             }
         }
-        val animeChannels = animeDeferred?.await()
-        if (!animeChannels.isNullOrEmpty()) {
-            combined += animeChannels
-        }
 
         // A refresh that produced nothing must not wipe the cached catalog off disk or off the
         // screen: keep the previously-cached allChannels, surface the errors, and don't stamp
@@ -588,16 +557,15 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
         // to reading the disk cache here.
         if (combined.isEmpty()) {
             val fallback = (cached ?: withContext(Dispatchers.IO) { ChannelCache.load(this@loadAllConfiguredProviders) })
-                ?.let { dropDisabledPluginContent(it) }
+                ?.let { stripLegacyAnimeRows(it) }
             if (!fallback.isNullOrEmpty()) {
                 allChannels = fallback
                 filmsSeriesDeriveJob?.cancel()
             }
             // classifyAndShow() has to run even when nothing above changed allChannels -
-            // its own hasContent check also asks hasProviderlessSource(), and skipping this
-            // call left a plugin-only setup (no IPTV/Jellyfin channels, empty/no disk cache)
-            // with nothing ever painted past the toolbar: uiPainted stays false and no later
-            // event re-triggers a render.
+            // skipping this call left a provider-less setup (no IPTV/Jellyfin channels,
+            // empty/no disk cache) with nothing ever painted past the toolbar: uiPainted
+            // stays false and no later event re-triggers a render.
             classifyAndShow(preserveUi = shouldPreserveUiOnLoad())
             setStatus("", visible = false)
             if (errors.isNotEmpty()) {
@@ -679,26 +647,6 @@ internal suspend fun MainActivity.fetchStalkerChannels(config: IptvProviderConfi
         throw e
     } catch (e: Exception) {
         FetchResult.Failure(e.message?.take(60) ?: "error")
-    }
-}
-
-/**
- * Fetches trending anime from the public anime database. Returns Channel objects
- * (mediaType=SERIES) that populate the Series section. Playback is handled by the
- * stream_search plugin — these channels have no direct URL, just metadata for browsing.
- */
-internal fun MainActivity.fetchAnimeChannels(): List<Channel> {
-    return try {
-        val client = AnimeCatalogClient(BaseApplication.instance.okHttpClient)
-        val catalog = client.fetchCatalog()
-        // Sections are only meaningful alongside the channels they point at - a stale set
-        // left over from a previous load would build sidebar rows whose ids aren't in the
-        // tab any more, so it's replaced (or cleared) on every fetch.
-        animeSections = catalog.sections
-        catalog.channels
-    } catch (e: Exception) {
-        animeSections = emptyList()
-        emptyList()
     }
 }
 

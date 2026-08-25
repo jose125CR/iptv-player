@@ -83,7 +83,6 @@
     <string name="overview">Oversikt</string>
     <string name="cast">Rolleliste</string>
     <string name="play">Spill</string>
-    <string name="find_stream">Finn &amp; spill</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Søvn</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - Oppdag-søk (TMDB) -->
     <string name="discover_search_hint">Søk i filmer &amp; serier…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - vises over utfordrings-WebViewet på TV,
-         der det ikke finnes peker og avkrysningsboksen må treffes med en virtuell markør. -->
-    <string name="bypass_tv_instructions">FLYTT MARKØREN OVER AVKRYSNINGSBOKSEN\nOG TRYKK OK FOR Å LÅSE OPP</string>
 
-    <!-- MainActivityScraper - kildevelgeren. TMDB forteller hva som finnes; nettstedene blir
-         bare spurt om hvem som kan strømme det, og verter dør ofte nok til at en som feiler
-         er vanlig. -->
-    <string name="scraper_dialog_title">Finn strøm \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Finner kilder\u2026</string>
-    <string name="scraper_searching_sites">Søker på nettsteder\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Åpner %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s fungerte ikke \u2014 prøv en annen kilde</string>
-    <string name="scraper_no_sources">Ingen kilder funnet for denne tittelen</string>
-    <string name="scraper_pick_manually">Velg en kilde</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 forsøk %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d kilde</item>
-        <item quantity="other">%1$d kilder</item>
-    </plurals>
 
     <!-- MainActivitySettings - strømmenettsted-kilder. -->
-    <string name="scraper_settings_title">Strømmenettsteder</string>
-    <string name="scraper_settings_subtitle">Offentlige strømmenettsteder som Finn strøm kan hente fra. Blaingen forblir på Oppdag \u2014 disse blir bare spurt om hvem som kan strømme en tittel du allerede har valgt.</string>
-    <string name="scraper_enabled_title">Bruk strømmenettsteder</string>
-    <string name="scraper_enabled_subtitle">Tilbyr Finn strøm på Oppdag-titler</string>
-    <string name="scraper_sites_header">Nettsteder å søke i</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Løser nettsteddomener gjennom en kryptert oppløser i stedet for din ISP\'s</string>
-    <string name="scraper_doh_system">System-DNS</string>
-    <string name="scraper_extra_buffering_title">Ekstra buffering</string>
-    <string name="scraper_extra_buffering_subtitle">Buffer opptil 5 minutter i forveien for verter som leverer i rykk. Bruker mer minne; gjelder etter en omstart</string>
     <string name="category_newest">Nyeste</string>
     <string name="category_continue_watching">Fortsett å se</string>
     <string name="category_other">Annet</string>
     <string name="category_all">Alle</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Kollaps kategorier</string>
     <string name="category_favourites">Favoritter</string>
     <string name="category_group_into_categories">Grupper i kategorier</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Nylig spilt</string>
     <string name="category_favourite_channels">Favorittkanaler</string>
     <string name="ui_not_driving_continue">Jeg kjører ikke - fortsett</string>
-    <string name="list_find_and_play">Finn og spill av</string>
     <string name="list_season_number">Sesong %1$d</string>
 </resources>

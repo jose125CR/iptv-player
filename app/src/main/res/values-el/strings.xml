@@ -83,7 +83,6 @@
     <string name="overview">Επισκόπηση</string>
     <string name="cast">Καστ</string>
     <string name="play">Αναπαραγωγή</string>
-    <string name="find_stream">Εύρεση &amp; αναπαραγωγή</string>
     <string name="trailer">Τρέιλερ</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Ύπνος</string>
@@ -236,42 +235,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - αναζήτηση Ανακάλυψης (TMDB) -->
     <string name="discover_search_hint">Αναζήτηση ταινιών &amp; σειρών…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - εμφανίζεται πάνω από το WebView πρόκλησης στην TV,
-         όπου δεν υπάρχει δείκτης και το πλαίσιο ελέγχου πρέπει να πατηθεί με εικονικό δρομέα. -->
-    <string name="bypass_tv_instructions">ΜΕΤΑΚΙΝΗΣΤΕ ΤΟΝ ΔΡΟΜΕΑ ΠΑΝΩ ΑΠΟ ΤΟ ΠΛΑΙΣΙΟ ΕΛΕΓΧΟΥ\nΚΑΙ ΠΑΤΗΣΤΕ ΟΚ ΓΙΑ ΞΕΚΛΕΙΔΩΜΑ</string>
 
-    <!-- MainActivityScraper - ο επιλογέας πηγής. Το TMDB λέει τι υπάρχει· οι ιστότοποι ερωτώνται
-         μόνο ποιος μπορεί να το μεταδώσει, και οι οικοδεσπότες πεθαίνουν αρκετά συχνά ώστε η
-         αποτυχία ενός να είναι συνηθισμένη. -->
-    <string name="scraper_dialog_title">Εύρεση ροής \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Αναζήτηση πηγών\u2026</string>
-    <string name="scraper_searching_sites">Αναζήτηση σε ιστότοπους\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Άνοιγμα %1$s\u2026</string>
-    <string name="scraper_source_failed">Το %1$s δεν λειτούργησε \u2014 δοκιμάστε άλλη πηγή</string>
-    <string name="scraper_no_sources">Δεν βρέθηκαν πηγές για αυτόν τον τίτλο</string>
-    <string name="scraper_pick_manually">Επιλογή πηγής</string>
-    <string name="scraper_attempt_detail">μέσω %1$s \u00b7 προσπάθεια %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d πηγή</item>
-        <item quantity="other">%1$d πηγές</item>
-    </plurals>
 
     <!-- MainActivitySettings - πηγές ιστοτόπων ροής. -->
-    <string name="scraper_settings_title">Ιστότοποι ροής</string>
-    <string name="scraper_settings_subtitle">Δημόσιοι ιστότοποι ροής από τους οποίους μπορεί να αντλήσει η Εύρεση ροής. Η περιήγηση παραμένει στην Ανακάλυψη \u2014 σε αυτούς τίθεται μόνο το ερώτημα ποιος μπορεί να μεταδώσει έναν τίτλο που έχετε ήδη επιλέξει.</string>
-    <string name="scraper_enabled_title">Χρήση ιστοτόπων ροής</string>
-    <string name="scraper_enabled_subtitle">Προσφέρει την Εύρεση ροής σε τίτλους της Ανακάλυψης</string>
-    <string name="scraper_sites_header">Ιστότοποι προς αναζήτηση</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Επιλύει τα ονόματα τομέων των ιστοτόπων μέσω κρυπτογραφημένου επιλυτή αντί για αυτόν του ISP σας</string>
-    <string name="scraper_doh_system">DNS συστήματος</string>
-    <string name="scraper_extra_buffering_title">Επιπλέον προσωρινή αποθήκευση</string>
-    <string name="scraper_extra_buffering_subtitle">Προσωρινά αποθηκεύει έως και 5 λεπτά μπροστά για οικοδεσπότες που παραδίδουν κατά ριπές. Χρησιμοποιεί περισσότερη μνήμη· εφαρμόζεται μετά από επανεκκίνηση</string>
     <string name="category_newest">Νεότερα</string>
     <string name="category_continue_watching">Συνέχεια παρακολούθησης</string>
     <string name="category_other">Άλλα</string>
     <string name="category_all">Όλα</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Σύμπτυξη κατηγοριών</string>
     <string name="category_favourites">Αγαπημένα</string>
     <string name="category_group_into_categories">Ομαδοποίηση σε κατηγορίες</string>
@@ -280,6 +250,5 @@
     <string name="category_recently_played">Πρόσφατη αναπαραγωγή</string>
     <string name="category_favourite_channels">Αγαπημένα κανάλια</string>
     <string name="ui_not_driving_continue">Δεν οδηγώ - συνέχεια</string>
-    <string name="list_find_and_play">Εύρεση και αναπαραγωγή</string>
     <string name="list_season_number">Σεζόν %1$d</string>
 </resources>

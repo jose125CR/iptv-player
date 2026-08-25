@@ -185,27 +185,3 @@ internal fun MainActivity.showTrailerPlayer(youtubeKey: String) {
     dialog.show()
     closeButton.requestFocus()
 }
-
-/** Shows/hides the detail screen's Find Stream button - one entry point that searches every
- *  source (the built-in site scrapers) and plays the best result without asking. */
-internal fun MainActivity.wireFindStreamButton(item: Channel) {
-    val button = binding.detailFindStreamButton
-    val available = canFindStream(item)
-    button.visibility = if (available) View.VISIBLE else View.GONE
-    button.setOnClickListener(
-        if (!available) null
-        else View.OnClickListener {
-            // A series has to say which episode before anything can be searched for - without
-            // this it silently searched S01E01, which is right roughly never. The picker is
-            // TMDB-backed, so it works for a title the library does not have at all (the
-            // "No episodes found" case on a Discover series).
-            if (item.mediaType == MediaType.SERIES) {
-                showSeriesEpisodePicker(item) { season, episode ->
-                    showFindStreamDialog(item, season, episode)
-                }
-            } else {
-                showFindStreamDialog(item)
-            }
-        }
-    )
-}

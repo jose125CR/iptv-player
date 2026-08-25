@@ -47,7 +47,6 @@
     <string name="play_channel_version_title">Version de la chaîne</string>
     <string name="play_no_other_versions_title">Aucune autre version de ce titre</string>
     <string name="play_version_title">Version</string>
-    <string name="play_find_and_play">Rechercher &amp; lire…</string>
     <string name="play_no_other_versions_series">Aucune autre version de cette série</string>
     <string name="play_series_version_title">Version de la série</string>
     <string name="play_loading_version">Chargement de %1$s…</string>

@@ -83,7 +83,6 @@
     <string name="overview">Översikt</string>
     <string name="cast">Rollista</string>
     <string name="play">Spela</string>
-    <string name="find_stream">Hitta &amp; spela</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Sömn</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - sökning i Upptäck (TMDB) -->
     <string name="discover_search_hint">Sök filmer &amp; serier…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - visas ovanför utmanings-WebView:en på TV:n,
-         där det inte finns någon pekare och kryssrutan måste träffas med en virtuell markör. -->
-    <string name="bypass_tv_instructions">FLYTTA MARKÖREN ÖVER KRYSSRUTAN\nOCH TRYCK OK FÖR ATT LÅSA UPP</string>
 
-    <!-- MainActivityScraper - källväljaren. TMDB talar om vad som finns; webbplatserna tillfrågas
-         bara om vem som kan strömma det, och värdar dör ofta nog för att ett misslyckande ska vara
-         rutin. -->
-    <string name="scraper_dialog_title">Hitta ström \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Hittar källor\u2026</string>
-    <string name="scraper_searching_sites">Söker på webbplatser\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Öppnar %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s fungerade inte \u2014 försök med en annan källa</string>
-    <string name="scraper_no_sources">Inga källor hittades för den här titeln</string>
-    <string name="scraper_pick_manually">Välj en källa</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 försök %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d källa</item>
-        <item quantity="other">%1$d källor</item>
-    </plurals>
 
     <!-- MainActivitySettings - källor för streamingwebbplatser. -->
-    <string name="scraper_settings_title">Streamingwebbplatser</string>
-    <string name="scraper_settings_subtitle">Offentliga streamingwebbplatser som Hitta ström kan hämta från. Bläddringen förblir på Upptäck \u2014 de tillfrågas bara om vem som kan strömma en titel du redan har valt.</string>
-    <string name="scraper_enabled_title">Använd streamingwebbplatser</string>
-    <string name="scraper_enabled_subtitle">Erbjuder Hitta ström på Upptäck-titlar</string>
-    <string name="scraper_sites_header">Webbplatser att söka i</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Löser webbplatsdomäner via en krypterad resolver istället för din ISP:s</string>
-    <string name="scraper_doh_system">System-DNS</string>
-    <string name="scraper_extra_buffering_title">Extra buffring</string>
-    <string name="scraper_extra_buffering_subtitle">Buffrar upp till 5 minuter i förväg för värdar som levererar i skurar. Använder mer minne; gäller efter en omstart</string>
     <string name="category_newest">Nyaste</string>
     <string name="category_continue_watching">Fortsätt titta</string>
     <string name="category_other">Övrigt</string>
     <string name="category_all">Alla</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Fäll ihop kategorier</string>
     <string name="category_favourites">Favoriter</string>
     <string name="category_group_into_categories">Gruppera i kategorier</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Nyligen spelade</string>
     <string name="category_favourite_channels">Favoritkanaler</string>
     <string name="ui_not_driving_continue">Jag kör inte - fortsätt</string>
-    <string name="list_find_and_play">Hitta och spela upp</string>
     <string name="list_season_number">Säsong %1$d</string>
 </resources>

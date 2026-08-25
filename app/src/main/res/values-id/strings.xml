@@ -82,7 +82,6 @@
     <string name="overview">Ringkasan</string>
     <string name="cast">Pemeran</string>
     <string name="play">Putar</string>
-    <string name="find_stream">Temukan &amp; putar</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Tidur</string>
@@ -230,41 +229,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - pencarian Jelajah (TMDB) -->
     <string name="discover_search_hint">Cari film &amp; serial…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - ditampilkan di atas WebView tantangan di TV,
-         tempat tidak ada penunjuk dan kotak centang harus dipukul dengan kursor virtual. -->
-    <string name="bypass_tv_instructions">GERAKKAN KURSOR KE KOTAK CENTANG\nDAN TEKAN OK UNTUK MEMBUKA KUNCI</string>
 
-    <!-- MainActivityScraper - pemilih sumber. TMDB memberi tahu apa yang ada; situs hanya ditanya
-         siapa yang dapat streaming, dan host cukup sering mati sehingga kegagalan satu situs adalah
-         hal biasa. -->
-    <string name="scraper_dialog_title">Temukan streaming \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Mencari sumber\u2026</string>
-    <string name="scraper_searching_sites">Mencari di situs\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Membuka %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s tidak berfungsi \u2014 coba sumber lain</string>
-    <string name="scraper_no_sources">Tidak ada sumber yang ditemukan untuk judul ini</string>
-    <string name="scraper_pick_manually">Pilih sumber</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 percobaan %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="other">%1$d sumber</item>
-    </plurals>
 
     <!-- MainActivitySettings - sumber situs streaming. -->
-    <string name="scraper_settings_title">Situs streaming</string>
-    <string name="scraper_settings_subtitle">Situs streaming publik yang dapat diambil oleh Temukan streaming. Penjelajahan tetap di Jelajah \u2014 mereka hanya ditanya siapa yang dapat melakukan streaming judul yang sudah Anda pilih.</string>
-    <string name="scraper_enabled_title">Gunakan situs streaming</string>
-    <string name="scraper_enabled_subtitle">Menawarkan Temukan streaming pada judul Jelajah</string>
-    <string name="scraper_sites_header">Situs untuk dicari</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Menyelesaikan domain situs melalui resolver terenkripsi, bukan resolver ISP Anda</string>
-    <string name="scraper_doh_system">DNS sistem</string>
-    <string name="scraper_extra_buffering_title">Buffering ekstra</string>
-    <string name="scraper_extra_buffering_subtitle">Menyangga hingga 5 menit ke depan untuk host yang mengirimkan dalam ledakan. Menggunakan lebih banyak memori; berlaku setelah memulai ulang</string>
     <string name="category_newest">Terbaru</string>
     <string name="category_continue_watching">Lanjutkan Menonton</string>
     <string name="category_other">Lainnya</string>
     <string name="category_all">Semua</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Ciutkan kategori</string>
     <string name="category_favourites">Favorit</string>
     <string name="category_group_into_categories">Kelompokkan ke dalam kategori</string>
@@ -273,6 +244,5 @@
     <string name="category_recently_played">Baru Diputar</string>
     <string name="category_favourite_channels">Saluran Favorit</string>
     <string name="ui_not_driving_continue">Saya tidak mengemudi - lanjutkan</string>
-    <string name="list_find_and_play">Cari dan putar</string>
     <string name="list_season_number">Musim %1$d</string>
 </resources>

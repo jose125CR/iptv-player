@@ -83,7 +83,6 @@
     <string name="overview">Aperçu</string>
     <string name="cast">Distribution</string>
     <string name="play">Lire</string>
-    <string name="find_stream">Trouver et lire</string>
     <string name="trailer">Bande-annonce</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Veille</string>
@@ -243,43 +242,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - recherche Découvrir (TMDB) -->
     <string name="discover_search_hint">Rechercher films et séries…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - affiché au-dessus du WebView de défi sur TV,
-         là où il n'y a pas de pointeur et où la case à cocher doit être touchée avec un curseur
-         virtuel. -->
-    <string name="bypass_tv_instructions">DÉPLACEZ LE CURSEUR SUR LA CASE À COCHER\nET APPUYEZ SUR OK POUR DÉVERROUILLER</string>
 
-    <!-- MainActivityScraper - le sélecteur de source. TMDB dit ce qui existe ; les sites ne sont
-         interrogés que pour savoir qui peut le diffuser, et les hébergeurs meurent assez souvent
-         pour qu'un échec soit courant. -->
-    <string name="scraper_dialog_title">Trouver le flux \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Recherche des sources\u2026</string>
-    <string name="scraper_searching_sites">Recherche sur les sites\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Ouverture de %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s n\'a pas fonctionné \u2014 essayez une autre source</string>
-    <string name="scraper_no_sources">Aucune source trouvée pour ce titre</string>
-    <string name="scraper_pick_manually">Choisir une source</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 tentative %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d source</item>
-        <item quantity="other">%1$d sources</item>
-    </plurals>
 
     <!-- MainActivitySettings - sources de sites de streaming. -->
-    <string name="scraper_settings_title">Sites de streaming</string>
-    <string name="scraper_settings_subtitle">Les sites de streaming publics que Trouver le flux peut consulter. La navigation reste sur Découvrir \u2014 ils ne sont interrogés que pour savoir qui peut diffuser un titre que vous avez déjà choisi.</string>
-    <string name="scraper_enabled_title">Utiliser les sites de streaming</string>
-    <string name="scraper_enabled_subtitle">Propose Trouver le flux sur les titres de Découvrir</string>
-    <string name="scraper_sites_header">Sites à rechercher</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Résout les domaines des sites via un résolveur chiffré au lieu de celui de votre FAI</string>
-    <string name="scraper_doh_system">DNS système</string>
-    <string name="scraper_extra_buffering_title">Mise en mémoire tampon supplémentaire</string>
-    <string name="scraper_extra_buffering_subtitle">Met en mémoire tampon jusqu\'à 5 minutes d\'avance pour les hébergeurs qui livrent par rafales. Utilise plus de mémoire ; s\'applique après un redémarrage</string>
     <string name="category_newest">Plus récents</string>
     <string name="category_continue_watching">Reprendre la lecture</string>
     <string name="category_other">Autre</string>
     <string name="category_all">Tout</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Réduire les catégories</string>
     <string name="category_favourites">Favoris</string>
     <string name="category_group_into_categories">Regrouper en catégories</string>
@@ -288,6 +257,5 @@
     <string name="category_recently_played">Lus récemment</string>
     <string name="category_favourite_channels">Chaînes favorites</string>
     <string name="ui_not_driving_continue">Je ne conduis pas - continuer</string>
-    <string name="list_find_and_play">Trouver et lire</string>
     <string name="list_season_number">Saison %1$d</string>
 </resources>

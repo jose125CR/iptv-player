@@ -83,7 +83,6 @@
     <string name="overview">Oversigt</string>
     <string name="cast">Medvirkende</string>
     <string name="play">Afspil</string>
-    <string name="find_stream">Find &amp; afspil</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Søvn</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - Opdag-søgning (TMDB) -->
     <string name="discover_search_hint">Søg i film &amp; serier…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - vises over udfordrings-WebView\'et på TV,
-         hvor der ikke er nogen peger, og afkrydsningsboksen skal rammes med en virtuel markør. -->
-    <string name="bypass_tv_instructions">FLYT MARKØREN OVER AFKRYDNINGSFELTET\nOG TRYK OK FOR AT LÅSE OP</string>
 
-    <!-- MainActivityScraper - kildevælgeren. TMDB fortæller, hvad der findes; siderne bliver
-         kun spurgt om, hvem der kan streame det, og værter dør ofte nok til, at en, der
-         fejler, er almindeligt. -->
-    <string name="scraper_dialog_title">Find stream \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Finder kilder\u2026</string>
-    <string name="scraper_searching_sites">Søger på sider\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Åbner %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s virkede ikke \u2014 prøv en anden kilde</string>
-    <string name="scraper_no_sources">Ingen kilder fundet til denne titel</string>
-    <string name="scraper_pick_manually">Vælg en kilde</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 forsøg %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d kilde</item>
-        <item quantity="other">%1$d kilder</item>
-    </plurals>
 
     <!-- MainActivitySettings - streaming-sidekilder. -->
-    <string name="scraper_settings_title">Streaming-sider</string>
-    <string name="scraper_settings_subtitle">Offentlige streaming-sider, som Find stream kan trække fra. Gennemsyn forbliver på Opdag \u2014 de bliver kun spurgt om, hvem der kan streame en titel, du allerede har valgt.</string>
-    <string name="scraper_enabled_title">Brug streaming-sider</string>
-    <string name="scraper_enabled_subtitle">Tilbyder Find stream på Opdag-titler</string>
-    <string name="scraper_sites_header">Sider at søge i</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Opløser sidedomæner gennem en krypteret opløser i stedet for din ISP\'s</string>
-    <string name="scraper_doh_system">System-DNS</string>
-    <string name="scraper_extra_buffering_title">Ekstra buffering</string>
-    <string name="scraper_extra_buffering_subtitle">Buffer op til 5 minutter i forvejen for værter, der leverer i rykk. Bruger mere hukommelse; gælder efter en genstart</string>
     <string name="category_newest">Nyeste</string>
     <string name="category_continue_watching">Fortsæt med at se</string>
     <string name="category_other">Andet</string>
     <string name="category_all">Alle</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Klap kategorier sammen</string>
     <string name="category_favourites">Favoritter</string>
     <string name="category_group_into_categories">Gruppér i kategorier</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Senest afspillet</string>
     <string name="category_favourite_channels">Favoritkanaler</string>
     <string name="ui_not_driving_continue">Jeg kører ikke - fortsæt</string>
-    <string name="list_find_and_play">Find og afspil</string>
     <string name="list_season_number">Sæson %1$d</string>
 </resources>

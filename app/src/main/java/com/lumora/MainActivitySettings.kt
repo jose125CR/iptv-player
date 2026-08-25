@@ -1431,8 +1431,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         // Appended rather than slotted in where it sits visually: selectSection()
         // addresses these by list index, so inserting in the middle would silently
         // renumber every section below it.
-        R.id.navSites to R.id.paneSites,
-        // Same reason - appended, not slotted in above Sites where the rail shows it.
         R.id.navTrakt to R.id.paneTrakt
     ).map { (navId, paneId) -> dialogView.findViewById<View>(navId) to dialogView.findViewById<View>(paneId) }
     wireTraktPane(dialogView)
@@ -1500,8 +1498,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         }
     }
     refreshDownloadsList()
-
-    wireScraperSettingsPane(dialogView)
 
     // About pane
     dialogView.findViewById<TextView>(R.id.settingsAppVersion).text = try {
@@ -1572,12 +1568,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         // did, and the tab bar stayed hidden until the app was restarted. showEmptyState()
         // runs it itself on the other branch.
         //
-        // "Nothing to show" is the same question classifyAndShow() asks, and it counts a
-        // provider-less source (the built-in site scrapers) as content: they contribute no
-        // catalog entries of their own but make Discover usable. Testing allChannels alone
-        // sent such a setup back to the "no provider" empty state the moment Settings
-        // closed.
-        val providerlessSource = hasProviderlessSource()
+        // "Nothing to show" is the same question classifyAndShow() asks. Testing
+        // allChannels alone sent a provider-less setup back to the "no provider" empty
+        // state the moment Settings closed.
         // Unticking the last provider has to take the tab bar and search back down, and
         // land on the empty state - which is the only screen left with a way back into
         // Settings. Asked of the enabled providers rather than of allChannels: disabling
@@ -1589,9 +1582,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         // yet - let the tab render empty under the "Loading..." status and let the load's
         // own classifyAndShow fill it in.
         val loadInFlight = providerLoadJob?.isActive == true
-        if (!hasProviderEnabled() && !providerlessSource) {
+        if (!hasProviderEnabled()) {
             showEmptyState()
-        } else if (allChannels.isEmpty() && !providerlessSource && !loadInFlight) {
+        } else if (allChannels.isEmpty() && !loadInFlight) {
             // Enabled, but it returned nothing (fetch failed, or an empty catalogue).
             showEmptyState()
         } else {

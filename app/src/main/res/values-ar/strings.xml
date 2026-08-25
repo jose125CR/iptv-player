@@ -87,7 +87,6 @@
     <string name="overview">نظرة عامة</string>
     <string name="cast">طاقم التمثيل</string>
     <string name="play">تشغيل</string>
-    <string name="find_stream">البحث والتشغيل</string>
     <string name="trailer">العرض الترويجي</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">سكون</string>
@@ -235,45 +234,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - بحث اكتشف (TMDB) -->
     <string name="discover_search_hint">ابحث في الأفلام والمسلسلات…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - يظهر فوق WebView التحدي على التلفاز،
-         حيث لا يوجد مؤشر ويجب إصابة خانة الاختيار بمؤشر افتراضي. -->
-    <string name="bypass_tv_instructions">حرّك المؤشر فوق خانة الاختيار\nواضغط OK لإلغاء القفل</string>
 
-    <!-- MainActivityScraper - منتقي المصدر. TMDB يقول ما الموجود؛ لا تُسأل المواقع إلا عن
-         القادر على بثه، والمضيفون يموتون كثيراً بما يكفي ليكون الفشل أمراً روتينياً. -->
-    <string name="scraper_dialog_title">البحث عن بث \u2014 %1$s</string>
-    <string name="scraper_finding_sources">جارٍ البحث عن مصادر\u2026</string>
-    <string name="scraper_searching_sites">جارٍ البحث في المواقع\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">فتح %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s لم يعمل \u2014 جرّب مصدراً آخر</string>
-    <string name="scraper_no_sources">لا توجد مصادر لهذا العنوان</string>
-    <string name="scraper_pick_manually">اختر مصدراً</string>
-    <string name="scraper_attempt_detail">عبر %1$s \u00b7 محاولة %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="zero">%1$d مصدر</item>
-        <item quantity="one">%1$d مصدر</item>
-        <item quantity="two">%1$d مصدران</item>
-        <item quantity="few">%1$d مصادر</item>
-        <item quantity="many">%1$d مصدراً</item>
-        <item quantity="other">%1$d مصدر</item>
-    </plurals>
 
     <!-- MainActivitySettings - مصادر مواقع البث. -->
-    <string name="scraper_settings_title">مواقع البث</string>
-    <string name="scraper_settings_subtitle">مواقع بث عامة يمكن لـ«البحث عن بث» الاعتماد عليها. يبقى التصفح في «اكتشف» \u2014 لا تُسأل إلا عن إمكانية بث عنوان اخترته بالفعل.</string>
-    <string name="scraper_enabled_title">استخدام مواقع البث</string>
-    <string name="scraper_enabled_subtitle">يعرض «البحث عن بث» على عناوين «اكتشف»</string>
-    <string name="scraper_sites_header">مواقع للبحث</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">يحلّ نطاقات المواقع عبر محلل مشفر بدلاً من محلل مزوّد الإنترنت لديك</string>
-    <string name="scraper_doh_system">DNS النظام</string>
-    <string name="scraper_extra_buffering_title">تخزين مؤقت إضافي</string>
-    <string name="scraper_extra_buffering_subtitle">يخزن ما يصل إلى 5 دقائق مقدماً للمواقع التي ترسل على دفعات. يستهلك ذاكرة أكبر؛ يُطبق بعد إعادة التشغيل</string>
     <string name="category_newest">الأحدث</string>
     <string name="category_continue_watching">متابعة المشاهدة</string>
     <string name="category_other">أخرى</string>
     <string name="category_all">الكل</string>
-    <string name="category_anime">أنمي</string>
     <string name="category_collapse_categories">طيّ الفئات</string>
     <string name="category_favourites">المفضلة</string>
     <string name="category_group_into_categories">تجميع في فئات</string>
@@ -282,6 +249,5 @@
     <string name="category_recently_played">تم تشغيلها مؤخراً</string>
     <string name="category_favourite_channels">القنوات المفضلة</string>
     <string name="ui_not_driving_continue">لست أقود - متابعة</string>
-    <string name="list_find_and_play">ابحث وشغّل</string>
     <string name="list_season_number">الموسم %1$d</string>
 </resources>

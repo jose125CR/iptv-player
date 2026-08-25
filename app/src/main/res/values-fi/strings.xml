@@ -83,7 +83,6 @@
     <string name="overview">Yleiskatsaus</string>
     <string name="cast">Näyttelijät</string>
     <string name="play">Toista</string>
-    <string name="find_stream">Etsi &amp; toista</string>
     <string name="trailer">Traileri</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Uni</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - Tutki (TMDB) -haku -->
     <string name="discover_search_hint">Hae elokuvia &amp; sarjoja…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - näytetään haaste-WebView:n yläpuolella TV:ssä,
-         jossa ei ole osoitinta ja valintaruutu on osuttava virtuaalikursorilla. -->
-    <string name="bypass_tv_instructions">SIIRRÄ KURSORI VALINTARUUDUN PÄÄLLE\nJA PAINA OK AVATAKSESI LUKITUS</string>
 
-    <!-- MainActivityScraper - lähdevalitsin. TMDB kertoo, mitä on olemassa; sivustoilta kysytään
-         vain, kuka voi striimata sen, ja isännät kuolevat riittävän usein, jotta yhden
-         epäonnistuminen on rutiinia. -->
-    <string name="scraper_dialog_title">Etsi striimi \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Etsitään lähteitä\u2026</string>
-    <string name="scraper_searching_sites">Haetaan sivustoilta\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Avataan %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s ei toiminut \u2014 kokeile toista lähdettä</string>
-    <string name="scraper_no_sources">Tälle nimikkeelle ei löytynyt lähteitä</string>
-    <string name="scraper_pick_manually">Valitse lähde</string>
-    <string name="scraper_attempt_detail">kautta %1$s \u00b7 yritys %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d lähde</item>
-        <item quantity="other">%1$d lähdettä</item>
-    </plurals>
 
     <!-- MainActivitySettings - suoratoistosivustojen lähteet. -->
-    <string name="scraper_settings_title">Suoratoistosivustot</string>
-    <string name="scraper_settings_subtitle">Julkiset suoratoistosivustot, joista Etsi striimi voi hakea. Selaus pysyy Tutki-välilehdellä \u2014 niiltä kysytään vain, kuka voi striimata jo valitsemasi nimikkeen.</string>
-    <string name="scraper_enabled_title">Käytä suoratoistosivustoja</string>
-    <string name="scraper_enabled_subtitle">Tarjoaa Etsi striimi -toimintoa Tutki-nimikkeille</string>
-    <string name="scraper_sites_header">Haettavat sivustot</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Selvittää sivustojen verkkotunnukset salatun resolverin kautta ISP:si resolverin sijaan</string>
-    <string name="scraper_doh_system">Järjestelmän DNS</string>
-    <string name="scraper_extra_buffering_title">Lisäpuskurointi</string>
-    <string name="scraper_extra_buffering_subtitle">Puskuroi jopa 5 minuuttia etukäteen isännille, jotka toimittavat sisältöä purskeina. Käyttää enemmän muistia; astuu voimaan uudelleenkäynnistyksen jälkeen</string>
     <string name="category_newest">Uusimmat</string>
     <string name="category_continue_watching">Jatka katsomista</string>
     <string name="category_other">Muut</string>
     <string name="category_all">Kaikki</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Kutista luokat</string>
     <string name="category_favourites">Suosikit</string>
     <string name="category_group_into_categories">Ryhmittele luokkiin</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Äskettäin toistetut</string>
     <string name="category_favourite_channels">Suosikkikanavat</string>
     <string name="ui_not_driving_continue">En aja - jatka</string>
-    <string name="list_find_and_play">Etsi ja toista</string>
     <string name="list_season_number">Kausi %1$d</string>
 </resources>

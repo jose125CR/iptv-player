@@ -83,7 +83,6 @@
     <string name="overview">Panoramica</string>
     <string name="cast">Cast</string>
     <string name="play">Riproduci</string>
-    <string name="find_stream">Trova e riproduci</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Sleep</string>
@@ -233,41 +232,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml: ricerca Scopri (TMDB) -->
     <string name="discover_search_hint">Cerca film e serie…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver: mostrato sopra la WebView del challenge su TV, dove
-         non c'è un puntatore e la casella va colpita con un cursore virtuale. -->
-    <string name="bypass_tv_instructions">SPOSTA IL CURSORE SULLA CASELLA\nE PREMI OK PER SBLOCCARE</string>
 
-    <!-- MainActivityScraper: il selettore delle sorgenti. TMDB dice cosa esiste; ai siti viene chiesto
-         solo chi può trasmetterlo, e gli host muoiono abbastanza spesso che fallirne uno è routine. -->
-    <string name="scraper_dialog_title">Trova stream \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Ricerca delle sorgenti\u2026</string>
-    <string name="scraper_searching_sites">Ricerca sui siti\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Apertura di %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s non ha funzionato \u2014 prova un\'altra sorgente</string>
-    <string name="scraper_no_sources">Nessuna sorgente trovata per questo titolo</string>
-    <string name="scraper_pick_manually">Scegli una sorgente</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 tentativo %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d sorgente</item>
-        <item quantity="other">%1$d sorgenti</item>
-    </plurals>
 
     <!-- MainActivitySettings: sorgenti dei siti di streaming. -->
-    <string name="scraper_settings_title">Siti di streaming</string>
-    <string name="scraper_settings_subtitle">Siti di streaming pubblici da cui Trova stream può attingere. La navigazione resta su Scopri \u2014 questi vengono interrogati solo per sapere chi può trasmettere un titolo che hai già scelto.</string>
-    <string name="scraper_enabled_title">Usa siti di streaming</string>
-    <string name="scraper_enabled_subtitle">Offre Trova stream sui titoli di Scopri</string>
-    <string name="scraper_sites_header">Siti da cercare</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Risolve i domini dei siti tramite un risolutore crittografato invece di quello del tuo ISP</string>
-    <string name="scraper_doh_system">DNS di sistema</string>
-    <string name="scraper_extra_buffering_title">Buffer aggiuntivo</string>
-    <string name="scraper_extra_buffering_subtitle">Bufferizza fino a 5 minuti in anticipo per gli host che distribuiscono a raffiche. Usa più memoria; si applica dopo un riavvio</string>
     <string name="category_newest">Più recenti</string>
     <string name="category_continue_watching">Continua a guardare</string>
     <string name="category_other">Altro</string>
     <string name="category_all">Tutto</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Comprimi categorie</string>
     <string name="category_favourites">Preferiti</string>
     <string name="category_group_into_categories">Raggruppa in categorie</string>
@@ -276,6 +247,5 @@
     <string name="category_recently_played">Riprodotti di recente</string>
     <string name="category_favourite_channels">Canali preferiti</string>
     <string name="ui_not_driving_continue">Non sto guidando - continua</string>
-    <string name="list_find_and_play">Trova e riproduci</string>
     <string name="list_season_number">Stagione %1$d</string>
 </resources>

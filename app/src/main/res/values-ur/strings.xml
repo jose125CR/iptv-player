@@ -83,7 +83,6 @@
     <string name="overview">جائزہ</string>
     <string name="cast">کاسٹ</string>
     <string name="play">چلائیں</string>
-    <string name="find_stream">تلاش کریں اور چلائیں</string>
     <string name="trailer">ٹریلر</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">سلیپ</string>
@@ -232,41 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - دریافت کریں (TMDB) تلاش -->
     <string name="discover_search_hint">فلمیں اور سیریز تلاش کریں…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - TV پر چیلنج WebView کے اوپر دکھایا جاتا ہے،
-         جہاں کوئی پوائنٹر نہیں ہوتا اور چیک باکس کو ورچوئل کرسر سے نشانہ بنانا ہوتا ہے۔ -->
-    <string name="bypass_tv_instructions">کرسر کو چیک باکس پر لے جائیں\nاور غیر مقفل کرنے کے لیے OK دبائیں</string>
 
-    <!-- MainActivityScraper - ذریعہ چننے والا۔ TMDB بتاتا ہے کہ کیا موجود ہے؛ سائٹس سے صرف
-         پوچھا جاتا ہے کہ کون اسے اسٹریم کر سکتا ہے، اور ہوسٹ اکثر مر جاتے ہیں کہ ناکامی معمول ہے۔ -->
-    <string name="scraper_dialog_title">اسٹریم تلاش کریں \u2014 %1$s</string>
-    <string name="scraper_finding_sources">ذرائع تلاش کیے جا رہے ہیں\u2026</string>
-    <string name="scraper_searching_sites">سائٹس تلاش کی جا رہی ہیں\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s کھولا جا رہا ہے\u2026</string>
-    <string name="scraper_source_failed">%1$s کام نہیں کیا \u2014 دوسرا ذریعہ آزمائیں</string>
-    <string name="scraper_no_sources">اس عنوان کے لیے کوئی ذریعہ نہیں ملا</string>
-    <string name="scraper_pick_manually">ذریعہ منتخب کریں</string>
-    <string name="scraper_attempt_detail">%1$s کے ذریعے \u00b7 کوشش %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d ذریعہ</item>
-        <item quantity="other">%1$d ذرائع</item>
-    </plurals>
 
     <!-- MainActivitySettings - اسٹریمنگ سائٹس کے ذرائع۔ -->
-    <string name="scraper_settings_title">اسٹریمنگ سائٹس</string>
-    <string name="scraper_settings_subtitle">عوامی اسٹریمنگ سائٹس جن سے اسٹریم تلاش کریں حاصل کر سکتا ہے۔ براؤزنگ دریافت کریں پر رہتی ہے \u2014 ان سے صرف یہ پوچھا جاتا ہے کہ آپ کے منتخب کردہ عنوان کو کون اسٹریم کر سکتا ہے۔</string>
-    <string name="scraper_enabled_title">اسٹریمنگ سائٹس استعمال کریں</string>
-    <string name="scraper_enabled_subtitle">دریافت کریں کے عنوانات پر اسٹریم تلاش کریں پیش کرتا ہے</string>
-    <string name="scraper_sites_header">تلاش کرنے کے لیے سائٹس</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">آپ کے ISP کے بجائے ایک خفیہ کردہ ریزالور کے ذریعے سائٹ ڈومینز حل کرتا ہے</string>
-    <string name="scraper_doh_system">سسٹم DNS</string>
-    <string name="scraper_extra_buffering_title">اضافی بفرنگ</string>
-    <string name="scraper_extra_buffering_subtitle">ان میزبانوں کے لیے 5 منٹ تک آگے بفر کرتا ہے جو برسٹ میں ڈیلیور کرتے ہیں۔ زیادہ میموری استعمال کرتا ہے؛ ری اسٹارٹ کے بعد لاگو ہوتا ہے</string>
     <string name="category_newest">تازہ ترین</string>
     <string name="category_continue_watching">دیکھنا جاری رکھیں</string>
     <string name="category_other">دیگر</string>
     <string name="category_all">سب</string>
-    <string name="category_anime">اینیمی</string>
     <string name="category_collapse_categories">زمرے سکیڑیں</string>
     <string name="category_favourites">پسندیدہ</string>
     <string name="category_group_into_categories">زمروں میں گروپ کریں</string>
@@ -275,6 +246,5 @@
     <string name="category_recently_played">حال ہی میں چلائی گئیں</string>
     <string name="category_favourite_channels">پسندیدہ چینلز</string>
     <string name="ui_not_driving_continue">میں گاڑی نہیں چلا رہا - جاری رکھیں</string>
-    <string name="list_find_and_play">تلاش کریں اور چلائیں</string>
     <string name="list_season_number">سیزن %1$d</string>
 </resources>

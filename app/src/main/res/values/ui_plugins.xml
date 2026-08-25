@@ -9,14 +9,8 @@
     <string name="plug_loading_trending">Loading trending…</string>
     <string name="plug_searching_query">Searching \"%1$s\"…</string>
     <string name="plug_no_results_for">No results for \"%1$s\".</string>
-    <string name="plug_enable_stream_plugin_browse">Enable a stream plugin to browse titles outside your library.</string>
     <string name="plug_loading_series">Loading series…</string>
     <string name="plug_loading_movies">Loading movies…</string>
-    <string name="plug_enable_stream_plugin_or_sites">Enable a stream plugin, or turn on Streaming sites in Settings, to play Discover titles.</string>
-    <string name="plug_loading_episodes">Loading episodes…</string>
-    <string name="plug_choose_season">%1$s — choose a season</string>
-    <string name="plug_episode">Episode %1$d</string>
-    <string name="plug_back">Back</string>
 
     <!-- Provider loading statuses (MainActivityProviders) -->
     <string name="plug_connecting_to">Connecting to %1$s...</string>

@@ -25,7 +25,6 @@ import com.lumora.model.CategoryFilter
 import com.lumora.model.Channel
 import com.lumora.model.ContentShelf
 import com.lumora.model.MediaType
-import com.lumora.anime.AnimeCatalogClient
 import com.lumora.parser.XtreamClient
 import com.lumora.util.deriveBrandCategories
 import com.lumora.util.groupCategories
@@ -466,7 +465,6 @@ internal suspend fun MainActivity.buildCategoriesForActiveTab(tab: Int = activeT
     val hiddenIds = getHiddenCategories(tab)
     val expandedSnapshot = expandedGroupKeys.toSet()
     val favoriteChannelIds = if (tab == 0) FavoritesStore.getFavoriteChannelIds(this) else emptySet()
-    val animeSectionsSnapshot = animeSections
     // Snapshot on the caller's thread - the pipeline below runs on Dispatchers.Default.
     val versionsById = when (tab) {
         1 -> seriesVersions
@@ -488,7 +486,6 @@ internal suspend fun MainActivity.buildCategoriesForActiveTab(tab: Int = activeT
             pinned = pinned,
             hiddenIds = hiddenIds,
             expanded = expandedSnapshot,
-            animeSections = animeSectionsSnapshot,
             useClassicLayout = useClassicLayout,
             favoriteChannelIds = favoriteChannelIds,
             categorize = categorize
@@ -570,7 +567,6 @@ internal fun MainActivity.buildCategoryRows(
     pinned: Set<String>,
     hiddenIds: Set<String>,
     expanded: Set<String>,
-    animeSections: List<AnimeCatalogClient.Section>,
     useClassicLayout: Boolean,
     favoriteChannelIds: Set<String>,   // tab 0 only
     categorize: Boolean   // render dynamic categories (buckets/brands/service clusters) for this tab
@@ -592,7 +588,7 @@ internal fun MainActivity.buildCategoryRows(
             // silently failed to invalidate anything. Bump it whenever what this function
             // emits changes.
             "rows:$tab:${BuildConfig.VERSION_CODE}.$CATEGORY_ROWS_LOGIC_VERSION:${pinned.hashCode()}:${hiddenIds.hashCode()}:" +
-                "${expanded.hashCode()}:${animeSections.hashCode()}:${favoriteChannelIds.hashCode()}:" +
+                "${expanded.hashCode()}:${favoriteChannelIds.hashCode()}:" +
                 "${versionsById.size}:$useClassicLayout:$categorize"
         )
         DerivedCache.loadRows(this, tab, fingerprint)?.let { cached ->
@@ -603,11 +599,6 @@ internal fun MainActivity.buildCategoryRows(
         val names = LinkedHashMap<String, String>()
         val counts = LinkedHashMap<String, Int>()
         for (ch in list) {
-            // Anime gets its own explicit parent row further down; leaving it in here as an
-            // ordinary category would also file it under the "Kids & Family" genre bucket
-            // (which matches on the word "anime"), so the catalog would appear twice, once
-            // buried two levels deep.
-            if (ch.id.startsWith(AnimeCatalogClient.ID_PREFIX)) continue
             val key = ch.filterKey() ?: continue
             if (key in hiddenIds) continue
             val rawLabel = ch.categoryName?.takeIf { it.isNotBlank() } ?: ch.group?.takeIf { it.isNotBlank() } ?: key
@@ -1036,62 +1027,6 @@ internal fun MainActivity.buildCategoryRows(
                         isDynamic = true
                     )
                 )
-            }
-        }
-        // Series: the anime catalog is one expandable row whose children are the catalog's
-        // sections, so browsing it is "Anime > Currently Airing" rather than one 500-title
-        // heap. Cached cold starts restore the channels but not the sections (they aren't
-        // in the flat channel cache), so the row degrades to a plain, unexpandable Anime
-        // category until the next catalog refresh rather than vanishing.
-        if (tab == 1 && ANIME_CATEGORY_ID !in hiddenIds) {
-            // Anime titles are deduped against the rest of the catalog by name like
-            // everything else, so a show an IPTV provider also carries becomes one card -
-            // and the copy that wins it is whichever had a poster, very often the provider's.
-            // Matching on the representative's own "anime:" id therefore lost every title
-            // the provider happened to stock, which with a large provider is most of them
-            // and took the whole Anime row with it. Same failure the Jellyfin row above
-            // already handles: look at every version in the group, not just the winner.
-            //
-            // Mapped rather than filtered, because the sections below index titles by their
-            // catalog id: once a title is represented by the provider's copy, its section
-            // has to point at that representative or the row would be empty.
-            val animeRepById = HashMap<String, String>()
-            for (ch in list) {
-                if (ch.id.startsWith(AnimeCatalogClient.ID_PREFIX)) animeRepById[ch.id] = ch.id
-                versionsById[ch.id]?.forEach { version ->
-                    if (version.id.startsWith(AnimeCatalogClient.ID_PREFIX)) {
-                        animeRepById[version.id] = ch.id
-                    }
-                }
-            }
-            val animeIds = animeRepById.values.toSet()
-            if (animeIds.isNotEmpty()) {
-                val children = animeSections.mapNotNull { section ->
-                    val ids = section.channelIds.mapNotNullTo(mutableSetOf()) { animeRepById[it] }
-                    if (ids.isEmpty()) return@mapNotNull null
-                    CategoryFilter(
-                        id = "$ANIME_CATEGORY_ID:${section.label}",
-                        name = section.label,
-                        count = ids.size,
-                        pinned = pinned.contains("$ANIME_CATEGORY_ID:${section.label}"),
-                        isChild = true,
-                        channelIds = ids
-                    )
-                }
-                val isExpanded = expanded.contains(ANIME_CATEGORY_ID)
-                val parent = CategoryFilter(
-                    id = ANIME_CATEGORY_ID,
-                    name = getString(R.string.category_anime),
-                    count = animeIds.size,
-                    pinned = pinned.contains(ANIME_CATEGORY_ID),
-                    channelIds = animeIds,
-                    isParent = children.isNotEmpty(),
-                    expanded = isExpanded && children.isNotEmpty(),
-                    isDynamic = true
-                )
-                if (children.isNotEmpty()) childrenByParent[ANIME_CATEGORY_ID] = children
-                result.add(parent)
-                if (parent.expanded) result.addAll(children)
             }
         }
         if (tab != 0) {
@@ -2008,7 +1943,7 @@ internal fun MainActivity.formatTime(ms: Long): String {
  *  7: quality tiers merge before clustering, cluster children feed the genre buckets, a
  *     bucket over one category promotes it instead of wrapping it, and the thin tail
  *     folds into one "Other" row. */
-private const val CATEGORY_ROWS_LOGIC_VERSION = 10
+private const val CATEGORY_ROWS_LOGIC_VERSION = 11
 
 /** Films/Series rail: a category with fewer titles than this sorts below the full ones.
  *  Counts are per-row, so a merged/clustered parent is judged on its members' total. */

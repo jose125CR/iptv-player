@@ -83,7 +83,6 @@
     <string name="overview">Áttekintés</string>
     <string name="cast">Szereplők</string>
     <string name="play">Lejátszás</string>
-    <string name="find_stream">Keresés és lejátszás</string>
     <string name="trailer">Előzetes</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Alvás</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - Felfedezés (TMDB) keresés -->
     <string name="discover_search_hint">Filmek és sorozatok keresése…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - a TV-n a kihívás WebView fölött jelenik meg,
-         ahol nincs mutató, és a jelölőnégyzetet virtuális kurzorral kell eltalálni. -->
-    <string name="bypass_tv_instructions">MOZGASSA A KURZORT A JELÖLŐNÉGYZETRE\nÉS NYOMJA MEG AZ OK GOMBOT A FELOLDÁSHOZ</string>
 
-    <!-- MainActivityScraper - a forrásválasztó. A TMDB megmondja, mi létezik; a webhelyeket csak arról
-         kérdezik, ki tudja streamelni, és a hosztok elég gyakran halnak meg ahhoz,
-         hogy egy meghibásodás rutin legyen. -->
-    <string name="scraper_dialog_title">Stream keresése \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Források keresése\u2026</string>
-    <string name="scraper_searching_sites">Webhelyek keresése\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Megnyitás: %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s nem működött \u2014 próbáljon másik forrást</string>
-    <string name="scraper_no_sources">Ehhez a címhez nem található forrás</string>
-    <string name="scraper_pick_manually">Forrás kiválasztása</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 %2$d. kísérlet</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d forrás</item>
-        <item quantity="other">%1$d forrás</item>
-    </plurals>
 
     <!-- MainActivitySettings - streamelő webhelyek forrásai. -->
-    <string name="scraper_settings_title">Streamelő webhelyek</string>
-    <string name="scraper_settings_subtitle">Nyilvános streamelő webhelyek, amelyekből a Keresés és lejátszás meríthet. A böngészés a Felfedezésnél marad \u2014 ezeket csak arról kérdezik, hogy ki tudja streamelni a már kiválasztott címet.</string>
-    <string name="scraper_enabled_title">Streamelő webhelyek használata</string>
-    <string name="scraper_enabled_subtitle">Keresés és lejátszás felajánlása a Felfedezés címeinél</string>
-    <string name="scraper_sites_header">Keresendő webhelyek</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">A webhelyek domainjeit titkosított resolverrel oldja fel az internetszolgáltatóé helyett</string>
-    <string name="scraper_doh_system">Rendszer-DNS</string>
-    <string name="scraper_extra_buffering_title">Extra pufferelés</string>
-    <string name="scraper_extra_buffering_subtitle">Akár 5 percet is előre pufferel azoknál a hosztoknál, amelyek adagokban szállítanak. Több memóriát használ; újraindítás után lép életbe</string>
     <string name="category_newest">Legújabb</string>
     <string name="category_continue_watching">Továbbnézés</string>
     <string name="category_other">Egyéb</string>
     <string name="category_all">Mind</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Kategóriák összecsukása</string>
     <string name="category_favourites">Kedvencek</string>
     <string name="category_group_into_categories">Kategóriákba csoportosítás</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Legutóbb lejátszott</string>
     <string name="category_favourite_channels">Kedvenc csatornák</string>
     <string name="ui_not_driving_continue">Nem vezetek - folytatás</string>
-    <string name="list_find_and_play">Keresés és lejátszás</string>
     <string name="list_season_number">%1$d. évad</string>
 </resources>

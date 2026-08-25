@@ -83,7 +83,6 @@
     <string name="overview">Genel Bakış</string>
     <string name="cast">Oyuncu Kadrosu</string>
     <string name="play">Oynat</string>
-    <string name="find_stream">Akışı Bul &amp; Oynat</string>
     <string name="trailer">Fragman</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Uyku</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - Keşfet (TMDB) araması -->
     <string name="discover_search_hint">Filmlerde &amp; dizilerde ara…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - TV'de zorluk WebView\'inin üzerinde
-         gösterilir; burada işaretçi yoktur ve onay kutusuna sanal imleçle vurulması gerekir. -->
-    <string name="bypass_tv_instructions">İMLECİ ONAY KUTUSUNUN ÜZERİNE GETİRİN\nVE KİLİDİ AÇMAK İÇİN TAMAM TUŞUNA BASIN</string>
 
-    <!-- MainActivityScraper - kaynak seçici. TMDB neyin var olduğunu söyler; sitelere yalnızca
-         kimin yayınlayabileceği sorulur ve sunucular yeterince sık öldüğünden birinin başarısız
-         olması olağandır. -->
-    <string name="scraper_dialog_title">Akış Bul \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Kaynaklar aranıyor\u2026</string>
-    <string name="scraper_searching_sites">Siteler aranıyor\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s açılıyor\u2026</string>
-    <string name="scraper_source_failed">%1$s çalışmadı \u2014 başka bir kaynak deneyin</string>
-    <string name="scraper_no_sources">Bu başlık için kaynak bulunamadı</string>
-    <string name="scraper_pick_manually">Bir kaynak seçin</string>
-    <string name="scraper_attempt_detail">%1$s üzerinden \u00b7 deneme %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d kaynak</item>
-        <item quantity="other">%1$d kaynak</item>
-    </plurals>
 
     <!-- MainActivitySettings - akış sitesi kaynakları. -->
-    <string name="scraper_settings_title">Akış siteleri</string>
-    <string name="scraper_settings_subtitle">Akış Bul\'un yararlanabileceği genel akış siteleri. Gezinme Keşfet\'te kalır \u2014 bunlara yalnızca daha önce seçtiğiniz bir başlığı kimin yayınlayabileceği sorulur.</string>
-    <string name="scraper_enabled_title">Akış sitelerini kullan</string>
-    <string name="scraper_enabled_subtitle">Keşfet başlıklarında Akış Bul\'u sunar</string>
-    <string name="scraper_sites_header">Aranacak siteler</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Site alan adlarını ISP\'nizin yerine şifreli bir çözümleyici üzerinden çözer</string>
-    <string name="scraper_doh_system">Sistem DNS\'i</string>
-    <string name="scraper_extra_buffering_title">Ekstra arabellek</string>
-    <string name="scraper_extra_buffering_subtitle">Aralıklı teslim eden sunucular için 5 dakikaya kadar önden arabellek oluşturur. Daha fazla bellek kullanır; yeniden başlatma sonrasında uygulanır</string>
     <string name="category_newest">En Yeni</string>
     <string name="category_continue_watching">İzlemeye Devam Et</string>
     <string name="category_other">Diğer</string>
     <string name="category_all">Tümü</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Kategorileri daralt</string>
     <string name="category_favourites">Favoriler</string>
     <string name="category_group_into_categories">Kategorilere grupla</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Son Oynatılanlar</string>
     <string name="category_favourite_channels">Favori Kanallar</string>
     <string name="ui_not_driving_continue">Sürmüyorum - devam et</string>
-    <string name="list_find_and_play">Bul ve oynat</string>
     <string name="list_season_number">%1$d. Sezon</string>
 </resources>

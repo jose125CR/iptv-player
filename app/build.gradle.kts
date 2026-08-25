@@ -4,8 +4,6 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp") version "1.9.22-1.0.17"
-    id("org.jetbrains.kotlin.plugin.parcelize")
-    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 // Release signing reads from keystore.properties (gitignored - never committed) so the
@@ -151,47 +149,16 @@ dependencies {
 
     // Networking
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    // DNS-over-HTTPS for com.lumora.scraper - the scraper sites are the ones ISP resolvers
-    // blackhole, so their OkHttp stack resolves through a user-selectable DoH endpoint and only
-    // falls back to system DNS per-lookup (see scraper/utils/DnsResolver.kt).
-    implementation("com.squareup.okhttp3:okhttp-dnsoverhttps:4.12.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
-
-    // Retrofit - only used by com.lumora.scraper. The ~66 ported site scrapers are all written
-    // as Retrofit services returning a Jsoup Document via the inlined
-    // com.tanasi.retrofit_jsoup converter, so this is what lets them compile unmodified rather
-    // than being rewritten against raw OkHttp.
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.retrofit2:converter-scalars:2.11.0")
-
-    // Rhino - runs the AAEncode-obfuscated JS that one extractor's host wraps its source list in
-    // (scraper/utils/AADecoder.java).
-    implementation("org.mozilla:rhino:1.8.0")
-
-    // LAN WebSocket bridge for the scraper's Cloudflare bypass: a TV that cannot clear a
-    // challenge in its own WebView hands the URL to a phone browser and gets the cookies back
-    // (scraper/utils/BypassWebSocket*.kt).
-    implementation("org.java-websocket:Java-WebSocket:1.5.3")
 
     // JSON
     implementation("com.google.code.gson:gson:2.10.1")
-    // 1.6.3 is the last line compatible with Kotlin 1.9.22 - the 1.8.x releases the upstream
-    // scraper app used require Kotlin 2.x, which would drag the whole toolchain forward for
-    // nothing this needs.
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 
     // QR code generation (ZXing)
     implementation("com.google.zxing:core:3.5.3")
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-
-    // HTML parsing for every com.lumora.scraper site provider.
-    // 1.21.x specifically: Elements.filter(NodeFilter) was removed there, and while it existed
-    // it shadowed Kotlin's Iterable.filter as a member, so the many `elements.filter { ... }`
-    // calls across the ported providers resolved to the NodeFilter overload and failed.
-    implementation("org.jsoup:jsoup:1.21.2")
 
     // Cast
     implementation("androidx.mediarouter:mediarouter:1.7.0")
@@ -208,5 +175,4 @@ dependencies {
 
     // Tests
     testImplementation("junit:junit:4.13.2")
-    testImplementation("com.squareup.okhttp3:mockwebserver:4.12.0")
 }

@@ -84,7 +84,6 @@
     <string name="overview">Pregled</string>
     <string name="cast">Glumačka postava</string>
     <string name="play">Reproduciraj</string>
-    <string name="find_stream">Pronađi &amp; reproduciraj</string>
     <string name="trailer">Najava</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Spavanje</string>
@@ -232,42 +231,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - pretraga Otkrij (TMDB) -->
     <string name="discover_search_hint">Pretraži filmove &amp; serije…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - prikazuje se iznad izazovnog WebViewa na TV-u,
-         gdje nema pokazivača i kućicu treba pogoditi virtualnim kursorom. -->
-    <string name="bypass_tv_instructions">POMAKNITE POKAZIVAČ IZNAD OKVIRA ZA POTVRDU\nI PRITISNITE OK ZA OTKLJUČAVANJE</string>
 
-    <!-- MainActivityScraper - birač izvora. TMDB kaže što postoji; stranice se pita samo
-         tko to može emitirati, a hostovi dovoljno često padaju da je neuspjeh jednog uobičajen. -->
-    <string name="scraper_dialog_title">Pronađi tok \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Pronalaženje izvora\u2026</string>
-    <string name="scraper_searching_sites">Pretraživanje stranica\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Otvaranje %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s nije uspjelo \u2014 pokušajte s drugim izvorom</string>
-    <string name="scraper_no_sources">Nema pronađenih izvora za ovaj naslov</string>
-    <string name="scraper_pick_manually">Odaberite izvor</string>
-    <string name="scraper_attempt_detail">putem %1$s \u00b7 pokušaj %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d izvor</item>
-        <item quantity="few">%1$d izvora</item>
-        <item quantity="other">%1$d izvora</item>
-    </plurals>
 
     <!-- MainActivitySettings - izvori stranica za strujanje. -->
-    <string name="scraper_settings_title">Stranice za strujanje</string>
-    <string name="scraper_settings_subtitle">Javne stranice za strujanje koje Pronađi tok može koristiti. Pregledavanje ostaje na Otkrij \u2014 njih se pita samo tko može reproducirati naslov koji ste već odabrali.</string>
-    <string name="scraper_enabled_title">Koristi stranice za strujanje</string>
-    <string name="scraper_enabled_subtitle">Nudi Pronađi tok na naslovima na Otkrij</string>
-    <string name="scraper_sites_header">Stranice za pretraživanje</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Razrješava domene stranica putem šifriranog razrješivača umjesto preko vašeg ISP-a</string>
-    <string name="scraper_doh_system">Sustavni DNS</string>
-    <string name="scraper_extra_buffering_title">Dodatno međuspremanje</string>
-    <string name="scraper_extra_buffering_subtitle">Međusprema do 5 minuta unaprijed za poslužitelje koji isporučuju u serijama. Koristi više memorije; primjenjuje se nakon ponovnog pokretanja</string>
     <string name="category_newest">Najnovije</string>
     <string name="category_continue_watching">Nastavi gledati</string>
     <string name="category_other">Ostalo</string>
     <string name="category_all">Sve</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Sažmi kategorije</string>
     <string name="category_favourites">Favoriti</string>
     <string name="category_group_into_categories">Grupiraj u kategorije</string>
@@ -276,6 +246,5 @@
     <string name="category_recently_played">Nedavno reproducirano</string>
     <string name="category_favourite_channels">Favoritni kanali</string>
     <string name="ui_not_driving_continue">Ne vozim - nastavi</string>
-    <string name="list_find_and_play">Pronađi i reproduciraj</string>
     <string name="list_season_number">Sezona %1$d</string>
 </resources>

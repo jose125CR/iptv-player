@@ -85,7 +85,6 @@
     <string name="overview">Přehled</string>
     <string name="cast">Obsazení</string>
     <string name="play">Přehrát</string>
-    <string name="find_stream">Najít a přehrát</string>
     <string name="trailer">Upoutávka</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Spánek</string>
@@ -233,44 +232,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - vyhledávání v Objevovat (TMDB) -->
     <string name="discover_search_hint">Hledat filmy a seriály…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - zobrazuje se nad WebView s výzvou na TV,
-         kde není ukazatel a na zaškrtávací políčko se musí kliknout virtuálním kurzorem. -->
-    <string name="bypass_tv_instructions">PŘESUŇTE KURZOR NA ZAŠKRTÁVACÍ POLÍČKO\nA STISKNĚTE OK PRO ODEMKNUTÍ</string>
 
-    <!-- MainActivityScraper - výběr zdroje. TMDB říká, co existuje; webům se pokládá
-         pouze otázka, kdo to může streamovat, a hostitelé zanikají tak často,
-         že neúspěch jednoho je běžný. -->
-    <string name="scraper_dialog_title">Najít stream \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Hledání zdrojů\u2026</string>
-    <string name="scraper_searching_sites">Prohledávají se weby\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Otevírá se %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s nefungoval \u2014 zkuste jiný zdroj</string>
-    <string name="scraper_no_sources">Pro tento titul nebyly nalezeny žádné zdroje</string>
-    <string name="scraper_pick_manually">Vybrat zdroj</string>
-    <string name="scraper_attempt_detail">přes %1$s \u00b7 pokus %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d zdroj</item>
-        <item quantity="few">%1$d zdroje</item>
-        <item quantity="many">%1$d zdrojů</item>
-        <item quantity="other">%1$d zdrojů</item>
-    </plurals>
 
     <!-- MainActivitySettings - zdroje streamovacích webů. -->
-    <string name="scraper_settings_title">Streamovací weby</string>
-    <string name="scraper_settings_subtitle">Veřejné streamovací weby, ze kterých může Najít a přehrát čerpat. Procházení zůstává v Objevovat \u2014 tyto weby jsou tázány pouze na to, kdo může streamovat titul, který jste si už vybrali.</string>
-    <string name="scraper_enabled_title">Používat streamovací weby</string>
-    <string name="scraper_enabled_subtitle">Nabízí Najít a přehrát u titulů v Objevovat</string>
-    <string name="scraper_sites_header">Weby k prohledání</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Domény webů řeší přes šifrovaný resolver místo resolveru vašeho ISP</string>
-    <string name="scraper_doh_system">Systémový DNS</string>
-    <string name="scraper_extra_buffering_title">Extra vyrovnávací paměť</string>
-    <string name="scraper_extra_buffering_subtitle">Načítá až 5 minut dopředu pro hostitele, kteří doručují po dávkách. Využívá více paměti; projeví se po restartu</string>
     <string name="category_newest">Nejnovější</string>
     <string name="category_continue_watching">Pokračovat ve sledování</string>
     <string name="category_other">Ostatní</string>
     <string name="category_all">Vše</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Sbalit kategorie</string>
     <string name="category_favourites">Oblíbené</string>
     <string name="category_group_into_categories">Seskupit do kategorií</string>
@@ -279,6 +247,5 @@
     <string name="category_recently_played">Nedávno přehráno</string>
     <string name="category_favourite_channels">Oblíbené kanály</string>
     <string name="ui_not_driving_continue">Neřídím - pokračovat</string>
-    <string name="list_find_and_play">Najít a přehrát</string>
     <string name="list_season_number">Sezóna %1$d</string>
 </resources>

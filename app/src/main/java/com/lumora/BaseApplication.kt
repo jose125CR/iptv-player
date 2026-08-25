@@ -44,11 +44,6 @@ class BaseApplication : Application() {
             // Google Play Services not available on this device
         }
 
-        // Application context for the ported site-scraper stack (com.lumora.scraper) - its
-        // network layer reads a bundled root certificate out of raw resources and shares the
-        // WebView cookie store, both of which need a Context that no scraper call carries.
-        com.lumora.scraper.ScraperApp.init(this)
-
         // Whether this phone is projecting to a car right now. Android Auto suppresses
         // permission dialogs while projecting, so MainActivity reads this before asking for
         // anything - see requestNotificationPermissionIfNeeded.

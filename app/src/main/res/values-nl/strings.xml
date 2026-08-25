@@ -83,7 +83,6 @@
     <string name="overview">Overzicht</string>
     <string name="cast">Cast</string>
     <string name="play">Afspelen</string>
-    <string name="find_stream">Zoek &amp; speel</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Slaap</string>
@@ -235,43 +234,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - zoeken in Ontdekken (TMDB) -->
     <string name="discover_search_hint">Zoek films &amp; series…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - wordt boven de challenge-WebView op tv
-         getoond, waar er geen aanwijzer is en het selectievakje met een virtuele cursor moet
-         worden geraakt. -->
-    <string name="bypass_tv_instructions">VERPLAATS DE CURSOR OVER HET VAKJE\nEN DRUK OP OK OM TE ONTGRENDELEN</string>
 
-    <!-- MainActivityScraper - de bronkiezer. TMDB zegt wat er bestaat; aan de sites wordt alleen
-         gevraagd wie het kan streamen, en hosts gaan vaak genoeg dood dat het falen van één site
-         routine is. -->
-    <string name="scraper_dialog_title">Stream zoeken \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Bronnen zoeken\u2026</string>
-    <string name="scraper_searching_sites">Sites doorzoeken\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">%1$s openen\u2026</string>
-    <string name="scraper_source_failed">%1$s werkte niet \u2014 probeer een andere bron</string>
-    <string name="scraper_no_sources">Geen bronnen gevonden voor deze titel</string>
-    <string name="scraper_pick_manually">Kies een bron</string>
-    <string name="scraper_attempt_detail">via %1$s \u00b7 poging %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d bron</item>
-        <item quantity="other">%1$d bronnen</item>
-    </plurals>
 
     <!-- MainActivitySettings - bronnen van streaming-sites. -->
-    <string name="scraper_settings_title">Streaming-sites</string>
-    <string name="scraper_settings_subtitle">Publieke streaming-sites waar Stream zoeken uit kan putten. Bladeren blijft op Ontdekken \u2014 ze worden alleen gevraagd wie een titel kan streamen die je al hebt gekozen.</string>
-    <string name="scraper_enabled_title">Streaming-sites gebruiken</string>
-    <string name="scraper_enabled_subtitle">Biedt Stream zoeken aan op Ontdekken-titels</string>
-    <string name="scraper_sites_header">Te doorzoeken sites</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Lost sitedomeinen op via een versleutelde resolver in plaats van die van je ISP</string>
-    <string name="scraper_doh_system">Systeem-DNS</string>
-    <string name="scraper_extra_buffering_title">Extra buffering</string>
-    <string name="scraper_extra_buffering_subtitle">Buffert tot 5 minuten vooruit voor hosts die in bursts leveren. Gebruikt meer geheugen; geldt na een herstart</string>
     <string name="category_newest">Nieuwste</string>
     <string name="category_continue_watching">Verder kijken</string>
     <string name="category_other">Overig</string>
     <string name="category_all">Alles</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Categorieën samenvouwen</string>
     <string name="category_favourites">Favorieten</string>
     <string name="category_group_into_categories">Groeperen in categorieën</string>
@@ -280,6 +249,5 @@
     <string name="category_recently_played">Recent afgespeeld</string>
     <string name="category_favourite_channels">Favoriete kanalen</string>
     <string name="ui_not_driving_continue">Ik rijd niet - doorgaan</string>
-    <string name="list_find_and_play">Zoeken en afspelen</string>
     <string name="list_season_number">Seizoen %1$d</string>
 </resources>

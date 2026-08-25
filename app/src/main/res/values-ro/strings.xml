@@ -84,7 +84,6 @@
     <string name="overview">Prezentare generală</string>
     <string name="cast">Distribuție</string>
     <string name="play">Redă</string>
-    <string name="find_stream">Găsește &amp; redă</string>
     <string name="trailer">Trailer</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">Somn</string>
@@ -234,43 +233,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - căutare Descoperă (TMDB) -->
     <string name="discover_search_hint">Căutați filme &amp; seriale…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - afișat deasupra WebView-ului de provocare
-         pe TV, unde nu există indicator, iar caseta trebuie atinsă cu un cursor virtual. -->
-    <string name="bypass_tv_instructions">MUTAȚI CURSORUL PESTE CĂSUȚA DE BIFARE\nȘI APĂSAȚI OK PENTRU A DEBLOCA</string>
 
-    <!-- MainActivityScraper - selectorul de surse. TMDB spune ce există; site-urile sunt
-         întrebate doar cine poate difuza, iar gazdele mor destul de des încât un eșec este
-         ceva obișnuit. -->
-    <string name="scraper_dialog_title">Găsește fluxul \u2014 %1$s</string>
-    <string name="scraper_finding_sources">Se caută surse\u2026</string>
-    <string name="scraper_searching_sites">Se caută pe site-uri\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">Se deschide %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s nu a funcționat \u2014 încercați altă sursă</string>
-    <string name="scraper_no_sources">Nu s-au găsit surse pentru acest titlu</string>
-    <string name="scraper_pick_manually">Alegeți o sursă</string>
-    <string name="scraper_attempt_detail">prin %1$s \u00b7 încercarea %2$d</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="one">%1$d sursă</item>
-        <item quantity="few">%1$d surse</item>
-        <item quantity="other">%1$d de surse</item>
-    </plurals>
 
     <!-- MainActivitySettings - surse de site-uri de streaming. -->
-    <string name="scraper_settings_title">Site-uri de streaming</string>
-    <string name="scraper_settings_subtitle">Site-uri publice de streaming de unde poate lua Găsește fluxul. Navigarea rămâne pe Descoperă \u2014 ele sunt întrebate doar cine poate difuza un titlu pe care l-ați ales deja.</string>
-    <string name="scraper_enabled_title">Folosește site-uri de streaming</string>
-    <string name="scraper_enabled_subtitle">Oferă Găsește fluxul pentru titlurile de pe Descoperă</string>
-    <string name="scraper_sites_header">Site-uri de căutat</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">Rezolvă domeniile site-urilor printr-un rezolvator criptat în locul ISP-ului dvs.</string>
-    <string name="scraper_doh_system">DNS de sistem</string>
-    <string name="scraper_extra_buffering_title">Buffer suplimentar</string>
-    <string name="scraper_extra_buffering_subtitle">Face buffer cu până la 5 minute în avans pentru gazdele care livrează în rafale. Folosește mai multă memorie; se aplică după o repornire</string>
     <string name="category_newest">Cele mai noi</string>
     <string name="category_continue_watching">Continuă vizionarea</string>
     <string name="category_other">Altele</string>
     <string name="category_all">Toate</string>
-    <string name="category_anime">Anime</string>
     <string name="category_collapse_categories">Restrânge categoriile</string>
     <string name="category_favourites">Favorite</string>
     <string name="category_group_into_categories">Grupează în categorii</string>
@@ -279,6 +248,5 @@
     <string name="category_recently_played">Redate recent</string>
     <string name="category_favourite_channels">Canale favorite</string>
     <string name="ui_not_driving_continue">Nu conduc - continuă</string>
-    <string name="list_find_and_play">Caută și redă</string>
     <string name="list_season_number">Sezonul %1$d</string>
 </resources>

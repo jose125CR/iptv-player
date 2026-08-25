@@ -54,7 +54,6 @@ import com.lumora.model.MediaType
 import com.lumora.model.Provider
 import com.lumora.model.IptvProviderConfig
 import com.lumora.pairing.QrPairingManager
-import com.lumora.anime.AnimeCatalogClient
 import com.lumora.player.PlayerManager
 import com.lumora.player.PlayerTrackController
 import com.lumora.util.isTvDevice
@@ -218,11 +217,6 @@ internal const val JELLYFIN_CATEGORY_ID = "__jellyfin__"
  *  can be configured at once, and "my Plex library" and "my Jellyfin library" are two
  *  different shelves to the person browsing, not one merged "own library". */
 internal const val PLEX_CATEGORY_ID = "__plex__"
-/** Series sidebar row for the anime catalog. Expandable: its children are the
- *  catalog's sections (Trending Now, Currently Airing, one per genre, ...). Built explicitly
- *  rather than derived from the channels' own category name, because anime titles carry a
- *  single "Anime" category and the sections they belong to overlap. */
-internal const val ANIME_CATEGORY_ID = "__anime__"
 /** Films/Series sidebar row collecting every category too thin to be worth its own row, so
  *  the long tail of near-empty categories costs one line instead of a dozen. Expandable -
  *  the categories themselves are its children. */
@@ -416,15 +410,6 @@ class MainActivity : AppCompatActivity() {
     /** The version group [detailReturnItem] was opened with, so re-opening its detail page shows
      *  the same set of alternate versions/episodes rather than re-deriving a narrower one. */
     internal var detailReturnGroup: List<Channel>? = null
-    /** Embed hosts from the last scraper source lookup (see MainActivityScraper). Held because a
-     *  source that fails to resolve puts the same list back rather than closing the picker -
-     *  picking a different host is the normal recovery, and re-fetching the list to do it would
-     *  mean a second round trip to the site for something already known. */
-    internal var lastScraperServers: List<com.lumora.scraper.models.Video.Server> = emptyList()
-    /** Section membership from the last anime catalog fetch (Trending Now, Action, ...), used to
-     *  build the Series sidebar's Anime parent and its child rows. A title belongs to several
-     *  sections at once, so these are ids into the tab's channel list, not separate channels. */
-    internal var animeSections: List<AnimeCatalogClient.Section> = emptyList()
     // Kept around after a successful Jellyfin content load so a series' detail page can
     // fetch its episodes without re-authenticating - Jellyfin's episode API has no
     // Xtream equivalent, so this is the only path a Jellyfin series' episodes ever load through.
@@ -1078,10 +1063,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // The site scrapers' Cloudflare bypass runs headless first and only needs an Activity if
-        // a challenge has to be promoted to a visible dialog - which can happen several seconds
-        // into a fetch that no Activity started. Held weakly, so this is a handle, not a leak.
-        com.lumora.scraper.ScraperApp.setCurrentActivity(this)
         // Resync on return: the clock may have been stopped across a long background stint,
         // and the time (or the 12/24h setting) can have changed while it was.
         startToolbarClock()
@@ -1091,9 +1072,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        // Cleared so a background scraper fetch cannot try to raise a challenge dialog over an
-        // Activity that is no longer in front of the user - it falls back to headless-only.
-        com.lumora.scraper.ScraperApp.setCurrentActivity(null)
         stopToolbarClock()
         val inPip = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && isInPictureInPictureMode
         // Entering PiP also triggers onPause() - don't pause playback or we'd defeat the point of PiP.

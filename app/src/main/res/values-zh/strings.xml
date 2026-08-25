@@ -82,7 +82,6 @@
     <string name="overview">概览</string>
     <string name="cast">演员</string>
     <string name="play">播放</string>
-    <string name="find_stream">查找并播放</string>
     <string name="trailer">预告片</string>
     <string name="speed_default">1.0x</string>
     <string name="sleep_timer_button">睡眠</string>
@@ -230,40 +229,13 @@
     <!-- activity_main.xml / dialog_discover_search.xml - 发现（TMDB）搜索 -->
     <string name="discover_search_hint">搜索电影和剧集…</string>
 
-    <!-- com.lumora.scraper.utils.WebViewResolver - 在电视上的验证 WebView 上方显示，
-         因为没有指针，复选框必须用虚拟光标点击。 -->
-    <string name="bypass_tv_instructions">将光标移到复选框上方\n然后按 OK 解锁</string>
 
-    <!-- MainActivityScraper - 源选择器。TMDB 告知有哪些内容；仅询问站点谁能提供流媒体，
-         主机经常失效，失败一个很常见。 -->
-    <string name="scraper_dialog_title">查找流 \u2014 %1$s</string>
-    <string name="scraper_finding_sources">正在查找源\u2026</string>
-    <string name="scraper_searching_sites">正在搜索站点\u2026 %1$d/%2$d</string>
-    <string name="scraper_opening_source">正在打开 %1$s\u2026</string>
-    <string name="scraper_source_failed">%1$s 不起作用 \u2014 请尝试其他源</string>
-    <string name="scraper_no_sources">未找到该标题的来源</string>
-    <string name="scraper_pick_manually">选择源</string>
-    <string name="scraper_attempt_detail">通过 %1$s \u00b7 第 %2$d 次尝试</string>
-    <plurals name="scraper_sources_found">
-        <item quantity="other">%1$d 个来源</item>
-    </plurals>
 
     <!-- MainActivitySettings - 流媒体站点源。 -->
-    <string name="scraper_settings_title">流媒体站点</string>
-    <string name="scraper_settings_subtitle">公共流媒体站点，"查找流"可从中获取内容。浏览仍停留在"发现"页面 \u2014 这些站点仅在您已选定的标题下被询问谁可以播放。</string>
-    <string name="scraper_enabled_title">使用流媒体站点</string>
-    <string name="scraper_enabled_subtitle">在"发现"标题上提供"查找流"选项</string>
-    <string name="scraper_sites_header">要搜索的站点</string>
-    <string name="scraper_doh_title">DNS-over-HTTPS</string>
-    <string name="scraper_doh_subtitle">通过加密解析器解析站点域名，而非使用您的 ISP 的解析器</string>
-    <string name="scraper_doh_system">系统 DNS</string>
-    <string name="scraper_extra_buffering_title">额外缓冲</string>
-    <string name="scraper_extra_buffering_subtitle">为分批投递内容的主机提前缓冲最多 5 分钟。占用更多内存；重启后生效</string>
     <string name="category_newest">最新</string>
     <string name="category_continue_watching">继续观看</string>
     <string name="category_other">其他</string>
     <string name="category_all">全部</string>
-    <string name="category_anime">动漫</string>
     <string name="category_collapse_categories">收起分类</string>
     <string name="category_favourites">收藏</string>
     <string name="category_group_into_categories">按分类分组</string>
@@ -272,6 +244,5 @@
     <string name="category_recently_played">最近播放</string>
     <string name="category_favourite_channels">收藏频道</string>
     <string name="ui_not_driving_continue">我不是驾驶员 - 继续</string>
-    <string name="list_find_and_play">查找并播放</string>
     <string name="list_season_number">第 %1$d 季</string>
 </resources>

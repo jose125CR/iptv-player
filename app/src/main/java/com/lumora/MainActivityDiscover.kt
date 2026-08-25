@@ -104,11 +104,10 @@ internal fun MainActivity.showDiscoverSearchOverlay() {
         status.visibility = View.VISIBLE
         searchJob = scope.launch {
             val results = tmdbClient.search(query)
-            // Same gate as loadDiscover(): with no scraper sites enabled a TMDB-only title
-            // is a dead tile, so only titles the library already carries are
-            // offered. Matching is the slow step, so it only runs when it decides something.
-            val pluginEnabled = hasProviderlessSource()
-            val visible = if (pluginEnabled) results else withContext(Dispatchers.Default) {
+            // A TMDB-only title is a dead tile - there is no source left that could play it -
+            // so only titles the library already carries are offered. Matching is the slow
+            // step, so it only runs when it decides something.
+            val visible = withContext(Dispatchers.Default) {
                 results.filter { findCatalogMatches(it).isNotEmpty() }
             }
             showResults(
@@ -117,8 +116,7 @@ internal fun MainActivity.showDiscoverSearchOverlay() {
                 emptyMap(),
                 when {
                     visible.isNotEmpty() -> null
-                    results.isEmpty() -> getString(R.string.plug_no_results_for, query)
-                    else -> getString(R.string.plug_enable_stream_plugin_browse)
+                    else -> getString(R.string.plug_no_results_for, query)
                 }
             )
             // Badges walk the whole catalogue once per tile, so they land after the posters
@@ -321,15 +319,10 @@ internal fun MainActivity.loadDiscover(query: String?) {
     setDiscoverStatus(if (query == null) getString(R.string.plug_loading_trending) else getString(R.string.plug_searching_query, query))
     discoverSearchJob = scope.launch {
         val results = if (query == null) tmdbClient.trending() else tmdbClient.search(query)
-        // Without a stream-search plugin (the common one being a general plugin), a
-        // TMDB-only title is a dead tile - its dialog offers nothing but a trailer.
-        // Drop anything that isn't already in the library; with a plugin enabled the
-        // plugin can play every title, so nothing gets filtered.
-        val pluginEnabled = hasProviderlessSource()
-        // With a plugin enabled every title is playable, so nothing has to be matched before
-        // the grid can be shown - and matching is the one slow step here. Only the no-plugin
-        // filter waits for it.
-        val visible = if (pluginEnabled) results else withContext(Dispatchers.Default) {
+        // A TMDB-only title is a dead tile - there is no source left that could play it -
+        // so anything not already in the library is dropped. Matching is the one slow
+        // step here, and the grid waits for it.
+        val visible = withContext(Dispatchers.Default) {
             results.filter { findCatalogMatches(it).isNotEmpty() }
         }
         discoverGridAdapter.replaceAll(visible)
@@ -339,15 +332,14 @@ internal fun MainActivity.loadDiscover(query: String?) {
         setDiscoverStatus(
             when {
                 visible.isNotEmpty() -> null
-                results.isEmpty() -> if (query == null) getString(R.string.plug_couldnt_load_titles) else getString(R.string.plug_no_results_for, query)
-                else -> getString(R.string.plug_enable_stream_plugin_browse)
+                else -> if (query == null) getString(R.string.plug_couldnt_load_titles) else getString(R.string.plug_no_results_for, query)
             }
         )
     }
 }
 
 /** Loads one of Discover's Movies/Series filter chips - [type]'s own paginated Popular
- *  ranking, same source and gates (English-only, News dropped, no-plugin library filter)
+ *  ranking, same source and gates (English-only, News dropped, library filter)
  *  as loadDiscover() uses for trending/search. */
 internal fun MainActivity.loadDiscoverByType(type: MediaType) {
     if (!tmdbClient.hasKey()) return
@@ -355,8 +347,7 @@ internal fun MainActivity.loadDiscoverByType(type: MediaType) {
     setDiscoverStatus(if (type == MediaType.SERIES) getString(R.string.plug_loading_series) else getString(R.string.plug_loading_movies))
     discoverSearchJob = scope.launch {
         val results = fetchPopularPaged(type)
-        val pluginEnabled = hasProviderlessSource()
-        val visible = if (pluginEnabled) results else withContext(Dispatchers.Default) {
+        val visible = withContext(Dispatchers.Default) {
             results.filter { findCatalogMatches(it).isNotEmpty() }
         }
         discoverGridAdapter.replaceAll(visible)
@@ -364,8 +355,7 @@ internal fun MainActivity.loadDiscoverByType(type: MediaType) {
         setDiscoverStatus(
             when {
                 visible.isNotEmpty() -> null
-                results.isEmpty() -> getString(R.string.plug_couldnt_load_titles)
-                else -> getString(R.string.plug_enable_stream_plugin_browse)
+                else -> getString(R.string.plug_couldnt_load_titles)
             }
         )
     }
@@ -466,22 +456,6 @@ internal fun MainActivity.onDiscoverItemClick(item: Channel) {
     else showContentDetail(item)
 }
 
-internal fun MainActivity.startDiscoverStreamSearch(item: Channel) {
-    if (!canFindStream(item)) {
-        Toast.makeText(
-            this,
-            getString(R.string.plug_enable_stream_plugin_or_sites),
-            Toast.LENGTH_LONG
-        ).show()
-        return
-    }
-    val search: (Int?, Int?) -> Unit = { season, episode ->
-        showFindStreamDialog(item, season, episode)
-    }
-    if (item.mediaType == MediaType.SERIES) showSeriesEpisodePicker(item, search)
-    else search(null, null)
-}
-
 /** Every copy of a Discover title the library holds, best first.
  *
  *  Plural on purpose. A title is routinely carried by more than one source - a Jellyfin
@@ -576,49 +550,6 @@ private fun isIgnorableTitleSuffix(remainder: String): Boolean {
 internal fun MainActivity.normalizeMatchTitle(title: String): String =
     title.lowercase(Locale.US).replace(Regex("\\(\\d{4}\\)"), " ")
         .replace(Regex("[^a-z0-9]+"), " ").trim()
-
-/**
- * Fetches the show's seasons from TMDB, then lets the user pick season → episode.
- *
- * [onPick] receives the chosen season/episode, or nulls when there is nothing to choose from
- * (no TMDB id, or TMDB has no season data) and the title has to be searched whole.
- */
-internal fun MainActivity.showSeriesEpisodePicker(
-    item: Channel,
-    onPick: (season: Int?, episode: Int?) -> Unit,
-) {
-    val tvId = item.id.substringAfterLast(':').toIntOrNull()
-    if (tvId == null) { onPick(null, null); return }
-    val loading = AlertDialog.Builder(this)
-        .setTitle(item.name)
-        .setMessage(getString(R.string.plug_loading_episodes))
-        .setNegativeButton(getString(R.string.cancel), null)
-        .create()
-    loading.show()
-    scope.launch {
-        val seasons = tmdbClient.tvSeasons(tvId)
-        loading.dismiss()
-        if (seasons.isEmpty()) {
-            // No season data - fall back to searching the title as a whole.
-            onPick(null, null)
-            return@launch
-        }
-        val seasonLabels = seasons.map { "${it.name} (${it.episodeCount} eps)" }.toTypedArray()
-        AlertDialog.Builder(this@showSeriesEpisodePicker)
-            .setTitle(getString(R.string.plug_choose_season, item.name))
-            .setItems(seasonLabels) { _, si ->
-                val season = seasons[si]
-                val epLabels = (1..season.episodeCount).map { getString(R.string.plug_episode, it) }.toTypedArray()
-                AlertDialog.Builder(this@showSeriesEpisodePicker)
-                    .setTitle(season.name)
-                    .setItems(epLabels) { _, ei -> onPick(season.number, ei + 1) }
-                    .setNegativeButton(getString(R.string.plug_back)) { _, _ -> showSeriesEpisodePicker(item, onPick) }
-                    .show()
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
-    }
-}
 
 internal fun MainActivity.onHomeItemClick(channel: Channel) {
     // User-initiated play - see playItem for why the suppression flag is cleared here.

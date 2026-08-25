@@ -76,7 +76,8 @@
     <string name="no_provider_configured">Δεν έχει διαμορφωθεί πάροχος</string>
     <string name="press_settings_to_add_playlist">Πατήστε Ρυθμίσεις για να προσθέσετε μια διεύθυνση URL λίστας αναπαραγωγής</string>
     <string name="add_a_provider">Προσθήκη παρόχου</string>
-    <string name="startup_choose_provider">ΠΑΡΟΧΟΣ IPTV/JELLYFIN</string>
+    <string name="startup_add_m3u">ΠΡΟΣΘΗΚΗ ΛΙΣΤΑΣ M3U</string>
+    <string name="startup_signin_xtream">ΣΥΝΔΕΣΗ ΜΕ XTREAM CODES</string>
     <string name="search_main_hint">Αναζήτηση σε ζωντανή TV, ταινίες &amp; σειρές…</string>
     <string name="no_downloads_yet">Δεν υπάρχουν λήψεις ακόμα</string>
     <string name="overview">Επισκόπηση</string>

@@ -306,7 +306,7 @@ internal fun MainActivity.showEmptyState() {
     // focused and centre-press does nothing. Retried once on the next frame because the
     // very first post can land before the row is laid out (requestFocus then no-ops).
     fun focusFirstAction(): Boolean {
-        val target = binding.emptyChooseProvider.takeIf { it.isShown }
+        val target = binding.emptyChooseM3u.takeIf { it.isShown }
             ?: return false
         return target.requestFocus()
     }
@@ -804,10 +804,11 @@ internal suspend fun MainActivity.fetchXtreamChannels(config: IptvProviderConfig
 
 // ── First-run startup chooser (empty state) ──
 
-/** Wires the empty state's sole entry point. An IPTV/Jellyfin provider is required before
- *  the app has anything to show, so this is the only way in. Only reachable while there is
- *  neither a provider nor a plugin enabled - showEmptyState() is the sole caller of the
- *  screen that hosts it. */
+/** Wires the empty state's two entry points. An IPTV provider is required before the app
+ *  has anything to show, and only its M3U/Xtream flavors are offered - each button opens
+ *  the provider form already on that type. Only reachable while there is neither a provider
+ *  nor a plugin enabled - showEmptyState() is the sole caller of the screen that hosts them. */
 internal fun MainActivity.wireStartupChooser() {
-    binding.emptyChooseProvider.setOnClickListener { showProviderSettings() }
+    binding.emptyChooseM3u.setOnClickListener { showProviderSettings("m3u") }
+    binding.emptyChooseXtream.setOnClickListener { showProviderSettings("xtream") }
 }

@@ -76,7 +76,8 @@
     <string name="no_provider_configured">No hay ningún proveedor configurado</string>
     <string name="press_settings_to_add_playlist">Pulse Ajustes para añadir una URL de lista</string>
     <string name="add_a_provider">Añadir un proveedor</string>
-    <string name="startup_choose_provider">PROVEEDOR IPTV/JELLYFIN</string>
+    <string name="startup_add_m3u">AÑADIR LISTA M3U</string>
+    <string name="startup_signin_xtream">INICIAR SESIÓN CON XTREAM CODES</string>
     <string name="search_main_hint">Buscar TV en directo, películas y series…</string>
     <string name="no_downloads_yet">Aún no hay descargas</string>
     <string name="overview">Resumen</string>

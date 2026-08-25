@@ -78,7 +78,8 @@
     <string name="no_provider_configured">Провайдер не настроен</string>
     <string name="press_settings_to_add_playlist">Нажмите «Настройки», чтобы добавить URL плейлиста</string>
     <string name="add_a_provider">Добавить провайдера</string>
-    <string name="startup_choose_provider">IPTV/JELLYFIN ПРОВАЙДЕР</string>
+    <string name="startup_add_m3u">ДОБАВИТЬ ПЛЕЙЛИСТ M3U</string>
+    <string name="startup_signin_xtream">ВОЙТИ ЧЕРЕЗ XTREAM CODES</string>
     <string name="search_main_hint">Поиск по ТВ, фильмам и сериалам…</string>
     <string name="no_downloads_yet">Пока нет загрузок</string>
     <string name="overview">Обзор</string>

@@ -75,7 +75,8 @@
     <string name="no_provider_configured">プロバイダーが設定されていません</string>
     <string name="press_settings_to_add_playlist">設定を押してプレイリスト URL を追加</string>
     <string name="add_a_provider">プロバイダーを追加</string>
-    <string name="startup_choose_provider">IPTV/JELLYFIN プロバイダー</string>
+    <string name="startup_add_m3u">M3Uプレイリストを追加</string>
+    <string name="startup_signin_xtream">Xtream Codesでログイン</string>
     <string name="search_main_hint">ライブ TV、映画、シリーズを検索…</string>
     <string name="no_downloads_yet">ダウンロードはまだありません</string>
     <string name="overview">概要</string>

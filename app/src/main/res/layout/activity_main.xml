@@ -678,10 +678,12 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_caption" />
 
-            <!-- First run: no provider configured yet, so nothing above knows what the
-                 user is here for. One entry point - an IPTV/Jellyfin provider is required
-                 before there is anything to browse. nextFocus is fixed explicitly since a
-                 GONE sibling (this whole block hides the moment a provider exists) must
+            <!-- First run: no provider configured yet, so nothing above knows what the user
+                 is here for. An IPTV provider is required before there is anything to browse,
+                 and it comes in exactly two flavors - each button opens the provider form with
+                 that type already selected (Stalker/Jellyfin/Plex stay reachable only through
+                 their backends until those are removed). nextFocus targets are fixed explicitly
+                 since a GONE sibling (this whole block hides the moment a provider exists) must
                  never be left as an implicit focus-search target. -->
             <LinearLayout
                 android:id="@+id/emptyStartupChooser"
@@ -692,23 +694,53 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/emptyChooseProvider"
                     android:layout_width="wrap_content"
-                    android:layout_height="56dp"
-                    android:background="@drawable/bg_focus_item"
-                    android:clickable="true"
-                    android:focusable="true"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:nextFocusUp="@id/btnSettings"
-                    android:paddingHorizontal="24dp">
+                    android:orientation="horizontal">
 
-                    <TextView
+                    <LinearLayout
+                        android:id="@+id/emptyChooseM3u"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/startup_choose_provider"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/text_body_s" />
+                        android:layout_height="56dp"
+                        android:background="@drawable/bg_focus_item"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:nextFocusUp="@id/btnSettings"
+                        android:nextFocusRight="@id/emptyChooseXtream"
+                        android:paddingHorizontal="24dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/startup_add_m3u"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_body_s" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/emptyChooseXtream"
+                        android:layout_width="wrap_content"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_focus_item"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:nextFocusUp="@id/btnSettings"
+                        android:nextFocusLeft="@id/emptyChooseM3u"
+                        android:paddingHorizontal="24dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/startup_signin_xtream"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:textSize="@dimen/text_body_s" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

@@ -77,7 +77,8 @@
     <string name="no_provider_configured">Nije konfiguriran nijedan pružatelj</string>
     <string name="press_settings_to_add_playlist">Pritisnite Postavke za dodavanje URL-a popisa</string>
     <string name="add_a_provider">Dodaj pružatelja</string>
-    <string name="startup_choose_provider">IPTV/JELLYFIN PRUŽATELJ</string>
+    <string name="startup_add_m3u">DODAJ M3U POPIS</string>
+    <string name="startup_signin_xtream">PRIJAVA S XTREAM CODES</string>
     <string name="search_main_hint">Pretraži TV uživo, filmove &amp; serije…</string>
     <string name="no_downloads_yet">Još nema preuzimanja</string>
     <string name="overview">Pregled</string>

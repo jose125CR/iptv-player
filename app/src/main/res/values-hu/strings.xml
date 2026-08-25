@@ -76,7 +76,8 @@
     <string name="no_provider_configured">Nincs szolgáltató beállítva</string>
     <string name="press_settings_to_add_playlist">Nyomja meg a Beállításokat egy lejátszási lista URL hozzáadásához</string>
     <string name="add_a_provider">Szolgáltató hozzáadása</string>
-    <string name="startup_choose_provider">IPTV/JELLYFIN SZOLGÁLTATÓ</string>
+    <string name="startup_add_m3u">M3U LISTA HOZZÁADÁSA</string>
+    <string name="startup_signin_xtream">BEJELENTKEZÉS XTREAM CODES SEGÍTSÉGÉVEL</string>
     <string name="search_main_hint">Élő TV, filmek és sorozatok keresése…</string>
     <string name="no_downloads_yet">Még nincs letöltés</string>
     <string name="overview">Áttekintés</string>

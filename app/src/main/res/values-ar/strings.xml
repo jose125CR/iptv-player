@@ -80,7 +80,8 @@
     <string name="no_provider_configured">لم يتم إعداد أي مزوّد</string>
     <string name="press_settings_to_add_playlist">اضغط الإعدادات لإضافة رابط قائمة تشغيل</string>
     <string name="add_a_provider">إضافة مزوّد</string>
-    <string name="startup_choose_provider">مزوّد IPTV/JELLYFIN</string>
+    <string name="startup_add_m3u">إضافة قائمة تشغيل M3U</string>
+    <string name="startup_signin_xtream">تسجيل الدخول عبر XTREAM CODES</string>
     <string name="search_main_hint">ابحث في البث المباشر والأفلام والمسلسلات…</string>
     <string name="no_downloads_yet">لا توجد تنزيلات بعد</string>
     <string name="overview">نظرة عامة</string>

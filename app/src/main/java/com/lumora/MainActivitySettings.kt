@@ -448,7 +448,7 @@ internal fun MainActivity.collapseSettingsRail() {
  *  Typeface constructor is API 28+, so this hand-rolled span keeps minSdk 25 happy.) */
 
 @Suppress("DEPRECATION")
-internal fun MainActivity.showProviderSettings() {
+internal fun MainActivity.showProviderSettings(presetProviderType: String? = null) {
     // Already open: unticking the last provider or plugin from inside Settings reloads, and
     // that load's "nothing configured" branch calls straight back in here - which would
     // inflate a second settings tree on top of the live one, leaving the first orphaned
@@ -473,6 +473,11 @@ internal fun MainActivity.showProviderSettings() {
     val typeStalker = dialogView.findViewById<View>(R.id.settingsTypeStalker)
     val typeJellyfin = dialogView.findViewById<View>(R.id.settingsTypeJellyfin)
     val typePlex = dialogView.findViewById<View>(R.id.settingsTypePlex)
+    // Only M3U and Xtream remain as ways in - the Stalker/Jellyfin/Plex cards stay
+    // hidden from the picker until their backends go away entirely.
+    typeStalker.visibility = View.GONE
+    typeJellyfin.visibility = View.GONE
+    typePlex.visibility = View.GONE
     val showQrButton = dialogView.findViewById<View>(R.id.settingsShowQrButton)
     val manualDivider = dialogView.findViewById<View>(R.id.settingsManualDivider)
     val nameSection = dialogView.findViewById<View>(R.id.settingsNameSection)
@@ -1156,9 +1161,12 @@ internal fun MainActivity.showProviderSettings() {
     // First run, nothing configured at all yet - the empty list + tiny "+ Add" button
     // would leave the user staring at nothing to interact with, so open the form
     // immediately (matches the old single-slot behavior of showing fields right away).
-    if (IptvProviderStore.load(prefs).isEmpty() && mediaServers().isEmpty()) {
+    // A preset (startup chooser's M3U/Xtream buttons) opens it too, then skips the
+    // picker step by selecting that type outright.
+    if (IptvProviderStore.load(prefs).isEmpty() && mediaServers().isEmpty() || presetProviderType != null) {
         openIptvForm(null)
     }
+    if (presetProviderType != null) selectType(presetProviderType)
 
     // Backup & Restore
     val backupManager = BackupManager(this)

@@ -75,7 +75,8 @@
     <string name="no_provider_configured">Tidak ada penyedia yang dikonfigurasi</string>
     <string name="press_settings_to_add_playlist">Tekan Pengaturan untuk menambahkan URL daftar putar</string>
     <string name="add_a_provider">Tambah Penyedia</string>
-    <string name="startup_choose_provider">PENYEDIA IPTV/JELLYFIN</string>
+    <string name="startup_add_m3u">TAMBAH DAFTAR PUTAR M3U</string>
+    <string name="startup_signin_xtream">MASUK DENGAN XTREAM CODES</string>
     <string name="search_main_hint">Cari TV langsung, film &amp; serial…</string>
     <string name="no_downloads_yet">Belum ada unduhan</string>
     <string name="overview">Ringkasan</string>

@@ -403,9 +403,6 @@ button:active{background:#1565c0}
 <select name="type" id="type" onchange="updateType()">
   <option value="m3u" ${if (presetType == "m3u") "selected" else ""}>M3U Playlist URL</option>
   <option value="xtream" ${if (presetType == "xtream") "selected" else ""}>Xtream Codes</option>
-  <option value="stalker" ${if (presetType == "stalker") "selected" else ""}>Stalker Portal</option>
-  <option value="jellyfin" ${if (presetType == "jellyfin") "selected" else ""}>Jellyfin</option>
-  <option value="plex" ${if (presetType == "plex") "selected" else ""}>Plex</option>
 </select>
 <label>Name (optional)</label>
 <input name="name" placeholder="My Provider">

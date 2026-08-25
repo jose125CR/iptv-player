@@ -75,7 +75,8 @@
     <string name="no_provider_configured">未配置提供商</string>
     <string name="press_settings_to_add_playlist">打开设置以添加播放列表 URL</string>
     <string name="add_a_provider">添加提供商</string>
-    <string name="startup_choose_provider">IPTV/JELLYFIN 提供商</string>
+    <string name="startup_add_m3u">添加 M3U 播放列表</string>
+    <string name="startup_signin_xtream">使用 Xtream Codes 登录</string>
     <string name="search_main_hint">搜索直播电视、电影和剧集…</string>
     <string name="no_downloads_yet">暂无下载</string>
     <string name="overview">概览</string>

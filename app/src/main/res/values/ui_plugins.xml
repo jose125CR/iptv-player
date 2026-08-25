@@ -2,7 +2,7 @@
 <resources>
     <!-- Plugins pane & stream search (MainActivityPlugins) -->
     <string name="plug_public_streaming_content_title">Public Streaming Content</string>
-    <string name="plug_public_streaming_content_message">These plugins search public torrent and streaming sites for content. Lumora does not host, control, or verify anything they find - what they return is entirely outside this app\'s control.\n\nFor educational and personal use only. You are responsible for complying with the laws that apply to you.</string>
+    <string name="plug_public_streaming_content_message">These plugins search public streaming sites for content. Lumora does not host, control, or verify anything they find - what they return is entirely outside this app\'s control.\n\nFor educational and personal use only. You are responsible for complying with the laws that apply to you.</string>
     <string name="plug_i_agree">I Agree</string>
     <string name="plug_no_trailer_found">No trailer found.</string>
     <string name="plug_could_not_resolve_stream">Could not resolve stream</string>

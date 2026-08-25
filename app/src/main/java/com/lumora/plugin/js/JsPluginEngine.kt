@@ -34,7 +34,7 @@ class JsPluginEngine(private val httpClient: OkHttpClient = OkHttpClient()) {
      * (`status.text = ...`, inflating and adding a result row, ...) that assumes it's on the
      * main thread. Calling it straight from the executor thread is a real `CalledFromWrongThreadException`
      * risk once a callback does anything beyond a plain field write (verified against a real
-     * device: a torrent search that reported one result crashed there, aborting the rest of the
+     * device: a stream search that reported one result crashed there, aborting the rest of the
      * script's execution and leaving one half-added, unclickable row behind - "1 result,
      * nothing selectable"). Every UI-facing callback this class exposes is hopped onto the main
      * thread before the caller ever sees it, so callers don't each have to remember to do this

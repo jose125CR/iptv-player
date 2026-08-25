@@ -59,8 +59,6 @@ import com.lumora.plugin.js.JsPluginEngine
 import com.lumora.plugin.js.PluginScript
 import com.lumora.plugin.js.PluginScriptManager
 import com.lumora.plugin.js.PluginStoreManager
-import com.lumora.torrent.TorrentEngine
-import com.lumora.torrent.TorrentForegroundService
 import com.lumora.anime.AnimeCatalogClient
 import com.lumora.player.PlayerManager
 import com.lumora.player.PlayerTrackController
@@ -459,9 +457,6 @@ class MainActivity : AppCompatActivity() {
     internal val pluginScriptManager by lazy { PluginScriptManager(this, prefs) }
     internal val pluginStoreManager by lazy { PluginStoreManager(prefs) }
     internal val jsPluginEngine by lazy { JsPluginEngine() }
-    /** Backs whatever's currently playing via a resolvesNatively plugin - the
-     *  local HTTP server it owns must stay alive for the life of playback. See showStreamSearchDialog. */
-    internal var activeTorrentSession: TorrentEngine? = null
     /** The film/series whose detail page a VOD playback was started from, so backing out of the
      *  player returns to that poster rather than dumping the user in the grid they had to walk
      *  to reach it. Set right before showPlayerFor by every detail-originated play path, and
@@ -1243,9 +1238,6 @@ class MainActivity : AppCompatActivity() {
         playerManager.release()
         if (::sleepTimer.isInitialized) sleepTimer.stop()
         if (::castManager.isInitialized) castManager.release()
-        activeTorrentSession?.let { engine -> Thread { runCatching { engine.stop() } }.start() }
-        activeTorrentSession = null
-        TorrentForegroundService.stop(this)
         releaseLivePreview()
         if (!isTv) runCatching { unregisterReceiver(downloadCompleteReceiver) }
     }

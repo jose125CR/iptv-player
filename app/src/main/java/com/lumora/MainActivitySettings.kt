@@ -1589,7 +1589,7 @@ internal fun MainActivity.showProviderSettings() {
         // restarted. showEmptyState() runs it itself on the other branch.
         //
         // "Nothing to show" is the same question classifyAndShow() asks, and it counts an
-        // enabled stream_search plugin as content: a torrent or anime plugin contributes no
+        // enabled stream_search plugin as content: a stream-search or anime plugin contributes no
         // catalog entries of its own but makes Discover and Find Stream usable. Testing
         // allChannels alone sent a plugin-only setup back to the "no provider" empty state
         // the moment Settings closed, however many plugins had just been switched on.

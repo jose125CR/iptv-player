@@ -42,10 +42,6 @@
     <string name="ui_reminder_channel_name">Rappels de programmes</string>
     <string name="ui_reminder_channel_desc">Alerte quelques minutes avant une émission pour laquelle vous avez défini un rappel</string>
 
-    <!-- Torrent foreground service -->
-    <string name="ui_torrent_channel_name">Streaming</string>
-    <string name="ui_torrent_streaming_text">Streaming torrent</string>
-
     <!-- On-screen keyboard action keys -->
     <string name="ui_key_space">ESPACE</string>
     <string name="ui_key_del">SUPPR</string>

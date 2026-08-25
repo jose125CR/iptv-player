@@ -53,7 +53,7 @@ internal suspend fun MainActivity.classifyAndShow(preserveUi: Boolean = false) {
 
     // Discover (TMDB browsing) and any stream_search plugin's Find Stream flow need no
     // provider-sourced channels at all - gating the whole content area on allChannels alone
-    // trapped a plugin-only setup (e.g. just torrent-search enabled, which contributes no
+    // trapped a plugin-only setup (e.g. just a stream_search plugin enabled, which contributes no
     // catalog entries) behind the "No provider configured" empty state for no reason.
     val hasContent = allChannels.isNotEmpty() || hasProviderlessSource()
 

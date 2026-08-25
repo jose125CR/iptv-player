@@ -322,7 +322,7 @@ internal fun MainActivity.loadDiscover(query: String?) {
     setDiscoverStatus(if (query == null) getString(R.string.plug_loading_trending) else getString(R.string.plug_searching_query, query))
     discoverSearchJob = scope.launch {
         val results = if (query == null) tmdbClient.trending() else tmdbClient.search(query)
-        // Without a stream-search plugin (the torrent plugin being the common one), a
+        // Without a stream-search plugin (the common one being a general plugin), a
         // TMDB-only title is a dead tile - its dialog offers nothing but a trailer.
         // Drop anything that isn't already in the library; with a plugin enabled the
         // plugin can play every title, so nothing gets filtered.
@@ -447,7 +447,7 @@ internal fun MainActivity.setDiscoverStatus(text: String?) {
 }
 
 /** Discover pick opens an info screen: overview + poster, then either play a matching catalog
- *  item (if this title is already served by a provider) or find a torrent stream for it. */
+ *  item (if this title is already served by a provider) or find a stream for it. */
 /**
  * Opens a Discover title on the same detail screen everything else uses.
  *

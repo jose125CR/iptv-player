@@ -26,8 +26,6 @@ import com.lumora.model.ProviderType
 import com.lumora.model.IptvProviderConfig
 import com.lumora.data.IptvProviderStore
 import com.lumora.plugin.ResolveResult
-import com.lumora.torrent.TorrentEngine
-import com.lumora.torrent.TorrentForegroundService
 import com.lumora.player.PlayerManager
 import com.lumora.player.VideoAspectFrameLayout
 import com.lumora.util.extractLeadingTag
@@ -854,22 +852,6 @@ internal fun MainActivity.showPlayerFor(
                 .firstOrNull { it.enabled && it.id == startVersion.pluginId }
             val resolved = when {
                 plugin == null -> ResolveResult.Failed(getString(R.string.play_plugin_disabled_message))
-                // Same split as the Find Stream dialog: a natively-resolving plugin's token
-                // is a magnet for the built-in torrent engine, not something the JS runtime
-                // can turn into a URL.
-                // Torrent metadata + initial buffering can take minutes with nothing on
-                // screen but a spinner, so the progress lines land on the player's subtitle
-                // row (free for VOD - only live TV puts EPG text there). TorrentEngine
-                // reports from its own IO thread, hence the hop.
-                plugin.resolvesNatively -> resolveTorrentStream(
-                    startVersion.pluginToken, null, startVersion.episodeNum
-                ) { line ->
-                    runOnUiThread {
-                        if (nowPlayingChannel?.id != channel.id) return@runOnUiThread
-                        binding.playerSubtitle.text = line
-                        binding.playerSubtitle.visibility = View.VISIBLE
-                    }
-                }
                 else -> jsPluginEngine.resolve(
                     pluginScriptManager.readSource(plugin),
                     startVersion.pluginToken,
@@ -1756,11 +1738,8 @@ internal fun MainActivity.hidePlayer() {
     mainHandler.removeCallbacks(upNextTickRunnable)
     playerManager.stop()
     sleepTimer.stop()
-    // A plugin-served stream (Find Stream) keeps a torrent + local server alive for as long
-    // as we're playing its URL - release it now.
-    activeTorrentSession?.let { engine -> Thread { runCatching { engine.stop() } }.start() }
-    activeTorrentSession = null
-    TorrentForegroundService.stop(this)
+    // A plugin-served stream (Find Stream) is a plain URL handed to the player, so there is
+    // nothing to tear down here.
     if (isCastManagerReady) castManager.stopCasting()
     if (activeTab == 0) {
         showLivePreviewPane()

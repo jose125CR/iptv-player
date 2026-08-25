@@ -21,14 +21,14 @@ object VodDownloader {
      * rejected up front rather than "succeeding" into a useless file:
      *
      *  - an HLS playlist would download as a few KB of text listing segment URLs;
-     *  - a torrent's URL points at the local HTTP server TorrentEngine runs for playback, which
-     *    stops with the session - and the real file is already on disk anyway.
+     *  - a channel whose URL is a local address (leftover from a resolved stream source) is
+     *    not directly downloadable.
      */
     fun unsupportedReason(channel: Channel): String? = when {
         channel.url.isBlank() ->
             "Play it once first - this title has no stream until a source is found for it."
         channel.url.contains("127.0.0.1") || channel.url.contains("localhost") ->
-            "Torrent streams can't be downloaded this way."
+            "This source can't be downloaded."
         // The system DownloadManager throws on anything that is not http(s) - a `data:` URI
         // playlist from a scraper crashed the app here rather than being refused. Anything of
         // that shape belongs to HlsDownloads; if it reaches this downloader at all, say so

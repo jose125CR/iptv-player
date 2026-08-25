@@ -131,7 +131,7 @@ object ExternalPlayer {
     }
 
     /** A `file://` download becomes a `content://` URI the receiving app is allowed to read;
-     *  anything else (http, rtsp, the local torrent HTTP server) is already shareable. */
+     *  anything else (http, rtsp, a resolved stream URL) is already shareable. */
     private fun toShareableUri(context: Context, url: String): Uri {
         if (!url.startsWith("file://")) return Uri.parse(url)
         val file = File(Uri.parse(url).path ?: return Uri.parse(url))

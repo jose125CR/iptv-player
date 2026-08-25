@@ -820,7 +820,7 @@ internal fun MainActivity.wireStartupChooser() {
 }
 
 /** Downloads and installs every stream_search/scraper_sites script the default plugin
- *  store lists - "public streaming content" is torrent/site-scraper plugins, not a
+ *  store lists - "public streaming content" is stream-search/scraper plugins, not a
  *  traditional provider. installScript() switches a first install on by itself, so
  *  nothing here has to enable them separately. Runs [onDone] whether or not anything
  *  actually installed - a store outage must not strand the user on a dead button. */

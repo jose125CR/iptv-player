@@ -42,10 +42,6 @@
     <string name="ui_reminder_channel_name">Programme reminders</string>
     <string name="ui_reminder_channel_desc">Alerts a few minutes before a show you set a reminder for</string>
 
-    <!-- Torrent foreground service -->
-    <string name="ui_torrent_channel_name">Streaming</string>
-    <string name="ui_torrent_streaming_text">Streaming torrent</string>
-
     <!-- On-screen keyboard action keys -->
     <string name="ui_key_space">SPACE</string>
     <string name="ui_key_del">DEL</string>

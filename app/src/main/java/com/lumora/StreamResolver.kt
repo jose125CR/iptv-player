@@ -26,27 +26,24 @@ private const val KEY_LAST_GOOD = "last_good_source"
 /**
  * How long a started source has to produce something before it is abandoned for the next one.
  *
- * Generous on purpose: a torrent legitimately spends this long finding peers and buffering (11s
- * was measured on device for a healthy swarm), so a tighter bound would drop working sources.
+ * Generous on purpose: a plugin resolve can take this long fetching from a slow host, so a
+ * tighter bound would drop working sources.
  */
 private const val STALL_TIMEOUT_MS = 20_000L
 
 /**
  * Find Stream: one search across every source Lumora has, played best-first without asking.
  *
- * There are two kinds of source and they used to be mutually exclusive - an installed
- * `stream_search` plugin won outright, and the ~49 built-in scraper sites were never consulted
- * while one was enabled. That was a bug in the shape of a design decision: with the torrent
- * plugin installed the site scrapers may as well not have existed.
+ * There are two kinds of source: an installed `stream_search` plugin and built-in site scrapers.
+ * Both run concurrently and their results go into one ranked queue.
  *
- * Now both run concurrently and their results go into one ranked queue.
+ * **Site sources are preferred over plugin results** - a site link starts playing in about a
+ * second, whereas a plugin may need to fetch from a slow host. Plugin results are what gets tried
+ * when no site carried the title.
  *
- * **Site sources are preferred over torrents outright** - they start in about a second, where a
- * torrent has to find peers and buffer first. Torrents are what gets tried when no site carried
- * the title.
- *
- * **Within the torrents, quality first and seeders second.** A 200-seeder CAM is a worse watch
- * than a 3-seeder BluRay, so seeders only break ties inside a quality tier - see [StreamQuality].
+ * **Within each group: a source that played last time wins** - a setup that works should keep
+ * working rather than re-deriving the answer - then dub preference when the user asked for it,
+ * then quality tier, then seeders as the tie-break inside a tier.
  *
  * Nothing is presented for approval and there is no picker. The queue is walked from the top, a
  * source that fails to resolve is skipped silently - a dead host is the normal case, not an error
@@ -260,17 +257,11 @@ internal class StreamResolver(
 
             activity.scope.launch {
                 when (next) {
-                    is FoundSource.FromPlugin -> {
-                        val resolved = if (next.plugin.resolvesNatively) {
-                            activity.resolveTorrentStream(next.result.token, season, episode) { line ->
-                                activity.runOnUiThread { if (!playbackStarted) detail.text = line }
-                            }
-                        } else {
-                            activity.jsPluginEngine.resolve(
-                                activity.pluginScriptManager.readSource(next.plugin),
-                                next.result.token, season, episode
-                            )
-                        }
+                     is FoundSource.FromPlugin -> {
+                        val resolved = activity.jsPluginEngine.resolve(
+                            activity.pluginScriptManager.readSource(next.plugin),
+                            next.result.token, season, episode
+                        )
                         trying = false
                         if (playbackStarted) return@launch
                         when (resolved) {
@@ -495,11 +486,11 @@ internal fun MainActivity.canFindStream(item: Channel): Boolean =
 /**
  * Best-first ordering.
  *
- * **Site sources come before torrents, always.** A site link starts playing in about a second; a
- * torrent has to find peers and buffer before the first frame, and on a weak swarm it may never
- * get there. So torrents are the fallback for when no site carried the title, not a competitor
- * ranked alongside them - which also means a site's lack of quality metadata can no longer cost
- * it against a torrent that advertises BluRay.
+ * **Site sources come first, always.** A site link starts playing in about a second; a
+ * plugin result may need to fetch from a slow host first. So plugin results are the fallback
+ * for when no site carried the title, not a competitor ranked alongside them - which also
+ * means a site's lack of quality metadata can no longer cost it against a plugin result
+ * that advertises BluRay.
  *
  * Within each group: a source that played last time wins - a setup that works should keep working
  * rather than re-deriving the answer - then dub preference when the user asked for it, then

@@ -31,8 +31,6 @@ import com.lumora.plugin.js.PluginScriptManager
 import com.lumora.plugin.js.PluginStore
 import com.lumora.plugin.js.PluginStoreManager
 import com.lumora.plugin.js.StoreScript
-import com.lumora.torrent.TorrentEngine
-import com.lumora.torrent.TorrentForegroundService
 import com.lumora.plugin.TorrentResult
 import com.lumora.scraper.utils.UserPreferences
 import kotlinx.coroutines.*
@@ -47,7 +45,7 @@ import java.util.Locale
 private const val PREF_PUBLIC_CONTENT_DISCLAIMER_ACCEPTED = "public_content_disclaimer_accepted"
 
 /** Gate in front of installing or enabling any stream_search/scraper_sites plugin - those
- *  search public torrent/streaming sites, which Lumora neither hosts nor controls. Accepted
+ *  search public streaming sites, which Lumora neither hosts nor controls. Accepted
  *  once, remembered in prefs; every later call runs [onAccepted] straight away. [onAccepted]
  *  is simply never called if the user declines. */
 internal fun MainActivity.ensurePublicContentDisclaimerAccepted(onAccepted: () -> Unit) {
@@ -270,43 +268,8 @@ internal fun MainActivity.wireFindStreamButton(item: Channel) {
 }
 
 /**
- * Resolves a magnet token via the native [TorrentEngine] instead of a JS plugin's own
- * `resolve()` - see [PluginScript.resolvesNatively]. Unlike a JS-resolved plain http(s) URL,
- * this one is served by a local HTTP server this engine instance owns, so it's kept alive in
- * [activeTorrentSession] for the life of playback (see [hidePlayer]/`onDestroy`).
- *
- * [activeTorrentSession] is set *before* the blocking [TorrentEngine.start] call, not after -
- * `start()` can take minutes (metadata fetch + buffering), and [TorrentEngine] only stops
- * that wait when its own `cancelled` flag is set by [TorrentEngine.stop] (coroutine
- * cancellation alone doesn't interrupt it - see [TorrentEngine]'s kdoc). Setting the field
- * early lets a caller that cancels mid-resolve (e.g. the Find Stream dialog's cancel
- * listener) actually reach and stop this engine instead of it finishing unattended minutes
- * later and popping up playback for a stream the user already backed out of.
- */
-internal suspend fun MainActivity.resolveTorrentStream(
-    magnet: String,
-    season: Int?,
-    episode: Int?,
-    onProgress: (String) -> Unit
-): ResolveResult {
-    activeTorrentSession?.let { old -> Thread { runCatching { old.stop() } }.start() }
-    TorrentForegroundService.start(this)
-    val engine = TorrentEngine(this)
-    activeTorrentSession = engine
-    return try {
-        val url = withContext(Dispatchers.IO) { engine.start(magnet, season, episode, onProgress) }
-        ResolveResult.Ready(url)
-    } catch (e: Exception) {
-        if (activeTorrentSession === engine) activeTorrentSession = null
-        withContext(Dispatchers.IO) { runCatching { engine.stop() } }
-        TorrentForegroundService.stop(this)
-        ResolveResult.Failed(e.message ?: getString(R.string.plug_could_not_resolve_stream))
-    }
-}
-
-/**
  * The enabled `stream_search` plugin to use for [item], if any. With more than one enabled
- * (e.g. an anime plugin and a general torrent plugin) this picks by declared
+ * (e.g. an anime plugin and a general stream-search plugin) this picks by declared
  * [PluginScript.contentTypes] instead of an arbitrary one - without [item] (existence-only
  * checks: is *any* stream_search plugin enabled, at all, for gating tabs/chrome) it just
  * returns the first. Anime catalog items carry the "anime:" id prefix set by
@@ -325,7 +288,7 @@ internal fun MainActivity.pluginChannelId(plugin: PluginScript, token: String, e
  *
  * The anime catalog (the AniList shelves and the Anime sidebar row) used to be gated on *any*
  * enabled `stream_search` plugin, on the reasoning that any of them could play the titles. In
- * practice that meant switching on the torrent plugin made a whole Anime section appear that the
+ * practice that meant switching on a general stream_search plugin made a whole Anime section appear that the
  * user never asked for and could not obviously connect to what they had just enabled. Gated on
  * the declared content type instead, so the section tracks the thing it is named after.
  */
@@ -391,15 +354,7 @@ internal fun MainActivity.showStreamSearchDialog(
         status.text = getString(R.string.plug_loading_title, result.title)
         resultsHost.removeAllViews()
         scope.launch {
-            val resolved = if (plugin.resolvesNatively) {
-                // TorrentEngine.start calls onProgress from its IO thread, so the TextView
-                // update has to hop to the main thread.
-                resolveTorrentStream(result.token, season, episode) { line ->
-                    runOnUiThread { status.text = line }
-                }
-            } else {
-                jsPluginEngine.resolve(source, result.token, season, episode)
-            }
+            val resolved = jsPluginEngine.resolve(source, result.token, season, episode)
             when (resolved) {
                 is ResolveResult.Ready -> {
                     dialog.dismiss()
@@ -488,14 +443,6 @@ internal fun MainActivity.showStreamSearchDialog(
     }
     dialog.setOnCancelListener {
         searchJob.cancel()
-        // A native-torrent resolve in progress won't stop on its own past this point (see
-        // resolveTorrentStream's kdoc) - only reachable while it hasn't succeeded yet, since
-        // a successful resolve already dismissed this dialog before the user could cancel it.
-        if (plugin.resolvesNatively) {
-            activeTorrentSession?.let { engine -> Thread { runCatching { engine.stop() } }.start() }
-            activeTorrentSession = null
-            TorrentForegroundService.stop(this)
-        }
     }
     dialog.show()
 }

@@ -371,7 +371,7 @@ class JsHostImpl(
         Base64.encodeToString(mac.doFinal(message), Base64.NO_WRAP)
     }.getOrNull()
 
-    // ── HTML parsing (Jsoup) for scraper scripts like torrent-search.js. A script re-parses a
+    // ── HTML parsing (Jsoup) for scraper scripts. A script re-parses a
     //    row's own outerHTML as its own mini-document for sub-selection rather than round-
     //    tripping opaque DOM element handles across the JS/Kotlin boundary. ──
 

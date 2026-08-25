@@ -3,7 +3,7 @@ package com.lumora
 /**
  * Ranks release quality so the best source can be played without asking.
  *
- * Torrent results advertise quality as free text, and it is the single most important thing
+ * Search results advertise quality as free text, and it is the single most important thing
  * about them: a 200-seeder CAM is a worse watch than a 3-seeder BluRay, so seeders can only be
  * the tie-break *within* a quality tier, never the primary sort. The tiers below are the standard
  * release ladder, coarse on purpose - the difference between BDRip and BluRay is not worth

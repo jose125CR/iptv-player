@@ -132,12 +132,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- Foreground-notification holder for TorrentEngine streams (see com.lumora.torrent). -->
-        <service
-            android:name=".torrent.TorrentForegroundService"
-            android:exported="false"
-            android:foregroundServiceType="dataSync" />
-
         <!-- No MediaBrowserService is declared, and no class implements one. Advertising one
              is what made Android Auto file Lumora as a media app - listed, but audio-only,
              with the car service never bound. The undeclared implementation that used to sit

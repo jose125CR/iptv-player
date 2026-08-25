@@ -57,8 +57,7 @@ private fun MainActivity.seriesItemForEpisode(channel: Channel): Channel {
 
 internal fun MainActivity.downloadItem(channel: Channel) {
     if (channel.id.isBlank()) return
-    // Used to return silently when there was no URL, which is every Discover, scraper and
-    // torrent item - so the button did nothing at all and said nothing about why.
+    // Used to return silently when there was no URL, which is every Discover and scraper item - so the button did nothing at all and said nothing about why.
     // No URL yet (a Discover title, or a TMDB episode placeholder): find a source first and
     // download whatever that resolves to, rather than telling the user to go and play it.
     if (channel.url.isBlank()) {

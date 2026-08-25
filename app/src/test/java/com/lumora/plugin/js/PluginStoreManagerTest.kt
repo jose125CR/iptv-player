@@ -143,7 +143,7 @@ class PluginStoreManagerTest {
                 {
                   "id": "torrent.search",
                   "label": "Torrent Search",
-                  "description": "Searches public torrent indexers for a title and streams the result via Lumora's built-in torrent engine.",
+                  "description": "Searches public torrent indexers for a title.",
                   "capabilities": ["stream_search"],
                   "file": "torrent-search.js"
                 }

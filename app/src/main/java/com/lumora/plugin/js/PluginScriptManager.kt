@@ -155,7 +155,6 @@ class PluginScriptManager(
             description = manifest["description"] as? String,
             capabilities = capabilities,
             enabled = enabled,
-            resolvesNatively = manifest["resolvesNatively"] as? Boolean ?: false,
             contentTypes = extractContentTypes(manifest),
         )
         discoverScripts()
@@ -185,7 +184,6 @@ class PluginScriptManager(
             description = manifest["description"] as? String,
             capabilities = capabilities,
             enabled = enabled,
-            resolvesNatively = manifest["resolvesNatively"] as? Boolean ?: false,
             contentTypes = extractContentTypes(manifest),
         )
     }

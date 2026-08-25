@@ -23,14 +23,6 @@ data class PluginScript(
     val capabilities: Set<String>,
     val enabled: Boolean,
     /**
-     * True for a `stream_search` script whose `PLUGIN.resolvesNatively` is set (e.g.
-     * torrent-search.js) - its results are resolved by a native engine
-     * ([com.lumora.torrent.TorrentEngine]) instead of calling the script's own `resolve()`,
-     * because a JS script can't run a persistent local HTTP server or hold a libtorrent session
-     * open the way a companion process used to.
-     */
-    val resolvesNatively: Boolean = false,
-    /**
      * Optional self-declared `PLUGIN.contentTypes` (e.g. `["anime"]`) - lets Lumora pick between
      * several enabled `stream_search` scripts by what a title actually is instead of an
      * arbitrary pick (see [com.lumora.MainActivity.enabledStreamSearchPlugin]), without Lumora

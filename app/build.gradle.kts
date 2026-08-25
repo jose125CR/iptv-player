@@ -119,15 +119,14 @@ android {
 
     packaging {
         jniLibs {
-            // Extract .so files to disk instead of loading them directly from the APK. libtorrent4j's
-            // native libs are not PAGE-aligned, so direct-from-apk loading throws "not PAGE-aligned -
-            // cannot open directly from apk" on older devices (old Fire TV sticks); legacy extraction
-            // avoids the crash at the cost of a little install-time unpacking.
+            // Extract .so files to disk instead of loading them directly from the APK. The
+            // QuickJS wrapper's native libs are not PAGE-aligned on every ABI, so direct-from-apk
+            // loading can throw "not PAGE-aligned" on older devices (old Fire TV sticks); legacy
+            // extraction avoids the crash at the cost of a little install-time unpacking.
             useLegacyPackaging = true
         }
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            // Multiple jlibtorrent per-ABI artifacts carry the same license/notice files.
             excludes += setOf("META-INF/LICENSE*", "META-INF/NOTICE*")
         }
     }
@@ -201,26 +200,11 @@ dependencies {
     // which requires Kotlin 2.4+ and would have forced an unrelated toolchain bump here).
     implementation("wang.harlon.quickjs:wrapper-android:3.2.3")
 
-    // HTML parsing for JS plugin host API (torrent scraper plugin uses host.parseHtml) and for
-    // every com.lumora.scraper site provider.
+    // HTML parsing for JS plugin host API and every com.lumora.scraper site provider.
     // 1.21.x specifically: Elements.filter(NodeFilter) was removed there, and while it existed
     // it shadowed Kotlin's Iterable.filter as a member, so the many `elements.filter { ... }`
     // calls across the ported providers resolved to the NodeFilter overload and failed.
     implementation("org.jsoup:jsoup:1.21.2")
-
-    // Native torrent streaming engine (com.lumora.torrent) - moved in-process from the old
-    // torrentplugin APK; only the scraper/search half became a JS script (torrent-search.js),
-    // this half needs libtorrent itself so it stays native Kotlin.
-    implementation("org.nanohttpd:nanohttpd:2.3.1")
-    // libtorrent4j (libtorrent 2.0.x), not FrostWire's jlibtorrent (libtorrent 1.2). 1.2 decides
-    // whether it may connect to an address from the routing table it reads over netlink, and
-    // Android only shows an app LAN + loopback routes - no default route - so every listen socket
-    // was treated as local-network-only and the engine refused to dial a single peer or announce
-    // to a single tracker (verified on device: 1000 known candidates, 0 connections).
-    implementation("org.libtorrent4j:libtorrent4j:2.1.0-35")
-    implementation("org.libtorrent4j:libtorrent4j-android-arm64:2.1.0-35")
-    implementation("org.libtorrent4j:libtorrent4j-android-arm:2.1.0-35")
-    implementation("org.libtorrent4j:libtorrent4j-android-x86_64:2.1.0-35")
 
     // Cast
     implementation("androidx.mediarouter:mediarouter:1.7.0")

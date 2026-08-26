@@ -8,9 +8,9 @@ import com.lumora.model.Channel
 import com.lumora.model.MediaType
 import com.lumora.model.Provider
 import com.lumora.model.ProviderType
-import com.lumora.model.IptvProviderConfig
+import com.lumora.model.AccountConfig
 import com.lumora.model.MediaServerConfig
-import com.lumora.data.IptvProviderStore
+import com.lumora.data.AccountStore
 import com.lumora.data.MediaServerStore
 import com.lumora.parser.M3uParser
 import com.lumora.parser.XtreamClient
@@ -32,7 +32,7 @@ internal fun MainActivity.localBackupFile(): File {
 /** IPTV (Xtream/M3U/Stalker - still mutually exclusive among themselves, that's what
  *  [provider] represents) and Jellyfin are independent provider slots that can each be
  *  configured and enabled at the same time - their catalogs get merged. */
-internal fun MainActivity.hasIptvConfigured(): Boolean = IptvProviderStore.load(prefs).isNotEmpty()
+internal fun MainActivity.hasIptvConfigured(): Boolean = AccountStore.load(prefs).isNotEmpty()
 
 /** Every configured media-server account, of both kinds. Any number of each can exist and be
  *  active at once; their catalogs merge into the same browsing experience as the IPTV ones. */
@@ -55,11 +55,9 @@ internal fun MainActivity.hasPlexConfigured(): Boolean = plexServers().isNotEmpt
 internal fun MainActivity.hasProviderConfigured(): Boolean =
     hasIptvConfigured() || mediaServers().isNotEmpty()
 
-/** Configured *and* switched on. A provider can exist but be disabled (its row unticked
- *  in Settings, or the demo auto-disabled), which leaves nothing to browse - distinct
- *  from hasProviderConfigured(), which only asks whether any entry exists at all. */
+/** An active IPTV account or any enabled media server — something the user can browse. */
 internal fun MainActivity.hasProviderEnabled(): Boolean =
-    IptvProviderStore.load(prefs).any { it.enabled } || mediaServers().any { it.enabled }
+    AccountStore.activeAccount(prefs) != null || mediaServers().any { it.enabled }
 
 /** Search and the tab bar are useful once there's an enabled provider to browse - with none,
  *  they point at nothing, so hide them and leave just the Settings button as the way in.
@@ -115,11 +113,11 @@ internal fun MainActivity.isVodDisabled(): Boolean = isSimpleMode() || prefs.get
 // ── Per-provider content-type gates ──────────────
 /** Effective per-content-type gate for one IPTV provider: the provider's own flag,
  *  with Movies/Series additionally subject to the global VOD gate. */
-internal fun MainActivity.providerAllowsLive(cfg: IptvProviderConfig): Boolean = cfg.liveEnabled
+internal fun MainActivity.providerAllowsLive(cfg: AccountConfig): Boolean = cfg.liveEnabled
 
-internal fun MainActivity.providerAllowsMovies(cfg: IptvProviderConfig): Boolean = !isVodDisabled() && cfg.moviesEnabled
+internal fun MainActivity.providerAllowsMovies(cfg: AccountConfig): Boolean = !isVodDisabled() && cfg.moviesEnabled
 
-internal fun MainActivity.providerAllowsSeries(cfg: IptvProviderConfig): Boolean = !isVodDisabled() && cfg.seriesEnabled
+internal fun MainActivity.providerAllowsSeries(cfg: AccountConfig): Boolean = !isVodDisabled() && cfg.seriesEnabled
 
 /** Per-media-server content-type gates, the same shape as the IPTV ones above: the server's
  *  own flag, with Movies/Series additionally subject to the global VOD gate. */
@@ -162,7 +160,7 @@ internal fun MainActivity.mediaServerOwner(ch: Channel, servers: List<MediaServe
  *  media-server item, whose owner is what says the account still exists at all. */
 internal fun MainActivity.isTypeAllowed(
     ch: Channel,
-    configs: List<IptvProviderConfig>,
+    configs: List<AccountConfig>,
     servers: List<MediaServerConfig> = mediaServers()
 ): Boolean {
     if (ch.isOwnLibrary) {
@@ -319,7 +317,7 @@ internal fun MainActivity.applyProviderToggle(enabled: Boolean, belongsToProvide
  *  cold-start filter (loadAllConfiguredProviders) is what hides gated VOD at display time,
  *  so the cache itself stays display-unfiltered. */
 internal suspend fun MainActivity.persistCatalog(channels: List<Channel>) = withContext(Dispatchers.IO) {
-    val configs = IptvProviderStore.load(prefs)
+    val configs = AccountStore.load(prefs)
     val servers = mediaServers()
     val configuredIds = configs.map { it.id }.toSet()
     // Fast path: no content-type gate is active (per-provider flags fold the global VOD
@@ -378,11 +376,12 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
     // Raised for the cached path too: reading and re-deriving a big catalog still takes
     // a few seconds, and with no status up the app just looks frozen.
     setStatus(getString(R.string.loading), visible = true)
-    xtreamProviderConfigs = IptvProviderStore.load(prefs).filter { it.enabled && it.type == "xtream" }.associateBy { it.id }
+    val activeConfig = AccountStore.activeAccount(prefs)
+    xtreamProviderConfigs = if (activeConfig?.type == "xtream") mapOf(activeConfig.id to activeConfig) else emptyMap()
     // Every type, not just Xtream, and regardless of enabled state - a cached catalog can
     // still contain items from a provider that's since been switched off, and their chips
     // should still say where they came from.
-    providerNamesById = IptvProviderStore.load(prefs).associate { it.id to it.name }
+    providerNamesById = AccountStore.load(prefs).associate { it.id to it.name }
     // Toggling/adding/removing providers in quick succession each calls this with no
     // ordering guarantee between the launched coroutines - without cancelling the
     // previous one, whichever network fetch happens to finish last wins and gets written
@@ -411,7 +410,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 // otherwise resurrect here (a cache saved with VOD on, for example).
                 // Both lists are read once, not per channel: each is a JSON parse, and this
                 // filter runs across a catalogue of tens of thousands of items.
-                val typeGates = IptvProviderStore.load(prefs)
+                val typeGates = listOfNotNull(AccountStore.activeAccount(prefs))
                 val serverGates = mediaServers()
                 cached = if (isVodDisabled()) {
                     cached.filter { it.mediaType == MediaType.LIVE && isTypeAllowed(it, typeGates, serverGates) }
@@ -447,7 +446,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
         val errors = mutableListOf<String>()
         var expiryText: String? = null
 
-        val enabledConfigs = IptvProviderStore.load(prefs).filter { it.enabled }
+        val enabledConfigs = AccountStore.activeAccount(prefs)?.let { listOf(it) } ?: emptyList()
         if (!uiPainted && enabledConfigs.isNotEmpty()) {
             setStatus(
                 if (enabledConfigs.size == 1) getString(R.string.plug_connecting_to, enabledConfigs.first().name)
@@ -504,7 +503,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
         // a provider off mid-refresh drops its id from this set, so the channels it just
         // fetched can't slip back into the catalog. Items with no sourceProviderId
         // (Jellyfin/Plex/anime) always pass.
-        val enabledProviderIds = IptvProviderStore.load(prefs).filter { it.enabled }.map { it.id }.toSet()
+        val enabledProviderIds = AccountStore.activeAccountId(prefs)?.let { setOf(it) } ?: emptySet()
         for ((config, result) in fetchResults) {
             when (result) {
                 is FetchResult.Success ->
@@ -593,7 +592,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
  *  what ran a low-RAM box out of heap (lowmemorykiller killing the process) and read as the
  *  whole app freezing. Splitting the fetch also gets Live TV on screen while VOD/series -
  *  the slower, bulkier part - are still loading. */
-internal suspend fun MainActivity.fetchStalkerChannels(config: IptvProviderConfig, onLive: suspend (List<Channel>) -> Unit): FetchResult {
+internal suspend fun MainActivity.fetchStalkerChannels(config: AccountConfig, onLive: suspend (List<Channel>) -> Unit): FetchResult {
     return try {
         val mac = config.userAgent ?: return FetchResult.Failure("no MAC address")
         val stalkerProvider = Provider(
@@ -630,7 +629,7 @@ internal suspend fun MainActivity.fetchStalkerChannels(config: IptvProviderConfi
 
 // ── M3U / Xtream channel fetch ─────────────────
 
-internal suspend fun MainActivity.fetchM3uChannels(config: IptvProviderConfig): FetchResult {
+internal suspend fun MainActivity.fetchM3uChannels(config: AccountConfig): FetchResult {
     val url = config.url ?: return FetchResult.Failure("no URL")
     return try {
         val result = withContext(Dispatchers.IO) { M3uParser.parseFromUrl(url, BaseApplication.instance.okHttpClient) }
@@ -654,7 +653,7 @@ internal suspend fun MainActivity.fetchM3uChannels(config: IptvProviderConfig): 
     }
 }
 
-internal suspend fun MainActivity.fetchXtreamChannels(config: IptvProviderConfig, onExpiry: (String?) -> Unit): FetchResult {
+internal suspend fun MainActivity.fetchXtreamChannels(config: AccountConfig, onExpiry: (String?) -> Unit): FetchResult {
     return try {
         val xtreamProvider = Provider(
             name = config.name, type = ProviderType.XTREAM,

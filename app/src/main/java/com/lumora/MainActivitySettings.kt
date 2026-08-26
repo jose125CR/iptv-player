@@ -18,8 +18,8 @@ import com.lumora.download.DownloadStore
 import com.lumora.cache.PlaybackPositionStore
 import com.lumora.cache.RecentlyPlayedStore
 import com.lumora.model.Provider
-import com.lumora.model.IptvProviderConfig
-import com.lumora.data.IptvProviderStore
+import com.lumora.model.AccountConfig
+import com.lumora.data.AccountStore
 import com.lumora.pairing.QrPairingManager
 import com.lumora.player.PlayerManager
 import com.lumora.util.normalizeServerUrl
@@ -530,9 +530,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             .setTitle(getString(R.string.sett_clear_history_confirm))
             .setMessage(getString(R.string.sett_clear_history_message))
             .setPositiveButton(getString(R.string.search_recents_clear)) { _, _ ->
-                PlaybackPositionStore.clearAll(this)
+                PlaybackPositionStore.clearAllAccounts(this)
                 clearUpNextMemo()
-                RecentlyPlayedStore.clear(this)
+                RecentlyPlayedStore.clearAll(this)
                 Toast.makeText(this, getString(R.string.sett_history_cleared), Toast.LENGTH_SHORT).show()
                 if (showingHome) selectHome()
             }
@@ -624,7 +624,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // separate always-visible section, but that meant asking for its server/user/pass
     // even when someone only wanted IPTV. Now it's just another type card, and only
     // its fields show once picked. IPTV types share one saved-config list
-    // (IptvProviderConfig, see editingProviderId); Jellyfin and Plex share another
+    // (AccountConfig, see editingProviderId); Jellyfin and Plex share another
     // (MediaServerConfig, see editingMediaServerId) - both lists take any number of entries.
     // currentType is null until a card is tapped - the rest of the form (QR button,
     // name, type-specific fields) stays hidden until then.
@@ -753,9 +753,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             when (type) {
                 "m3u" -> {
                     val url = form["m3uUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
-                    IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                        id = IptvProviderStore.newId(), type = "m3u", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR M3U",
-                        enabled = true, url = url, userAgent = form["userAgent"]
+                    AccountStore.upsert(prefs, AccountConfig(
+                        id = AccountStore.newId(), type = "m3u", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR M3U",
+                        url = url, userAgent = form["userAgent"]
                     ))
                     
                     stopQrServer()
@@ -764,9 +764,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
                 }
                 "xtream" -> {
                     val su = form["serverUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
-                    IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                        id = IptvProviderStore.newId(), type = "xtream", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Xtream",
-                        enabled = true, url = su, username = form["username"], password = form["password"]
+                    AccountStore.upsert(prefs, AccountConfig(
+                        id = AccountStore.newId(), type = "xtream", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Xtream",
+                        url = su, username = form["username"], password = form["password"]
                     ))
                     
                     stopQrServer()
@@ -777,10 +777,10 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
                     val su = form["stalkerUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
                     val mac = form["stalkerMac"]?.takeIf { it.isNotBlank() } ?: return@runOnUiThread
                     // MAC rides in userAgent - the same slot Stalker configs use for it
-                    // everywhere else (see IptvProviderConfig / loadAllConfiguredProviders).
-                    IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                        id = IptvProviderStore.newId(), type = "stalker", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Stalker",
-                        enabled = true, url = su, userAgent = mac
+                    // everywhere else (see AccountConfig / loadAllConfiguredProviders).
+                    AccountStore.upsert(prefs, AccountConfig(
+                        id = AccountStore.newId(), type = "stalker", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Stalker",
+                        url = su, userAgent = mac
                     ))
                     
                     stopQrServer()
@@ -930,7 +930,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // already known. The "your providers" list collapses while this is open (see
     // settingsIptvListSection) - it's irrelevant mid-add and the space it frees up
     // is what keeps the QR code/fields on screen without a scroll.
-    fun openIptvForm(existing: IptvProviderConfig?) {
+    fun openIptvForm(existing: AccountConfig?) {
         editingProviderId = existing?.id
         editingMediaServerId = null
         addIptvProviderButton.visibility = View.GONE
@@ -977,7 +977,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         if (existing == null) focusWhenReady(typeM3u)
     }
 
-    // Jellyfin accounts live in MediaServerStore, not IptvProviderStore, so editing one
+    // Jellyfin accounts live in MediaServerStore, not AccountStore, so editing one
     // re-uses the same form/type-card UI but pre-fills from its MediaServerConfig.
     fun openJellyfinEditForm(existing: MediaServerConfig) {
         editingProviderId = null
@@ -1011,21 +1011,18 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
 
     fun renderIptvProviderList() {
         iptvProviderListContainer.removeAllViews()
-        val list = IptvProviderStore.load(prefs)
+        val list = AccountStore.load(prefs)
         val servers = mediaServers()
         iptvProviderListEmpty.visibility =
             if (list.isEmpty() && servers.isEmpty()) View.VISIBLE else View.GONE
         for (cfg in list) {
             val row = layoutInflater.inflate(R.layout.item_iptv_provider_row, iptvProviderListContainer, false)
             val enabledBox = row.findViewById<CheckBox>(R.id.rowEnabled)
-            enabledBox.isChecked = cfg.enabled
-            // The checkbox is not clickable/focusable itself - clicking the row is what
-            // toggles it, which is the only way a D-pad can reach it at all.
+            enabledBox.isChecked = cfg.id == AccountStore.activeAccountId(prefs)
             row.setOnClickListener {
-                val checked = !enabledBox.isChecked
-                enabledBox.isChecked = checked
-                IptvProviderStore.setEnabled(prefs, cfg.id, checked)
-                applyProviderToggle(checked) { it.sourceProviderId == cfg.id }
+                AccountStore.setActiveAccount(prefs, cfg.id)
+                applyProviderToggle(true) { it.sourceProviderId == cfg.id }
+                if (hasProviderConfigured()) scope.launch { loadAllConfiguredProviders(forceRefresh = true) }
             }
             // Per-content-type toggles: TV / Movies / Series, one checkbox each. Persist
             // before reloading - the reload must see the new flags, and a stale cache
@@ -1037,9 +1034,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
                     if (hasProviderConfigured()) scope.launch { loadAllConfiguredProviders(forceRefresh = true) }
                 }
             }
-            bindContentBox(row.findViewById(R.id.rowTvBox), cfg.liveEnabled) { on -> IptvProviderStore.setContentFlags(prefs, cfg.id, live = on) }
-            bindContentBox(row.findViewById(R.id.rowMoviesBox), cfg.moviesEnabled) { on -> IptvProviderStore.setContentFlags(prefs, cfg.id, movies = on) }
-            bindContentBox(row.findViewById(R.id.rowSeriesBox), cfg.seriesEnabled) { on -> IptvProviderStore.setContentFlags(prefs, cfg.id, series = on) }
+            bindContentBox(row.findViewById(R.id.rowTvBox), cfg.liveEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, live = on) }
+            bindContentBox(row.findViewById(R.id.rowMoviesBox), cfg.moviesEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, movies = on) }
+            bindContentBox(row.findViewById(R.id.rowSeriesBox), cfg.seriesEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, series = on) }
             row.findViewById<TextView>(R.id.rowName).text = cfg.name
             val typeLabel = when (cfg.type) {
                 "xtream" -> getString(R.string.provider_type_xtream)
@@ -1053,7 +1050,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
                     .setTitle(getString(R.string.sett_remove_provider_confirm, cfg.name))
                     .setMessage(getString(R.string.sett_remove_provider_message))
                     .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                        IptvProviderStore.remove(prefs, cfg.id)
+                        AccountStore.remove(prefs, cfg.id)
                         renderIptvProviderList()
                         // The removed row's own Remove button was holding focus and is
                         // gone now - see focusWhenReady.
@@ -1163,7 +1160,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // immediately (matches the old single-slot behavior of showing fields right away).
     // A preset (startup chooser's M3U/Xtream buttons) opens it too, then skips the
     // picker step by selecting that type outright.
-    if (IptvProviderStore.load(prefs).isEmpty() && mediaServers().isEmpty() || presetProviderType != null) {
+    if (AccountStore.load(prefs).isEmpty() && mediaServers().isEmpty() || presetProviderType != null) {
         openIptvForm(null)
     }
     if (presetProviderType != null) selectType(presetProviderType)
@@ -1615,18 +1612,18 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             Toast.makeText(this, getString(R.string.sett_choose_provider_type_first), Toast.LENGTH_SHORT).show(); return@setOnClickListener
         }
         val name = providerNameInput.text.toString().trim()
-        val id = editingProviderId ?: IptvProviderStore.newId()
+        val id = editingProviderId ?: AccountStore.newId()
         // The form has no per-type controls; preserve the provider's existing content
         // flags so saving the form never silently resets a movies/series split.
-        val prevConfig = editingProviderId?.let { pid -> IptvProviderStore.load(prefs).firstOrNull { it.id == pid } }
+        val prevConfig = editingProviderId?.let { pid -> AccountStore.load(prefs).firstOrNull { it.id == pid } }
         when (currentType) {
             "m3u" -> {
                 val url = m3uUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
                 if (url.isBlank()) {
                     Toast.makeText(this, getString(R.string.sett_enter_m3u_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener
                 }
-                IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                    id = id, type = "m3u", name = name.ifBlank { "M3U/M3U8 Playlist" }, enabled = true,
+                AccountStore.upsert(prefs, AccountConfig(
+                    id = id, type = "m3u", name = name.ifBlank { "M3U/M3U8 Playlist" },
                     liveEnabled = prevConfig?.liveEnabled ?: true,
                     moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
                     url = url, userAgent = uaInput.text.toString().trim().ifBlank { null }
@@ -1635,8 +1632,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             "xtream" -> {
                 val url = xtreamUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
                 if (url.isBlank()) { Toast.makeText(this, getString(R.string.sett_enter_server_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-                IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                    id = id, type = "xtream", name = name.ifBlank { "Xtream" }, enabled = true,
+                AccountStore.upsert(prefs, AccountConfig(
+                    id = id, type = "xtream", name = name.ifBlank { "Xtream" },
                     liveEnabled = prevConfig?.liveEnabled ?: true,
                     moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
                     url = url, username = xtreamUser.text.toString().trim(), password = xtreamPass.text.toString().trim()
@@ -1645,15 +1642,15 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             "stalker" -> {
                 val url = stalkerUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
                 if (url.isBlank()) { Toast.makeText(this, getString(R.string.sett_enter_server_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-                IptvProviderStore.upsert(prefs, IptvProviderConfig(
-                    id = id, type = "stalker", name = name.ifBlank { "Stalker Portal" }, enabled = true,
+                AccountStore.upsert(prefs, AccountConfig(
+                    id = id, type = "stalker", name = name.ifBlank { "Stalker Portal" },
                     liveEnabled = prevConfig?.liveEnabled ?: true,
                     moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
                     url = url, userAgent = stalkerMac.text.toString().trim()
                 ))
             }
             "jellyfin" -> {
-                // Media servers have their own list (MediaServerStore), not IptvProviderStore -
+                // Media servers have their own list (MediaServerStore), not AccountStore -
                 // same "any number of entries" shape, different contents.
                 val url = jellyfinUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it, defaultScheme = "https") }
                 if (url.isBlank()) { Toast.makeText(this, getString(R.string.sett_enter_server_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener }

@@ -63,7 +63,7 @@
     <string name="catchup_loading">جارٍ تحميل الدليل…</string>
     <string name="catchup_no_guide">لا توجد بيانات دليل لهذا اليوم — يتم عرض فترات ساعة بساعة.</string>
     <string name="catchup_nothing_aired">لم يُعرض أي شيء في هذا اليوم بعد.</string>
-    <string name="catchup_no_provider">لا يمكن تشغيل هذا — لم يعد المزوّد الذي جاء منه مُعدّاً بعد الآن.</string>
+    <string name="catchup_no_provider">لا يمكن تشغيل هذا — الحساب الذي جاء منه لم يعد مُعدّاً.</string>
     <string name="catchup_hour_block">فترة ساعة</string>
     <plurals name="catchup_days_kept">
         <item quantity="zero">%1$d يوم محفوظ</item>
@@ -76,9 +76,9 @@
     <string name="series_tab">المسلسلات</string>
     <string name="films_tab">الأفلام</string>
     <string name="downloads_tab">التنزيلات</string>
-    <string name="no_provider_configured">لم يتم إعداد أي مزوّد</string>
+    <string name="no_provider_configured">لم يتم إعداد أي حساب</string>
     <string name="press_settings_to_add_playlist">اضغط الإعدادات لإضافة رابط قائمة تشغيل</string>
-    <string name="add_a_provider">إضافة مزوّد</string>
+    <string name="add_a_provider">إضافة حساب</string>
     <string name="startup_add_m3u">إضافة قائمة تشغيل M3U</string>
     <string name="startup_signin_xtream">تسجيل الدخول عبر XTREAM CODES</string>
     <string name="search_main_hint">ابحث في البث المباشر والأفلام والمسلسلات…</string>
@@ -111,7 +111,7 @@
     <string name="side_menu_loading">جارٍ التحميل…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">المزوّدون</string>
+    <string name="providers">الحسابات</string>
     <string name="playback">التشغيل</string>
     <string name="general">عام</string>
     <string name="filters">عوامل التصفية</string>
@@ -120,11 +120,11 @@
     <string name="enabled">مفعّل</string>
     <string name="update">تحديث</string>
     <string name="about">حول</string>
-    <string name="providers_description">شغّل عدة مزوّدين معاً - فعّل أو عطّل كل واحد على حدة</string>
-    <string name="your_providers">المزوّدون لديك</string>
-    <string name="no_iptv_providers_added_yet">لم تتم إضافة أي مزوّد IPTV بعد</string>
-    <string name="add_provider">+ إضافة مزوّد</string>
-    <string name="what_kind_of_provider">ما نوع هذا المزوّد؟</string>
+    <string name="providers_description">حساب واحد نشط في كل مرة — التبديل لتغيير الكتالوج</string>
+    <string name="your_providers">حساباتك</string>
+    <string name="no_iptv_providers_added_yet">لم تتم إضافة أي حساب IPTV بعد</string>
+    <string name="add_provider">+ إضافة حساب</string>
+    <string name="what_kind_of_provider">ما نوع هذا الحساب؟</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">رابط قائمة التشغيل</string>
     <string name="provider_type_xtream">Xtream</string>

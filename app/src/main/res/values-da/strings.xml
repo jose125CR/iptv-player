@@ -63,7 +63,7 @@
     <string name="catchup_loading">Indlæser guide…</string>
     <string name="catchup_no_guide">Ingen guidedata for denne dag — viser timeblokke.</string>
     <string name="catchup_nothing_aired">Intet er blevet sendt denne dag endnu.</string>
-    <string name="catchup_no_provider">Kan ikke afspilles — udbyderen, den kommer fra, er ikke længere konfigureret.</string>
+    <string name="catchup_no_provider">Kan ikke afspilles — kontoen, den kommer fra, er ikke længere konfigureret.</string>
     <string name="catchup_hour_block">Timeblok</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d dag beholdt</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Serier</string>
     <string name="films_tab">Film</string>
     <string name="downloads_tab">Downloads</string>
-    <string name="no_provider_configured">Ingen udbyder konfigureret</string>
+    <string name="no_provider_configured">Ingen konto konfigureret</string>
     <string name="press_settings_to_add_playlist">Tryk på Indstillinger for at tilføje en afspilningsliste-URL</string>
-    <string name="add_a_provider">Tilføj en udbyder</string>
+    <string name="add_a_provider">Tilføj en konto</string>
     <string name="startup_add_m3u">TILFØJ M3U-LISTE</string>
     <string name="startup_signin_xtream">LOG IND MED XTREAM CODES</string>
     <string name="search_main_hint">Søg i direkte TV, film &amp; serier…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">Indlæser…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Udbyder</string>
+    <string name="providers">Konti</string>
     <string name="playback">Afspilning</string>
     <string name="general">Generelt</string>
     <string name="filters">Filtre</string>
@@ -116,11 +116,11 @@
     <string name="enabled">Aktiveret</string>
     <string name="update">Opdater</string>
     <string name="about">Om</string>
-    <string name="providers_description">Kør flere udbydere sammen - aktiver eller deaktiver hver enkelt uafhængigt</string>
-    <string name="your_providers">DINE UDBYDERE</string>
-    <string name="no_iptv_providers_added_yet">Ingen IPTV-udbydere tilføjet endnu</string>
-    <string name="add_provider">+ Tilføj udbyder</string>
-    <string name="what_kind_of_provider">Hvilken slags udbyder er dette?</string>
+    <string name="providers_description">Kun én aktiv ad gangen — skift for at ændre kataloget</string>
+    <string name="your_providers">DINE KONTOER</string>
+    <string name="no_iptv_providers_added_yet">Ingen IPTV-konti tilføjet endnu</string>
+    <string name="add_provider">+ Tilføj konto</string>
+    <string name="what_kind_of_provider">Hvilken slags konto er dette?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Afspilningsliste-link</string>
     <string name="provider_type_xtream">Xtream</string>

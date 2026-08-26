@@ -1,12 +1,14 @@
 package com.lumora.cache
 
 import android.content.Context
+import com.lumora.data.AccountStore
 
 private const val PREFS_NAME = "iptv_prefs"
 private const val KEY_FAVORITE_SERIES = "favorite_series_ids"
 private const val KEY_FAVORITE_CHANNELS = "favorite_channel_ids"
 
-/** Favorited series (shown on Home) and favorited live channels (Favourites category in Live TV). */
+/** Favorited series (shown on Home) and favorited live channels (Favourites category in Live TV).
+ *  Data is isolated per active account: keys are prefixed with `{accountId}_`. */
 object FavoritesStore {
     private val lock = Any()
 
@@ -25,6 +27,7 @@ object FavoritesStore {
      * reader sees; writers replace the entry rather than editing it in place.
      */
     private val cache = mutableMapOf<String, Set<String>>()
+    private var cacheAccountId: String? = null
 
     fun isFavoriteSeries(context: Context, id: String): Boolean = id in getFavoriteSeriesIds(context)
 
@@ -48,6 +51,14 @@ object FavoritesStore {
 
     fun getFavoriteChannelIds(context: Context): Set<String> = readSet(context, KEY_FAVORITE_CHANNELS)
 
+    /** Wipe ALL accounts' favorites (used by the Settings "clear data" action). */
+    fun clearAll(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().clear().apply()
+        cache.clear()
+        cacheAccountId = null
+    }
+
     /** Returns the new membership state (true = now favorited). */
     private fun toggle(context: Context, key: String, id: String): Boolean = synchronized(lock) {
         val current = readSet(context, key)
@@ -56,19 +67,37 @@ object FavoritesStore {
         nowFavorite
     }
 
+    private fun activeAccountId(context: Context): String {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return AccountStore.activeAccountId(prefs) ?: "_no_account"
+    }
+
+    private fun prefixedKey(context: Context, key: String): String =
+        "${activeAccountId(context)}_$key"
+
     private fun write(context: Context, key: String, value: Set<String>) {
-        cache[key] = value
+        val realKey = prefixedKey(context, key)
+        cache[realKey] = value
         context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            .edit().putStringSet(key, value).apply()
+            .edit().putStringSet(realKey, value).apply()
     }
 
     private fun readSet(context: Context, key: String): Set<String> = synchronized(lock) {
-        cache.getOrPut(key) {
+        val realKey = prefixedKey(context, key)
+        // Invalidate cache if account changed since last read
+        val currentAccountId = activeAccountId(context)
+        if (cacheAccountId != null && cacheAccountId != currentAccountId) {
+            cache.clear()
+            cacheAccountId = currentAccountId
+        } else if (cacheAccountId == null) {
+            cacheAccountId = currentAccountId
+        }
+        cache.getOrPut(realKey) {
             // Copied out of the pref rather than handed over: SharedPreferences returns its own
             // live instance from getStringSet, and the docs are explicit that mutating it (or
             // reading it after a later write) is undefined.
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-                .getStringSet(key, emptySet())?.toSet() ?: emptySet()
+                .getStringSet(realKey, emptySet())?.toSet() ?: emptySet()
         }
     }
 }

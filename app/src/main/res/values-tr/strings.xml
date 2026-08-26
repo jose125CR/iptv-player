@@ -63,7 +63,7 @@
     <string name="catchup_loading">Rehber yükleniyor…</string>
     <string name="catchup_no_guide">Bu güne ait rehber verisi yok — saatlik bloklar gösteriliyor.</string>
     <string name="catchup_nothing_aired">Bu günde henüz hiçbir şey yayınlanmadı.</string>
-    <string name="catchup_no_provider">Bu oynatılamıyor — geldiği sağlayıcı artık yapılandırılmamış.</string>
+    <string name="catchup_no_provider">Bu oynatılamıyor — geldiği hesap artık yapılandırılmamış.</string>
     <string name="catchup_hour_block">Saatlik blok</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d gün saklandı</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Diziler</string>
     <string name="films_tab">Filmler</string>
     <string name="downloads_tab">İndirilenler</string>
-    <string name="no_provider_configured">Sağlayıcı yapılandırılmamış</string>
+    <string name="no_provider_configured">Hesap yapılandırılmamış</string>
     <string name="press_settings_to_add_playlist">Oynatma listesi URL\'si eklemek için Ayarlar\'a basın</string>
-    <string name="add_a_provider">Sağlayıcı Ekle</string>
+    <string name="add_a_provider">Hesap Ekle</string>
     <string name="startup_add_m3u">M3U LİSTESİ EKLE</string>
     <string name="startup_signin_xtream">XTREAM CODES İLE GİRİŞ YAP</string>
     <string name="search_main_hint">Canlı TV, filmler &amp; dizilerde ara…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">Yükleniyor…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Sağlayıcılar</string>
+    <string name="providers">Hesaplar</string>
     <string name="playback">Oynatma</string>
     <string name="general">Genel</string>
     <string name="filters">Filtreler</string>
@@ -116,11 +116,11 @@
     <string name="enabled">Etkin</string>
     <string name="update">Güncelle</string>
     <string name="about">Hakkında</string>
-    <string name="providers_description">Birden fazla sağlayıcıyı birlikte çalıştırın - her birini bağımsız olarak etkinleştirin veya devre dışı bırakın</string>
-    <string name="your_providers">SAĞLAYICILARINIZ</string>
-    <string name="no_iptv_providers_added_yet">Henüz IPTV sağlayıcısı eklenmedi</string>
-    <string name="add_provider">+ Sağlayıcı Ekle</string>
-    <string name="what_kind_of_provider">Bu ne tür bir sağlayıcı?</string>
+    <string name="providers_description">Yalnızca bir tane aynı anda aktif — kataloğu değiştirmek için geçiş yapın</string>
+    <string name="your_providers">HESAPLARINIZ</string>
+    <string name="no_iptv_providers_added_yet">Henüz IPTV hesabı eklenmedi</string>
+    <string name="add_provider">+ Hesap Ekle</string>
+    <string name="what_kind_of_provider">Bu ne tür bir hesap?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Oynatma listesi bağlantısı</string>
     <string name="provider_type_xtream">Xtream</string>

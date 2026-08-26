@@ -63,7 +63,7 @@
     <string name="catchup_loading">ガイドを読み込み中…</string>
     <string name="catchup_no_guide">この日のガイドデータがありません — 1時間ごとのブロックで表示します。</string>
     <string name="catchup_nothing_aired">この日に放送されたものはまだありません。</string>
-    <string name="catchup_no_provider">再生できません — 元のプロバイダーはもう設定されていません。</string>
+    <string name="catchup_no_provider">再生できません — 元のアカウントはもう設定されていません。</string>
     <string name="catchup_hour_block">1時間ブロック</string>
     <plurals name="catchup_days_kept">
         <item quantity="other">%1$d 日保持</item>
@@ -71,9 +71,9 @@
     <string name="series_tab">シリーズ</string>
     <string name="films_tab">映画</string>
     <string name="downloads_tab">ダウンロード</string>
-    <string name="no_provider_configured">プロバイダーが設定されていません</string>
+    <string name="no_provider_configured">アカウントが設定されていません</string>
     <string name="press_settings_to_add_playlist">設定を押してプレイリスト URL を追加</string>
-    <string name="add_a_provider">プロバイダーを追加</string>
+    <string name="add_a_provider">アカウントを追加</string>
     <string name="startup_add_m3u">M3Uプレイリストを追加</string>
     <string name="startup_signin_xtream">Xtream Codesでログイン</string>
     <string name="search_main_hint">ライブ TV、映画、シリーズを検索…</string>
@@ -106,7 +106,7 @@
     <string name="side_menu_loading">読み込み中…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">プロバイダー</string>
+    <string name="providers">アカウント</string>
     <string name="playback">再生</string>
     <string name="general">一般</string>
     <string name="filters">フィルター</string>
@@ -115,11 +115,11 @@
     <string name="enabled">有効</string>
     <string name="update">更新</string>
     <string name="about">このアプリについて</string>
-    <string name="providers_description">複数のプロバイダーを同時に実行 - それぞれ個別に有効または無効にできます</string>
-    <string name="your_providers">マイプロバイダー</string>
-    <string name="no_iptv_providers_added_yet">IPTV プロバイダーはまだ追加されていません</string>
-    <string name="add_provider">+ プロバイダーを追加</string>
-    <string name="what_kind_of_provider">これはどの種類のプロバイダーですか？</string>
+    <string name="providers_description">一度に1つのアカウントのみアクティブ — 切り替えてカタログを変更</string>
+    <string name="your_providers">マイアカウント</string>
+    <string name="no_iptv_providers_added_yet">IPTVアカウントはまだ追加されていません</string>
+    <string name="add_provider">+ アカウントを追加</string>
+    <string name="what_kind_of_provider">これはどの種類のアカウントですか？</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">プレイリストのリンク</string>
     <string name="provider_type_xtream">Xtream</string>

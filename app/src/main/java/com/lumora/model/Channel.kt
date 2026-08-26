@@ -45,13 +45,13 @@ data class Channel(
     // source has to know *which* server, not merely that it is one.
     val isPlex: Boolean = false,
     // Stalker's MAC-as-User-Agent or M3U's custom User-Agent, baked in from whichever
-    // IptvProviderConfig this channel came from - playback needs the *source* provider's
+    // AccountConfig this channel came from - playback needs the *source* provider's
     // header, not whichever IPTV provider happens to be first/active.
     val streamUserAgent: String? = null,
     // Extra HTTP request headers the stream URL needs - e.g. a resolved CDN that
     // hotlink-protects its playlist behind a Referer. Applied by PlayerManager alongside the UA.
     val streamHeaders: Map<String, String>? = null,
-    // Which configured source this item came from: an IptvProviderConfig.id for Xtream, or a
+    // Which configured source this item came from: an AccountConfig.id for Xtream, or a
     // MediaServerConfig.id for a Jellyfin/Plex item (isJellyfin/isPlex say which store to look
     // it up in). Detail/EPG calls (get_series_info, get_short_epg, get_vod_info) and every
     // media-server call (episodes, playback negotiation, progress reporting) need the
@@ -65,7 +65,7 @@ data class Channel(
     val avOffsetMs: Int = 0,
     // Stalker VOD/series play command (base64), which only becomes a playable URL via a
     // create_link call at play time - unlike live, whose url is resolved up front. Paired
-    // with sourceProviderId (the portal's IptvProviderConfig id) so the play step can
+    // with sourceProviderId (the portal's AccountConfig id) so the play step can
     // re-auth against the right portal. Null for everything that already has a direct url.
     val stalkerCmd: String? = null,
     // Xtream `tv_archive` (0/1): the panel keeps a rolling recording of this channel, so a

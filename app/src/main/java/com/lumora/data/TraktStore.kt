@@ -6,7 +6,7 @@ import com.lumora.data.remote.trakt.TraktClient
 /**
  * The stored Trakt session and its two feature toggles.
  *
- * Deliberately not part of [IptvProviderStore] or [MediaServerStore]: Trakt is neither a source
+ * Deliberately not part of [AccountStore] or [MediaServerStore]: Trakt is neither a source
  * of content nor a library to browse. Nothing here ever produces a [com.lumora.model.Channel] -
  * it is one account whose only job is to be told what was watched. So it lives as four flat
  * prefs keys in the same "iptv_prefs" file everything else uses, rather than as an entry in a

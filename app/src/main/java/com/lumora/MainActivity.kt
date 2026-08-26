@@ -52,7 +52,7 @@ import com.lumora.model.Channel
 import com.lumora.model.ContentShelf
 import com.lumora.model.MediaType
 import com.lumora.model.Provider
-import com.lumora.model.IptvProviderConfig
+import com.lumora.model.AccountConfig
 import com.lumora.pairing.QrPairingManager
 import com.lumora.player.PlayerManager
 import com.lumora.player.PlayerTrackController
@@ -391,11 +391,11 @@ class MainActivity : AppCompatActivity() {
     internal val deadStreamUntil = mutableMapOf<String, Long>()
 
     internal var provider: Provider = Provider()
-    // Every configured Xtream provider, keyed by IptvProviderConfig.id - detail/EPG calls
+    // Every configured Xtream provider, keyed by AccountConfig.id - detail/EPG calls
     // resolve the right one per-Channel via Channel.sourceProviderId instead of assuming
     // whichever Xtream provider loaded last (the old single `provider` field above).
-    internal var xtreamProviderConfigs: Map<String, IptvProviderConfig> = emptyMap()
-    /** IptvProviderConfig id -> display name, for showing which provider an item came from. */
+    internal var xtreamProviderConfigs: Map<String, AccountConfig> = emptyMap()
+    /** AccountConfig id -> display name, for showing which provider an item came from. */
     internal var providerNamesById: Map<String, String> = emptyMap()
     /** What the last setStatus() asked for, kept because whether it can actually be shown
      *  depends on screen state that changes after the fact - see applyStatus(). */

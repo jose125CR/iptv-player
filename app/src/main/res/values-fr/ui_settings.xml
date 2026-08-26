@@ -44,15 +44,15 @@
     <string name="sett_plex_signed_in">Connecté à %1$s</string>
     <string name="sett_provider_row_detail">%1$s · %2$s</string>
     <string name="sett_remove_provider_confirm">Supprimer %1$s ?</string>
-    <string name="sett_remove_provider_message">Les chaînes de ce fournisseur n\'apparaîtront plus.</string>
+    <string name="sett_remove_provider_message">Les chaînes de ce compte n\'apparaîtront plus.</string>
     <string name="sett_remove_plex_confirm">Supprimer Plex ?</string>
     <string name="sett_remove_plex_message">Ses films et séries n\'apparaîtront plus.</string>
     <string name="sett_remove_jellyfin_confirm">Supprimer Jellyfin ?</string>
     <string name="sett_remove_jellyfin_message">Ses chaînes n\'apparaîtront plus.</string>
-    <string name="sett_choose_provider_type_first">Choisissez d\'abord un type de fournisseur</string>
+    <string name="sett_choose_provider_type_first">Choisissez d\'abord un type de compte</string>
     <string name="sett_enter_m3u_url">Entrez une URL M3U</string>
     <string name="sett_enter_server_url">Entrez une URL de serveur</string>
-    <string name="sett_provider_saved_loading">Fournisseur enregistré. Chargement...</string>
+    <string name="sett_provider_saved_loading">Compte enregistré. Chargement...</string>
 
     <!-- MainActivitySettings.kt - serveur de jumelage QR -->
     <string name="sett_starting_server">Démarrage du serveur...</string>
@@ -60,13 +60,13 @@
     <string name="sett_expires_in">Expire dans %1$d:%2$02d</string>
     <string name="sett_expired">Expiré</string>
     <string name="sett_could_not_start_server">Impossible de démarrer le serveur</string>
-    <string name="sett_provider_received">Fournisseur reçu ! Chargement...</string>
+    <string name="sett_provider_received">Compte reçu ! Chargement...</string>
 
     <!-- MainActivitySettings.kt - sauvegarde et restauration -->
     <string name="sett_backup_saved_to">Sauvegarde enregistrée dans %1$s</string>
     <string name="sett_export_failed">Échec de l\'exportation</string>
     <string name="sett_no_backup_file">Aucun fichier de sauvegarde trouvé à %1$s</string>
-    <string name="sett_imported_summary">Importés : %1$d fournisseurs, %2$d sources EPG, %3$d groupes</string>
+    <string name="sett_imported_summary">Importés : %1$d comptes, %2$d sources EPG, %3$d groupes</string>
     <string name="sett_recording_storage_path">Stockage des enregistrements : %1$s</string>
 
     <!-- MainActivitySettings.kt - boîte de dialogue des paramètres de lecture -->

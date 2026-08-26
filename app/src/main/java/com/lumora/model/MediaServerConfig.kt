@@ -2,10 +2,10 @@ package com.lumora.model
 
 /**
  * One configured personal-media-server account - a Jellyfin login or a Plex account/server
- * pair. Any number can exist side by side, the same way [IptvProviderConfig] entries do, and
+ * pair. Any number can exist side by side, the same way [AccountConfig] entries do, and
  * their catalogs are merged into the one browsing experience.
  *
- * Kept apart from [IptvProviderConfig] rather than folded into it because the two describe
+ * Kept apart from [AccountConfig] rather than folded into it because the two describe
  * different things: an IPTV provider is a URL plus credentials, while these carry a session
  * (Jellyfin token + user id, Plex per-server token plus the account token that listed it) and
  * are reached through their own clients and playback negotiation.
@@ -42,7 +42,7 @@ data class MediaServerConfig(
      *  servers) without a second sign-in - a per-server token can't list an account's
      *  resources. */
     val accountToken: String? = null,
-    /** Per-content-type gates, mirroring IptvProviderConfig. Plex never produces live
+    /** Per-content-type gates, mirroring AccountConfig. Plex never produces live
      *  channels (its Live TV is a tuner-session flow Lumora's URL-per-channel model can't
      *  express), so [liveEnabled] is meaningless there and left at its default. */
     val liveEnabled: Boolean = true,

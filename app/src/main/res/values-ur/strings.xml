@@ -63,7 +63,7 @@
     <string name="catchup_loading">گائیڈ لوڈ ہو رہی ہے…</string>
     <string name="catchup_no_guide">اس دن کے لیے گائیڈ ڈیٹا موجود نہیں — گھنٹہ وار بلاکس دکھائے جا رہے ہیں۔</string>
     <string name="catchup_nothing_aired">اس دن ابھی کچھ نشر نہیں ہوا۔</string>
-    <string name="catchup_no_provider">یہ چلایا نہیں جا سکتا — جس فراہم کنندہ سے یہ آیا تھا وہ اب ترتیب شدہ نہیں ہے۔</string>
+    <string name="catchup_no_provider">یہ چلایا نہیں جا سکتا — جس اکاؤنٹ سے یہ آیا تھا وہ اب ترتیب شدہ نہیں ہے۔</string>
     <string name="catchup_hour_block">گھنٹہ وار بلاک</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d دن محفوظ رکھا گیا</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">سیریز</string>
     <string name="films_tab">فلمیں</string>
     <string name="downloads_tab">ڈاؤن لوڈز</string>
-    <string name="no_provider_configured">کوئی فراہم کنندہ ترتیب شدہ نہیں</string>
+    <string name="no_provider_configured">کوئی اکاؤنٹ ترتیب شدہ نہیں</string>
     <string name="press_settings_to_add_playlist">پلے لسٹ کا URL شامل کرنے کے لیے ترتیبات دبائیں</string>
-    <string name="add_a_provider">فراہم کنندہ شامل کریں</string>
+    <string name="add_a_provider">اکاؤنٹ شامل کریں</string>
     <string name="startup_add_m3u">M3U پلے لسٹ شامل کریں</string>
     <string name="startup_signin_xtream">XTREAM کوڈز سے سائن ان کریں</string>
     <string name="search_main_hint">لائیو ٹی وی، فلمیں اور سیریز تلاش کریں…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">لوڈ ہو رہا ہے…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">فراہم کنندگان</string>
+    <string name="providers">اکاؤنٹس</string>
     <string name="playback">پلے بیک</string>
     <string name="general">عمومی</string>
     <string name="filters">فلٹرز</string>
@@ -116,11 +116,11 @@
     <string name="enabled">فعال</string>
     <string name="update">اپ ڈیٹ</string>
     <string name="about">تعارف</string>
-    <string name="providers_description">متعدد فراہم کنندگان کو ساتھ چلائیں - ہر ایک کو الگ سے فعال یا غیر فعال کریں</string>
-    <string name="your_providers">آپ کے فراہم کنندگان</string>
-    <string name="no_iptv_providers_added_yet">ابھی کوئی IPTV فراہم کنندہ شامل نہیں کیا گیا</string>
-    <string name="add_provider">+ فراہم کنندہ شامل کریں</string>
-    <string name="what_kind_of_provider">یہ کس قسم کا فراہم کنندہ ہے؟</string>
+    <string name="providers_description">ایک وقت میں صرف ایک فعال — کیٹلاگ بدلنے کے لیے سوئچ کریں</string>
+    <string name="your_providers">آپ کے اکاؤنٹس</string>
+    <string name="no_iptv_providers_added_yet">ابھی کوئی IPTV اکاؤنٹ شامل نہیں کیا گیا</string>
+    <string name="add_provider">+ اکاؤنٹ شامل کریں</string>
+    <string name="what_kind_of_provider">یہ کس قسم کا اکاؤنٹ ہے؟</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">پلے لسٹ لنک</string>
     <string name="provider_type_xtream">Xtream</string>

@@ -212,7 +212,7 @@
                     android:textSize="@dimen/settings_text_caption"
                     android:fontFamily="@font/inter_bold" />
 
-                <!-- Populated at runtime from IptvProviderStore - see renderIptvProviderList()
+                <!-- Populated at runtime from AccountStore - see renderIptvProviderList()
                      in showProviderSettings(). -->
                 <LinearLayout
                     android:id="@+id/settingsIptvProviderList"

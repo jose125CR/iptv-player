@@ -63,7 +63,7 @@
     <string name="catchup_loading">Laster guide…</string>
     <string name="catchup_no_guide">Ingen guidedata for denne dagen — viser timeblokker.</string>
     <string name="catchup_nothing_aired">Ingenting har blitt sendt denne dagen ennå.</string>
-    <string name="catchup_no_provider">Kan ikke spilles — leverandøren den kom fra er ikke lenger konfigurert.</string>
+    <string name="catchup_no_provider">Kan ikke spilles — kontoen det kom fra er ikke lenger konfigurert.</string>
     <string name="catchup_hour_block">Timeblokk</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d dag beholdt</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Serier</string>
     <string name="films_tab">Filmer</string>
     <string name="downloads_tab">Nedlastinger</string>
-    <string name="no_provider_configured">Ingen leverandør konfigurert</string>
+    <string name="no_provider_configured">Ingen konto konfigurert</string>
     <string name="press_settings_to_add_playlist">Trykk på Innstillinger for å legge til en spilleliste-URL</string>
-    <string name="add_a_provider">Legg til en leverandør</string>
+    <string name="add_a_provider">Legg til en konto</string>
     <string name="startup_add_m3u">LEGG TIL M3U-LISTE</string>
     <string name="startup_signin_xtream">LOGG INN MED XTREAM CODES</string>
     <string name="search_main_hint">Søk i direkte-TV, filmer &amp; serier…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">Laster…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Leverandører</string>
+    <string name="providers">Kontoer</string>
     <string name="playback">Avspilling</string>
     <string name="general">Generelt</string>
     <string name="filters">Filtre</string>
@@ -116,11 +116,11 @@
     <string name="enabled">Aktivert</string>
     <string name="update">Oppdater</string>
     <string name="about">Om</string>
-    <string name="providers_description">Kjør flere leverandører sammen - aktiver eller deaktiver hver enkelt uavhengig</string>
-    <string name="your_providers">DINE LEVERANDØRER</string>
-    <string name="no_iptv_providers_added_yet">Ingen IPTV-leverandører lagt til ennå</string>
-    <string name="add_provider">+ Legg til leverandør</string>
-    <string name="what_kind_of_provider">Hva slags leverandør er dette?</string>
+    <string name="providers_description">Bare én aktiv om gangen — bytt for å endre katalogen</string>
+    <string name="your_providers">DINE KONTOER</string>
+    <string name="no_iptv_providers_added_yet">Ingen IPTV-kontoer lagt til ennå</string>
+    <string name="add_provider">+ Legg til konto</string>
+    <string name="what_kind_of_provider">Hva slags konto er dette?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Spillelistelenke</string>
     <string name="provider_type_xtream">Xtream</string>

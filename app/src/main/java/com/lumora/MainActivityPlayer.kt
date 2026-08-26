@@ -23,8 +23,8 @@ import com.lumora.model.Channel
 import com.lumora.model.MediaType
 import com.lumora.model.Provider
 import com.lumora.model.ProviderType
-import com.lumora.model.IptvProviderConfig
-import com.lumora.data.IptvProviderStore
+import com.lumora.model.AccountConfig
+import com.lumora.data.AccountStore
 import com.lumora.player.PlayerManager
 import com.lumora.player.VideoAspectFrameLayout
 import com.lumora.util.extractLeadingTag
@@ -866,10 +866,10 @@ internal fun MainActivity.showPlayerFor(
 /** Resolves a Stalker VOD/series item's base64 command into a playable URL against the
  *  portal it came from (matched by sourceProviderId). Null if the portal's gone or the
  *  config isn't a Stalker one. */
-internal fun MainActivity.stalkerConfigFor(channel: Channel): IptvProviderConfig? =
-    channel.sourceProviderId?.let { id -> IptvProviderStore.load(prefs).firstOrNull { it.id == id && it.type == "stalker" } }
+internal fun MainActivity.stalkerConfigFor(channel: Channel): AccountConfig? =
+    channel.sourceProviderId?.let { id -> AccountStore.load(prefs).firstOrNull { it.id == id && it.type == "stalker" } }
 
-internal fun MainActivity.stalkerProviderStub(config: IptvProviderConfig): Provider = Provider(
+internal fun MainActivity.stalkerProviderStub(config: AccountConfig): Provider = Provider(
     name = config.name, type = ProviderType.M3U,
     serverUrl = config.url?.let { normalizeServerUrl(it) }, userAgent = config.userAgent
 )
@@ -906,7 +906,7 @@ internal fun MainActivity.xtreamProviderFor(channel: Channel): Provider? {
 /** The name of the provider a Channel came from, for labelling version chips. A media-server
  *  item is labelled with its account's own name, since several Jellyfin/Plex accounts can be
  *  configured at once and "Jellyfin" alone wouldn't say which library the version is in.
- *  Everything else is an IptvProviderConfig matched by sourceProviderId. Null when the config
+ *  Everything else is an AccountConfig matched by sourceProviderId. Null when the config
  *  has since been deleted (cached items outlive it). */
 internal fun MainActivity.providerNameFor(channel: Channel): String? = when {
     channel.isOwnLibrary -> mediaServerOwner(channel, mediaServers())?.name?.takeIf { it.isNotBlank() }

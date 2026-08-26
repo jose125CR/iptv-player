@@ -63,7 +63,7 @@
     <string name="catchup_loading">Laddar guide…</string>
     <string name="catchup_no_guide">Inga guidedata för den här dagen — visar timblock.</string>
     <string name="catchup_nothing_aired">Inget har sänts den här dagen ännu.</string>
-    <string name="catchup_no_provider">Kan inte spela detta — leverantören det kom från är inte längre konfigurerad.</string>
+    <string name="catchup_no_provider">Kan inte spela detta — kontot det kom från är inte längre konfigurerat.</string>
     <string name="catchup_hour_block">Timblock</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d dag behålls</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Serier</string>
     <string name="films_tab">Filmer</string>
     <string name="downloads_tab">Nedladdningar</string>
-    <string name="no_provider_configured">Ingen leverantör konfigurerad</string>
+    <string name="no_provider_configured">Inget konto konfigurerat</string>
     <string name="press_settings_to_add_playlist">Tryck på Inställningar för att lägga till en spellista-URL</string>
-    <string name="add_a_provider">Lägg till en leverantör</string>
+    <string name="add_a_provider">Lägg till ett konto</string>
     <string name="startup_add_m3u">LÄGG TILL M3U-LISTA</string>
     <string name="startup_signin_xtream">LOGGA IN MED XTREAM CODES</string>
     <string name="search_main_hint">Sök i live-TV, filmer &amp; serier…</string>
@@ -108,7 +108,7 @@
     <string name="side_menu_loading">Laddar…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Leverantörer</string>
+    <string name="providers">Konton</string>
     <string name="playback">Uppspelning</string>
     <string name="general">Allmänt</string>
     <string name="filters">Filter</string>
@@ -117,11 +117,11 @@
     <string name="enabled">Aktiverad</string>
     <string name="update">Uppdatera</string>
     <string name="about">Om</string>
-    <string name="providers_description">Kör flera leverantörer tillsammans - aktivera eller inaktivera var och en oberoende</string>
-    <string name="your_providers">DINA LEVERANTÖRER</string>
-    <string name="no_iptv_providers_added_yet">Inga IPTV-leverantörer har lagts till ännu</string>
-    <string name="add_provider">+ Lägg till leverantör</string>
-    <string name="what_kind_of_provider">Vilken typ av leverantör är detta?</string>
+    <string name="providers_description">Bara ett aktivt konto i taget — växla för att ändra katalogen</string>
+    <string name="your_providers">DINA KONTON</string>
+    <string name="no_iptv_providers_added_yet">Inga IPTV-konton har lagts till ännu</string>
+    <string name="add_provider">+ Lägg till konto</string>
+    <string name="what_kind_of_provider">Vilken typ av konto är detta?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Spellista-länk</string>
     <string name="provider_type_xtream">Xtream</string>

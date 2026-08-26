@@ -63,7 +63,7 @@
     <string name="catchup_loading">Завантаження телепрограми…</string>
     <string name="catchup_no_guide">Немає даних телепрограми на цей день — показуємо погодинні блоки.</string>
     <string name="catchup_nothing_aired">Цього дня ще нічого не виходило в ефір.</string>
-    <string name="catchup_no_provider">Це не можна відтворити — постачальник, з якого воно надійшло, більше не налаштований.</string>
+    <string name="catchup_no_provider">Це не можна відтворити — обліковий запис, з якого воно надійшло, більше не налаштований.</string>
     <string name="catchup_hour_block">Погодинний блок</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d день збережено</item>
@@ -74,9 +74,9 @@
     <string name="series_tab">Серіали</string>
     <string name="films_tab">Фільми</string>
     <string name="downloads_tab">Завантаження</string>
-    <string name="no_provider_configured">Постачальника не налаштовано</string>
+    <string name="no_provider_configured">Обліковий запис не налаштовано</string>
     <string name="press_settings_to_add_playlist">Натисніть «Налаштування», щоб додати URL плейлиста</string>
-    <string name="add_a_provider">Додати постачальника</string>
+    <string name="add_a_provider">Додати обліковий запис</string>
     <string name="startup_add_m3u">ДОДАТИ ПЛЕЙЛИСТ M3U</string>
     <string name="startup_signin_xtream">УВІЙТИ ЧЕРЕЗ XTREAM CODES</string>
     <string name="search_main_hint">Пошук у живому ТБ, фільмах і серіалах…</string>
@@ -109,7 +109,7 @@
     <string name="side_menu_loading">Завантаження…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Постачальники</string>
+    <string name="providers">Облікові записи</string>
     <string name="playback">Відтворення</string>
     <string name="general">Загальні</string>
     <string name="filters">Фільтри</string>
@@ -118,11 +118,11 @@
     <string name="enabled">Увімкнено</string>
     <string name="update">Оновити</string>
     <string name="about">Про застосунок</string>
-    <string name="providers_description">Запускайте кілька постачальників разом - кожного можна вмикати або вимикати незалежно</string>
-    <string name="your_providers">ВАШІ ПОСТАЧАЛЬНИКИ</string>
-    <string name="no_iptv_providers_added_yet">IPTV-постачальників ще не додано</string>
-    <string name="add_provider">+ Додати постачальника</string>
-    <string name="what_kind_of_provider">Який це тип постачальника?</string>
+    <string name="providers_description">Лише один обліковий запис активний одночасно — перемикайте для зміни каталогу</string>
+    <string name="your_providers">ВАШІ ОБЛІКОВІ ЗАПИСИ</string>
+    <string name="no_iptv_providers_added_yet">IPTV-облікові записи ще не додано</string>
+    <string name="add_provider">+ Додати обліковий запис</string>
+    <string name="what_kind_of_provider">Який це тип облікового запису?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Посилання на плейлист</string>
     <string name="provider_type_xtream">Xtream</string>

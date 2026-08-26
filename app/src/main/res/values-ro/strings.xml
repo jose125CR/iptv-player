@@ -63,7 +63,7 @@
     <string name="catchup_loading">Se încarcă ghidul…</string>
     <string name="catchup_no_guide">Nu există date de ghid pentru această zi — se afișează blocuri orare.</string>
     <string name="catchup_nothing_aired">În această zi nu s-a difuzat încă nimic.</string>
-    <string name="catchup_no_provider">Nu poate fi redat — furnizorul de la care provine nu mai este configurat.</string>
+    <string name="catchup_no_provider">Nu poate fi redat — contul de la care provine nu mai este configurat.</string>
     <string name="catchup_hour_block">Bloc orar</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d zi păstrată</item>
@@ -73,9 +73,9 @@
     <string name="series_tab">Seriale</string>
     <string name="films_tab">Filme</string>
     <string name="downloads_tab">Descărcări</string>
-    <string name="no_provider_configured">Niciun furnizor configurat</string>
+    <string name="no_provider_configured">Niciun cont configurat</string>
     <string name="press_settings_to_add_playlist">Apăsați Setări pentru a adăuga un URL de listă de redare</string>
-    <string name="add_a_provider">Adaugă un furnizor</string>
+    <string name="add_a_provider">Adaugă un cont</string>
     <string name="startup_add_m3u">ADAUGĂ LISTA M3U</string>
     <string name="startup_signin_xtream">CONECTEAZĂ-TE CU XTREAM CODES</string>
     <string name="search_main_hint">Căutați în TV live, filme &amp; seriale…</string>
@@ -109,7 +109,7 @@
     <string name="side_menu_loading">Se încarcă…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Furnizori</string>
+    <string name="providers">Conturi</string>
     <string name="playback">Redare</string>
     <string name="general">General</string>
     <string name="filters">Filtre</string>
@@ -118,11 +118,11 @@
     <string name="enabled">Activat</string>
     <string name="update">Actualizează</string>
     <string name="about">Despre</string>
-    <string name="providers_description">Rulați mai mulți furnizori împreună - activați sau dezactivați fiecare independent</string>
-    <string name="your_providers">FURNIZORII DVS.</string>
-    <string name="no_iptv_providers_added_yet">Nu s-au adăugat încă furnizori IPTV</string>
-    <string name="add_provider">+ Adaugă furnizor</string>
-    <string name="what_kind_of_provider">Ce fel de furnizor este acesta?</string>
+    <string name="providers_description">Doar unul activ la un moment dat — comutați pentru a schimba catalogul</string>
+    <string name="your_providers">CONTurile DVS.</string>
+    <string name="no_iptv_providers_added_yet">Nu s-au adăugat încă conturi IPTV</string>
+    <string name="add_provider">+ Adaugă cont</string>
+    <string name="what_kind_of_provider">Ce fel de cont este acesta?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Link listă de redare</string>
     <string name="provider_type_xtream">Xtream</string>

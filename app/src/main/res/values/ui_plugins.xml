@@ -7,7 +7,7 @@
 
     <!-- Provider loading statuses (MainActivityProviders) -->
     <string name="plug_connecting_to">Connecting to %1$s...</string>
-    <string name="plug_connecting_to_n">Connecting to %1$d providers...</string>
+    <string name="plug_connecting_to_n">Connecting to %1$d accounts...</string>
     <string name="plug_connecting_to_jellyfin">Connecting to Jellyfin...</string>
     <string name="plug_connecting_to_plex">Connecting to Plex...</string>
     <string name="plug_item_count">%1$d items</string>

@@ -63,7 +63,7 @@
     <string name="catchup_loading">Загрузка программы…</string>
     <string name="catchup_no_guide">Нет данных программы на этот день — показываем часовые блоки.</string>
     <string name="catchup_nothing_aired">В этот день ещё ничего не выходило в эфир.</string>
-    <string name="catchup_no_provider">Не удаётся воспроизвести — провайдер, из которого это взято, больше не настроен.</string>
+    <string name="catchup_no_provider">Не удаётся воспроизвести — учётная запись, из которой это взято, больше не настроена.</string>
     <string name="catchup_hour_block">Часовой блок</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d день сохранён</item>
@@ -74,9 +74,9 @@
     <string name="series_tab">Сериалы</string>
     <string name="films_tab">Фильмы</string>
     <string name="downloads_tab">Загрузки</string>
-    <string name="no_provider_configured">Провайдер не настроен</string>
+    <string name="no_provider_configured">Учётная запись не настроена</string>
     <string name="press_settings_to_add_playlist">Нажмите «Настройки», чтобы добавить URL плейлиста</string>
-    <string name="add_a_provider">Добавить провайдера</string>
+    <string name="add_a_provider">Добавить учётную запись</string>
     <string name="startup_add_m3u">ДОБАВИТЬ ПЛЕЙЛИСТ M3U</string>
     <string name="startup_signin_xtream">ВОЙТИ ЧЕРЕЗ XTREAM CODES</string>
     <string name="search_main_hint">Поиск по ТВ, фильмам и сериалам…</string>
@@ -109,7 +109,7 @@
     <string name="side_menu_loading">Загрузка…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Провайдеры</string>
+    <string name="providers">Учётные записи</string>
     <string name="playback">Воспроизведение</string>
     <string name="general">Общие</string>
     <string name="filters">Фильтры</string>
@@ -118,11 +118,11 @@
     <string name="enabled">Включено</string>
     <string name="update">Обновить</string>
     <string name="about">О приложении</string>
-    <string name="providers_description">Запускайте несколько провайдеров вместе - включайте или отключайте каждый независимо</string>
-    <string name="your_providers">ВАШИ ПРОВАЙДЕРЫ</string>
-    <string name="no_iptv_providers_added_yet">Провайдеры IPTV ещё не добавлены</string>
-    <string name="add_provider">+ Добавить провайдера</string>
-    <string name="what_kind_of_provider">Какой это тип провайдера?</string>
+    <string name="providers_description">Только одна учётная запись активна одновременно — переключайте для смены каталога</string>
+    <string name="your_providers">ВАШИ УЧЁТНЫЕ ЗАПИСИ</string>
+    <string name="no_iptv_providers_added_yet">Учётные записи IPTV ещё не добавлены</string>
+    <string name="add_provider">+ Добавить учётную запись</string>
+    <string name="what_kind_of_provider">Какой это тип учётной записи?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Ссылка на плейлист</string>
     <string name="provider_type_xtream">Xtream</string>

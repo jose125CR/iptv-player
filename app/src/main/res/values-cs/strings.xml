@@ -63,7 +63,7 @@
     <string name="catchup_loading">Načítání průvodce…</string>
     <string name="catchup_no_guide">Pro tento den nejsou žádná data průvodce — zobrazují se hodinové bloky.</string>
     <string name="catchup_nothing_aired">V tento den se zatím nic nevysílalo.</string>
-    <string name="catchup_no_provider">Toto nelze přehrát — poskytovatel, ze kterého položka pochází, už není nakonfigurován.</string>
+    <string name="catchup_no_provider">Toto nelze přehrát — účet, ze kterého položka pochází, už není nakonfigurován.</string>
     <string name="catchup_hour_block">Hodinový blok</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d den uchován</item>
@@ -74,9 +74,9 @@
     <string name="series_tab">Seriály</string>
     <string name="films_tab">Filmy</string>
     <string name="downloads_tab">Stažené</string>
-    <string name="no_provider_configured">Není nakonfigurován žádný poskytovatel</string>
+    <string name="no_provider_configured">Není nakonfigurován žádný účet</string>
     <string name="press_settings_to_add_playlist">Stiskněte Nastavení a přidejte URL playlistu</string>
-    <string name="add_a_provider">Přidat poskytovatele</string>
+    <string name="add_a_provider">Přidat účet</string>
     <string name="startup_add_m3u">PŘIDAT SEZNAM M3U</string>
     <string name="startup_signin_xtream">PŘIHLÁSIT SE PŘES XTREAM CODES</string>
     <string name="search_main_hint">Hledat v živé TV, filmech a seriálech…</string>
@@ -109,7 +109,7 @@
     <string name="side_menu_loading">Načítání…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Poskytovatelé</string>
+    <string name="providers">Účty</string>
     <string name="playback">Přehrávání</string>
     <string name="general">Obecné</string>
     <string name="filters">Filtry</string>
@@ -118,11 +118,11 @@
     <string name="enabled">Povoleno</string>
     <string name="update">Aktualizovat</string>
     <string name="about">O aplikaci</string>
-    <string name="providers_description">Spouštějte více poskytovatelů najednou - každého lze zapnout nebo vypnout nezávisle</string>
-    <string name="your_providers">VAŠI POSKYTOVATELÉ</string>
-    <string name="no_iptv_providers_added_yet">Zatím nebyli přidáni žádní poskytovatelé IPTV</string>
-    <string name="add_provider">+ Přidat poskytovatele</string>
-    <string name="what_kind_of_provider">O jaký typ poskytovatele jde?</string>
+    <string name="providers_description">Pouze jeden aktivní najednou — přepněte pro změnu katalogu</string>
+    <string name="your_providers">VAŠE ÚČTY</string>
+    <string name="no_iptv_providers_added_yet">Zatím nebyly přidány žádné IPTV účty</string>
+    <string name="add_provider">+ Přidat účet</string>
+    <string name="what_kind_of_provider">O jaký typ účtu jde?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Odkaz na playlist</string>
     <string name="provider_type_xtream">Xtream</string>

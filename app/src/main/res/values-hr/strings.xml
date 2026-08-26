@@ -63,7 +63,7 @@
     <string name="catchup_loading">Učitavanje vodiča…</string>
     <string name="catchup_no_guide">Nema podataka vodiča za ovaj dan — prikazuju se satni blokovi.</string>
     <string name="catchup_nothing_aired">Na ovaj dan još ništa nije emitirano.</string>
-    <string name="catchup_no_provider">Ne može se reproducirati — pružatelj od kojeg dolazi više nije konfiguriran.</string>
+    <string name="catchup_no_provider">Ne može se reproducirati — račun od kojeg dolazi više nije konfiguriran.</string>
     <string name="catchup_hour_block">Satni blok</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d dan sačuvan</item>
@@ -73,9 +73,9 @@
     <string name="series_tab">Serije</string>
     <string name="films_tab">Filmovi</string>
     <string name="downloads_tab">Preuzimanja</string>
-    <string name="no_provider_configured">Nije konfiguriran nijedan pružatelj</string>
+    <string name="no_provider_configured">Nije konfiguriran nijedan račun</string>
     <string name="press_settings_to_add_playlist">Pritisnite Postavke za dodavanje URL-a popisa</string>
-    <string name="add_a_provider">Dodaj pružatelja</string>
+    <string name="add_a_provider">Dodaj račun</string>
     <string name="startup_add_m3u">DODAJ M3U POPIS</string>
     <string name="startup_signin_xtream">PRIJAVA S XTREAM CODES</string>
     <string name="search_main_hint">Pretraži TV uživo, filmove &amp; serije…</string>
@@ -108,7 +108,7 @@
     <string name="side_menu_loading">Učitavanje…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Pružatelji</string>
+    <string name="providers">Računi</string>
     <string name="playback">Reprodukcija</string>
     <string name="general">Općenito</string>
     <string name="filters">Filtri</string>
@@ -117,11 +117,11 @@
     <string name="enabled">Omogućeno</string>
     <string name="update">Ažuriraj</string>
     <string name="about">O aplikaciji</string>
-    <string name="providers_description">Pokrenite više pružatelja zajedno - svaki uključite ili isključite neovisno</string>
-    <string name="your_providers">VAŠI PRUŽATELJI</string>
-    <string name="no_iptv_providers_added_yet">Još nisu dodani IPTV pružatelji</string>
-    <string name="add_provider">+ Dodaj pružatelja</string>
-    <string name="what_kind_of_provider">Kakav je to pružatelj?</string>
+    <string name="providers_description">Samo jedan aktivan u isto vrijeme — prebacite za promjenu kataloga</string>
+    <string name="your_providers">VAŠI RAČUNI</string>
+    <string name="no_iptv_providers_added_yet">Još nisu dodani IPTV računi</string>
+    <string name="add_provider">+ Dodaj račun</string>
+    <string name="what_kind_of_provider">Kakav je to račun?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Poveznica popisa</string>
     <string name="provider_type_xtream">Xtream</string>

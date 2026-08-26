@@ -63,7 +63,7 @@
     <string name="catchup_loading">Gids laden…</string>
     <string name="catchup_no_guide">Geen gidsgegevens voor deze dag — uurlijkse blokken worden getoond.</string>
     <string name="catchup_nothing_aired">Op deze dag is nog niets uitgezonden.</string>
-    <string name="catchup_no_provider">Kan dit niet afspelen — de provider waar het vandaan komt is niet meer geconfigureerd.</string>
+    <string name="catchup_no_provider">Kan dit niet afspelen — het account waar het vandaan komt is niet meer geconfigureerd.</string>
     <string name="catchup_hour_block">Uurlijks blok</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d dag bewaard</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Series</string>
     <string name="films_tab">Films</string>
     <string name="downloads_tab">Downloads</string>
-    <string name="no_provider_configured">Geen provider geconfigureerd</string>
+    <string name="no_provider_configured">Geen account geconfigureerd</string>
     <string name="press_settings_to_add_playlist">Druk op Instellingen om een afspeellijst-URL toe te voegen</string>
-    <string name="add_a_provider">Provider toevoegen</string>
+    <string name="add_a_provider">Account toevoegen</string>
     <string name="startup_add_m3u">M3U-LIJST TOEVOEGEN</string>
     <string name="startup_signin_xtream">AANMELDEN MET XTREAM CODES</string>
     <string name="search_main_hint">Zoek in live-tv, films &amp; series…</string>
@@ -108,7 +108,7 @@
     <string name="side_menu_loading">Laden…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Providers</string>
+    <string name="providers">Accounts</string>
     <string name="playback">Afspelen</string>
     <string name="general">Algemeen</string>
     <string name="filters">Filters</string>
@@ -117,11 +117,11 @@
     <string name="enabled">Ingeschakeld</string>
     <string name="update">Bijwerken</string>
     <string name="about">Over</string>
-    <string name="providers_description">Voer meerdere providers samen uit - schakel elk afzonderlijk in of uit</string>
-    <string name="your_providers">JOUW PROVIDERS</string>
-    <string name="no_iptv_providers_added_yet">Nog geen IPTV-providers toegevoegd</string>
-    <string name="add_provider">+ Provider toevoegen</string>
-    <string name="what_kind_of_provider">Wat voor provider is dit?</string>
+    <string name="providers_description">Slechts één actief tegelijk — schakel over om de catalogus te wijzigen</string>
+    <string name="your_providers">JOUW ACCOUNTS</string>
+    <string name="no_iptv_providers_added_yet">Nog geen IPTV-accounts toegevoegd</string>
+    <string name="add_provider">+ Account toevoegen</string>
+    <string name="what_kind_of_provider">Welk type account is dit?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Afspeellijst-link</string>
     <string name="provider_type_xtream">Xtream</string>

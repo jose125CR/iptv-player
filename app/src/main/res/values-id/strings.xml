@@ -63,7 +63,7 @@
     <string name="catchup_loading">Memuat panduan…</string>
     <string name="catchup_no_guide">Tidak ada data panduan untuk hari ini — menampilkan blok per jam.</string>
     <string name="catchup_nothing_aired">Belum ada yang ditayangkan pada hari ini.</string>
-    <string name="catchup_no_provider">Tidak dapat memutar ini — penyedia asalnya tidak lagi dikonfigurasi.</string>
+    <string name="catchup_no_provider">Tidak dapat memutar ini — akun asalnya tidak lagi dikonfigurasi.</string>
     <string name="catchup_hour_block">Blok per jam</string>
     <plurals name="catchup_days_kept">
         <item quantity="other">%1$d hari disimpan</item>
@@ -71,9 +71,9 @@
     <string name="series_tab">Serial</string>
     <string name="films_tab">Film</string>
     <string name="downloads_tab">Unduhan</string>
-    <string name="no_provider_configured">Tidak ada penyedia yang dikonfigurasi</string>
+    <string name="no_provider_configured">Tidak ada akun yang dikonfigurasi</string>
     <string name="press_settings_to_add_playlist">Tekan Pengaturan untuk menambahkan URL daftar putar</string>
-    <string name="add_a_provider">Tambah Penyedia</string>
+    <string name="add_a_provider">Tambah Akun</string>
     <string name="startup_add_m3u">TAMBAH DAFTAR PUTAR M3U</string>
     <string name="startup_signin_xtream">MASUK DENGAN XTREAM CODES</string>
     <string name="search_main_hint">Cari TV langsung, film &amp; serial…</string>
@@ -106,7 +106,7 @@
     <string name="side_menu_loading">Memuat…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Penyedia</string>
+    <string name="providers">Akun</string>
     <string name="playback">Pemutaran</string>
     <string name="general">Umum</string>
     <string name="filters">Filter</string>
@@ -115,11 +115,11 @@
     <string name="enabled">Diaktifkan</string>
     <string name="update">Perbarui</string>
     <string name="about">Tentang</string>
-    <string name="providers_description">Jalankan beberapa penyedia sekaligus - aktifkan atau nonaktifkan masing-masing secara independen</string>
-    <string name="your_providers">PENYEDIA ANDA</string>
-    <string name="no_iptv_providers_added_yet">Belum ada penyedia IPTV yang ditambahkan</string>
-    <string name="add_provider">+ Tambah Penyedia</string>
-    <string name="what_kind_of_provider">Penyedia jenis apa ini?</string>
+    <string name="providers_description">Hanya satu aktif sekaligus — beralih untuk mengubah katalog</string>
+    <string name="your_providers">AKUN ANDA</string>
+    <string name="no_iptv_providers_added_yet">Belum ada akun IPTV yang ditambahkan</string>
+    <string name="add_provider">+ Tambah Akun</string>
+    <string name="what_kind_of_provider">Akun jenis apa ini?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Tautan daftar putar</string>
     <string name="provider_type_xtream">Xtream</string>

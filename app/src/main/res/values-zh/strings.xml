@@ -63,7 +63,7 @@
     <string name="catchup_loading">正在加载节目单…</string>
     <string name="catchup_no_guide">该日没有节目单数据 —— 按小时块显示。</string>
     <string name="catchup_nothing_aired">该日尚无任何播出内容。</string>
-    <string name="catchup_no_provider">无法播放 —— 其来源提供商已不再配置。</string>
+    <string name="catchup_no_provider">无法播放 —— 其来源账户已不再配置。</string>
     <string name="catchup_hour_block">小时块</string>
     <plurals name="catchup_days_kept">
         <item quantity="other">%1$d 天保留</item>
@@ -71,9 +71,9 @@
     <string name="series_tab">剧集</string>
     <string name="films_tab">电影</string>
     <string name="downloads_tab">下载</string>
-    <string name="no_provider_configured">未配置提供商</string>
+    <string name="no_provider_configured">未配置账户</string>
     <string name="press_settings_to_add_playlist">打开设置以添加播放列表 URL</string>
-    <string name="add_a_provider">添加提供商</string>
+    <string name="add_a_provider">添加账户</string>
     <string name="startup_add_m3u">添加 M3U 播放列表</string>
     <string name="startup_signin_xtream">使用 Xtream Codes 登录</string>
     <string name="search_main_hint">搜索直播电视、电影和剧集…</string>
@@ -106,7 +106,7 @@
     <string name="side_menu_loading">正在加载…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">提供商</string>
+    <string name="providers">账户</string>
     <string name="playback">播放</string>
     <string name="general">通用</string>
     <string name="filters">筛选</string>
@@ -115,11 +115,11 @@
     <string name="enabled">已启用</string>
     <string name="update">更新</string>
     <string name="about">关于</string>
-    <string name="providers_description">同时运行多个提供商 - 可分别启用或禁用每个提供商</string>
-    <string name="your_providers">我的提供商</string>
-    <string name="no_iptv_providers_added_yet">尚未添加 IPTV 提供商</string>
-    <string name="add_provider">+ 添加提供商</string>
-    <string name="what_kind_of_provider">这是什么类型的提供商？</string>
+    <string name="providers_description">一次只有一个账户处于活动状态 — 切换以更改目录</string>
+    <string name="your_providers">我的账户</string>
+    <string name="no_iptv_providers_added_yet">尚未添加 IPTV 账户</string>
+    <string name="add_provider">+ 添加账户</string>
+    <string name="what_kind_of_provider">这是什么类型的账户？</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">播放列表链接</string>
     <string name="provider_type_xtream">Xtream</string>

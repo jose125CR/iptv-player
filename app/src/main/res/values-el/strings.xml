@@ -63,7 +63,7 @@
     <string name="catchup_loading">Φόρτωση οδηγού…</string>
     <string name="catchup_no_guide">Δεν υπάρχουν δεδομένα οδηγού για αυτή την ημέρα — εμφανίζονται ωριαία μπλοκ.</string>
     <string name="catchup_nothing_aired">Δεν έχει μεταδοθεί τίποτα ακόμα αυτή την ημέρα.</string>
-    <string name="catchup_no_provider">Δεν είναι δυνατή η αναπαραγωγή — ο πάροχος από τον οποίο προήλθε δεν είναι πλέον διαμορφωμένος.</string>
+    <string name="catchup_no_provider">Δεν είναι δυνατή η αναπαραγωγή — ο λογαριασμός από τον οποίο προήλθε δεν είναι πλέον διαμορφωμένος.</string>
     <string name="catchup_hour_block">Ωριαίο μπλοκ</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d ημέρα διατηρήθηκε</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Σειρές</string>
     <string name="films_tab">Ταινίες</string>
     <string name="downloads_tab">Λήψεις</string>
-    <string name="no_provider_configured">Δεν έχει διαμορφωθεί πάροχος</string>
+    <string name="no_provider_configured">Δεν έχει διαμορφωθεί λογαριασμός</string>
     <string name="press_settings_to_add_playlist">Πατήστε Ρυθμίσεις για να προσθέσετε μια διεύθυνση URL λίστας αναπαραγωγής</string>
-    <string name="add_a_provider">Προσθήκη παρόχου</string>
+    <string name="add_a_provider">Προσθήκη λογαριασμού</string>
     <string name="startup_add_m3u">ΠΡΟΣΘΗΚΗ ΛΙΣΤΑΣ M3U</string>
     <string name="startup_signin_xtream">ΣΥΝΔΕΣΗ ΜΕ XTREAM CODES</string>
     <string name="search_main_hint">Αναζήτηση σε ζωντανή TV, ταινίες &amp; σειρές…</string>
@@ -108,7 +108,7 @@
     <string name="side_menu_loading">Φόρτωση…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Πάροχοι</string>
+    <string name="providers">Λογαριασμοί</string>
     <string name="playback">Αναπαραγωγή</string>
     <string name="general">Γενικά</string>
     <string name="filters">Φίλτρα</string>
@@ -117,11 +117,11 @@
     <string name="enabled">Ενεργοποιημένο</string>
     <string name="update">Ενημέρωση</string>
     <string name="about">Σχετικά</string>
-    <string name="providers_description">Εκτελέστε πολλούς παρόχους μαζί - ενεργοποιήστε ή απενεργοποιήστε τον καθένα ανεξάρτητα</string>
-    <string name="your_providers">ΟΙ ΠΑΡΟΧΟΙ ΣΑΣ</string>
-    <string name="no_iptv_providers_added_yet">Δεν έχουν προστεθεί ακόμα πάροχοι IPTV</string>
-    <string name="add_provider">+ Προσθήκη παρόχου</string>
-    <string name="what_kind_of_provider">Τι είδους πάροχος είναι αυτός;</string>
+    <string name="providers_description">Μόνο ένα ενεργό τη φορά — αλλάξτε για να αλλάξετε τον κατάλογο</string>
+    <string name="your_providers">ΟΙ ΛΟΓΑΡΙΑΣΜΟΙ ΣΑΣ</string>
+    <string name="no_iptv_providers_added_yet">Δεν έχουν προστεθεί ακόμα λογαριασμοί IPTV</string>
+    <string name="add_provider">+ Προσθήκη λογαριασμού</string>
+    <string name="what_kind_of_provider">Τι είδους λογαριασμός είναι αυτός;</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Σύνδεσμος λίστας αναπαραγωγής</string>
     <string name="provider_type_xtream">Xtream</string>

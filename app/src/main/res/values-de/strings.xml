@@ -64,7 +64,7 @@
     <string name="catchup_loading">Guide wird geladen…</string>
     <string name="catchup_no_guide">Keine Guidedaten für diesen Tag — es werden Stundenblöcke angezeigt.</string>
     <string name="catchup_nothing_aired">An diesem Tag wurde noch nichts ausgestrahlt.</string>
-    <string name="catchup_no_provider">Kann nicht abgespielt werden — der zugehörige Anbieter ist nicht mehr konfiguriert.</string>
+    <string name="catchup_no_provider">Kann nicht abgespielt werden — das zugehörige Konto ist nicht mehr konfiguriert.</string>
     <string name="catchup_hour_block">Stundenblock</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d Tag aufbewahrt</item>
@@ -73,9 +73,9 @@
     <string name="series_tab">Serien</string>
     <string name="films_tab">Filme</string>
     <string name="downloads_tab">Downloads</string>
-    <string name="no_provider_configured">Kein Anbieter konfiguriert</string>
+    <string name="no_provider_configured">Kein Konto konfiguriert</string>
     <string name="press_settings_to_add_playlist">Drücken Sie Einstellungen, um eine Playlist-URL hinzuzufügen</string>
-    <string name="add_a_provider">Anbieter hinzufügen</string>
+    <string name="add_a_provider">Konto hinzufügen</string>
     <string name="startup_add_m3u">M3U-LISTE HINZUFÜGEN</string>
     <string name="startup_signin_xtream">MIT XTREAM CODES ANMELDEN</string>
     <string name="search_main_hint">Live-TV, Filme &amp; Serien durchsuchen…</string>
@@ -109,7 +109,7 @@
     <string name="side_menu_loading">Wird geladen…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Anbieter</string>
+    <string name="providers">Konten</string>
     <string name="playback">Wiedergabe</string>
     <string name="general">Allgemein</string>
     <string name="filters">Filter</string>
@@ -118,11 +118,11 @@
     <string name="enabled">Aktiviert</string>
     <string name="update">Aktualisieren</string>
     <string name="about">Über</string>
-    <string name="providers_description">Mehrere Anbieter gemeinsam nutzen - jeden einzeln aktivieren oder deaktivieren</string>
-    <string name="your_providers">IHRE ANBIETER</string>
-    <string name="no_iptv_providers_added_yet">Noch keine IPTV-Anbieter hinzugefügt</string>
-    <string name="add_provider">+ Anbieter hinzufügen</string>
-    <string name="what_kind_of_provider">Um welche Art von Anbieter handelt es sich?</string>
+    <string name="providers_description">Nur ein Konto gleichzeitig aktiv — wechseln, um den Katalog zu ändern</string>
+    <string name="your_providers">IHRE KONTEN</string>
+    <string name="no_iptv_providers_added_yet">Noch keine IPTV-Konten hinzugefügt</string>
+    <string name="add_provider">+ Konto hinzufügen</string>
+    <string name="what_kind_of_provider">Um welche Art von Konto handelt es sich?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Playlist-Link</string>
     <string name="provider_type_xtream">Xtream</string>

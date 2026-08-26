@@ -63,7 +63,7 @@
     <string name="catchup_loading">Műsorújság betöltése…</string>
     <string name="catchup_no_guide">Nincs műsorújság-adat erre a napra — órás blokkok jelennek meg.</string>
     <string name="catchup_nothing_aired">Ezen a napon még semmi sem került adásba.</string>
-    <string name="catchup_no_provider">Ez nem játszható le — a származási szolgáltató már nincs beállítva.</string>
+    <string name="catchup_no_provider">Ez nem játszható le — a származási fiók már nincs beállítva.</string>
     <string name="catchup_hour_block">Órás blokk</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d nap megőrizve</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Sorozatok</string>
     <string name="films_tab">Filmek</string>
     <string name="downloads_tab">Letöltések</string>
-    <string name="no_provider_configured">Nincs szolgáltató beállítva</string>
+    <string name="no_provider_configured">Nincs fiók beállítva</string>
     <string name="press_settings_to_add_playlist">Nyomja meg a Beállításokat egy lejátszási lista URL hozzáadásához</string>
-    <string name="add_a_provider">Szolgáltató hozzáadása</string>
+    <string name="add_a_provider">Fiók hozzáadása</string>
     <string name="startup_add_m3u">M3U LISTA HOZZÁADÁSA</string>
     <string name="startup_signin_xtream">BEJELENTKEZÉS XTREAM CODES SEGÍTSÉGÉVEL</string>
     <string name="search_main_hint">Élő TV, filmek és sorozatok keresése…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">Betöltés…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Szolgáltatók</string>
+    <string name="providers">Fiókok</string>
     <string name="playback">Lejátszás</string>
     <string name="general">Általános</string>
     <string name="filters">Szűrők</string>
@@ -116,11 +116,11 @@
     <string name="enabled">Engedélyezve</string>
     <string name="update">Frissítés</string>
     <string name="about">Névjegy</string>
-    <string name="providers_description">Több szolgáltatót is futtathat együtt - mindegyiket egymástól függetlenül engedélyezheti vagy letilthatja</string>
-    <string name="your_providers">AZ ÖN SZOLGÁLTATÓI</string>
-    <string name="no_iptv_providers_added_yet">Még nincs hozzáadva IPTV-szolgáltató</string>
-    <string name="add_provider">+ Szolgáltató hozzáadása</string>
-    <string name="what_kind_of_provider">Milyen típusú szolgáltató ez?</string>
+    <string name="providers_description">Egyszerre csak egy aktív fiók — váltson a katalógus megváltoztatásához</string>
+    <string name="your_providers">AZ ÖN FIÓKJAI</string>
+    <string name="no_iptv_providers_added_yet">Még nincs hozzáadva IPTV-fiók</string>
+    <string name="add_provider">+ Fiók hozzáadása</string>
+    <string name="what_kind_of_provider">Milyen típusú fiók ez?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Lejátszási lista hivatkozása</string>
     <string name="provider_type_xtream">Xtream</string>

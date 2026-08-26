@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import com.lumora.data.AccountStore
 import com.lumora.model.Channel
 import com.lumora.model.MediaType
 import org.json.JSONObject
@@ -12,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.Executors
 
 private const val TAG = "PlaybackPositionStore"
-private const val FILE_NAME = "playback_positions.json"
+private const val FILE_PREFIX = "playback_positions"
 private const val COMPLETION_THRESHOLD = 0.95
 
 data class PlaybackPosition(
@@ -28,7 +29,8 @@ data class PlaybackPosition(
     val isNearComplete: Boolean get() = durationMs > 0 && positionMs >= durationMs * COMPLETION_THRESHOLD
 }
 
-/** Saves VOD/series watch progress to disk so playback can resume where it left off. */
+/** Saves VOD/series watch progress to disk so playback can resume where it left off.
+ *  Data is isolated per active account: each account gets its own JSON file. */
 object PlaybackPositionStore {
     private const val MAX_ENTRIES = 500
     private const val DEBOUNCE_MS = 5_000L
@@ -47,6 +49,15 @@ object PlaybackPositionStore {
     // worker could see a stale null and re-load, or see the pre-clear map after clearAll.
     @Volatile
     private var cache: MutableMap<String, PlaybackPosition>? = null
+
+    private var cacheAccountId: String? = null
+
+    private fun fileName(context: Context): String {
+        val id = AccountStore.activeAccountId(
+            context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
+        ) ?: "_none"
+        return "${FILE_PREFIX}_${id}.json"
+    }
 
     fun get(context: Context, key: String): PlaybackPosition? = ensureLoaded(context)[key]
 
@@ -91,14 +102,27 @@ object PlaybackPositionStore {
             .sortedByDescending { it.value.updatedAt }
             .mapNotNull { it.value.channel }
 
+    /** Clear current account's data. */
     fun clearAll(context: Context) {
         cache = ConcurrentHashMap()
+        cacheAccountId = null
+        val fileName = fileName(context)
         // Route the disk wipe through the same single-thread executor as every other write:
         // a persist queued before this captured the OLD map reference and must run first and
         // be overwritten by this delete - deleting the file inline while a queued persist was
         // still pending let that persist rewrite the old data afterwards, resurrecting
         // "cleared" history on the next load. FIFO ordering makes the wipe stick.
-        writeExecutor.execute { runCatching { File(context.filesDir, FILE_NAME).delete() } }
+        writeExecutor.execute { runCatching { File(context.filesDir, fileName).delete() } }
+    }
+
+    /** Clear ALL accounts' playback positions (full data wipe from Settings). */
+    fun clearAllAccounts(context: Context) {
+        cache = ConcurrentHashMap()
+        cacheAccountId = null
+        writeExecutor.execute {
+            context.filesDir.listFiles()?.filter { it.name.startsWith("${FILE_PREFIX}_") && it.name.endsWith(".json") }
+                ?.forEach { it.delete() }
+        }
     }
 
     /** Most recently-completed episode snapshot per series, only for series with no
@@ -133,6 +157,16 @@ object PlaybackPositionStore {
     }
 
     private fun ensureLoaded(context: Context): MutableMap<String, PlaybackPosition> {
+        val accountId = AccountStore.activeAccountId(
+            context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
+        )
+        // If the account changed, invalidate cache and reload
+        if (cacheAccountId != accountId) {
+            cache = null
+            cacheAccountId = accountId
+            pendingSaveRunnable?.let { debounceHandler.removeCallbacks(it) }
+            pendingSaveRunnable = null
+        }
         cache?.let { return it }
         // Cancel any pending flush so we don't overwrite the freshly loaded data with stale
         // in-memory state (e.g. if a delayed save fires after a cold-start load completes).
@@ -142,7 +176,7 @@ object PlaybackPositionStore {
             pendingSaveRunnable = null
         }
         val loaded: MutableMap<String, PlaybackPosition> = try {
-            val file = File(context.filesDir, FILE_NAME)
+            val file = File(context.filesDir, fileName(context))
             if (!file.exists()) {
                 ConcurrentHashMap()
             } else {
@@ -159,11 +193,6 @@ object PlaybackPositionStore {
                                 logoUrl = c.optString("logoUrl", null),
                                 posterUrl = c.optString("posterUrl", null),
                                 mediaType = runCatching { MediaType.valueOf(c.optString("mediaType")) }.getOrDefault(MediaType.MOVIE),
-                                // Kept so Continue Watching can tell whether an entry is
-                                // adult content without re-finding it in the catalog - the
-                                // catalog may not be loaded yet, and a series episode is
-                                // never in it at all. Absent on entries written before this
-                                // was stored; callers fall back to the catalog then.
                                 group = c.optString("group", null),
                                 categoryName = c.optString("categoryName", null),
                                 episodeNum = c.optInt("episodeNum", -1).takeIf { it >= 0 },
@@ -213,10 +242,6 @@ object PlaybackPositionStore {
                             ch.group?.let { put("group", it) }
                             ch.categoryName?.let { put("categoryName", it) }
                             ch.episodeNum?.let { put("episodeNum", it) }
-                            // Provider provenance, so Continue Watching can rebuild the
-                            // auto-advance episode queue after a cold restart (a series
-                            // episode is never in the catalog). Absent on entries written
-                            // before this was stored; the queue rebuild no-ops then.
                             ch.categoryId?.let { put("categoryId", it) }
                             put("isJellyfin", ch.isJellyfin)
                             put("isPlex", ch.isPlex)
@@ -228,7 +253,7 @@ object PlaybackPositionStore {
                     }
                 })
             }
-            writeToFile(File(context.filesDir, FILE_NAME), obj.toString())
+            writeToFile(File(context.filesDir, fileName(context)), obj.toString())
         } catch (e: Exception) {
             Log.w(TAG, "Failed to save: ${e.message}")
         }

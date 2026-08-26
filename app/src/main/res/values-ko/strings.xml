@@ -63,7 +63,7 @@
     <string name="catchup_loading">가이드 로드 중…</string>
     <string name="catchup_no_guide">이 날짜에 대한 가이드 데이터가 없습니다 — 시간대별 블록을 표시합니다.</string>
     <string name="catchup_nothing_aired">이 날에는 아직 방송된 콘텐츠가 없습니다.</string>
-    <string name="catchup_no_provider">재생할 수 없습니다 — 해당 콘텐츠의 제공업체가 더 이상 구성되어 있지 않습니다.</string>
+    <string name="catchup_no_provider">재생할 수 없습니다 — 해당 콘텐츠의 계정이 더 이상 구성되어 있지 않습니다.</string>
     <string name="catchup_hour_block">시간대별 블록</string>
     <plurals name="catchup_days_kept">
         <item quantity="other">%1$d일 보관됨</item>
@@ -71,9 +71,9 @@
     <string name="series_tab">시리즈</string>
     <string name="films_tab">영화</string>
     <string name="downloads_tab">다운로드</string>
-    <string name="no_provider_configured">구성된 제공업체 없음</string>
+    <string name="no_provider_configured">구성된 계정 없음</string>
     <string name="press_settings_to_add_playlist">재생목록 URL을 추가하려면 설정을 누르세요</string>
-    <string name="add_a_provider">제공업체 추가</string>
+    <string name="add_a_provider">계정 추가</string>
     <string name="startup_add_m3u">M3U 재생목록 추가</string>
     <string name="startup_signin_xtream">Xtream Codes로 로그인</string>
     <string name="search_main_hint">실시간 TV, 영화 &amp; 시리즈 검색…</string>
@@ -106,7 +106,7 @@
     <string name="side_menu_loading">로드 중…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">제공업체</string>
+    <string name="providers">계정</string>
     <string name="playback">재생</string>
     <string name="general">일반</string>
     <string name="filters">필터</string>
@@ -115,11 +115,11 @@
     <string name="enabled">사용 중</string>
     <string name="update">업데이트</string>
     <string name="about">정보</string>
-    <string name="providers_description">여러 제공업체를 함께 실행하세요 - 각각을 개별적으로 활성화 또는 비활성화할 수 있습니다</string>
-    <string name="your_providers">내 제공업체</string>
-    <string name="no_iptv_providers_added_yet">아직 추가된 IPTV 제공업체가 없습니다</string>
-    <string name="add_provider">+ 제공업체 추가</string>
-    <string name="what_kind_of_provider">어떤 종류의 제공업체인가요?</string>
+    <string name="providers_description">한 번에 하나의 계정만 활성 — 전환하여 카탈로그를 변경하세요</string>
+    <string name="your_providers">내 계정</string>
+    <string name="no_iptv_providers_added_yet">아직 추가된 IPTV 계정이 없습니다</string>
+    <string name="add_provider">+ 계정 추가</string>
+    <string name="what_kind_of_provider">어떤 종류의 계정인가요?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">재생목록 링크</string>
     <string name="provider_type_xtream">Xtream</string>

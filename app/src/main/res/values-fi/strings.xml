@@ -63,7 +63,7 @@
     <string name="catchup_loading">Ladataan opasta…</string>
     <string name="catchup_no_guide">Ei opastietoja tälle päivälle — näytetään tuntikohtaiset lohkot.</string>
     <string name="catchup_nothing_aired">Tänä päivänä ei ole vielä lähetetty mitään.</string>
-    <string name="catchup_no_provider">Ei voida toistaa — sen lähdepalveluntarjoajaa ei ole enää määritetty.</string>
+    <string name="catchup_no_provider">Ei voida toistaa — sen lähde tileä ei ole enää määritetty.</string>
     <string name="catchup_hour_block">Tunnin lohko</string>
     <plurals name="catchup_days_kept">
         <item quantity="one">%1$d päivä säilytetty</item>
@@ -72,9 +72,9 @@
     <string name="series_tab">Sarjat</string>
     <string name="films_tab">Elokuvat</string>
     <string name="downloads_tab">Lataukset</string>
-    <string name="no_provider_configured">Palveluntarjoajaa ei ole määritetty</string>
+    <string name="no_provider_configured">Tiliä ei ole määritetty</string>
     <string name="press_settings_to_add_playlist">Paina Asetukset lisätäksesi soittolistan URL-osoitteen</string>
-    <string name="add_a_provider">Lisää palveluntarjoaja</string>
+    <string name="add_a_provider">Lisää tili</string>
     <string name="startup_add_m3u">LISÄÄ M3U-SOITTOLUETTELO</string>
     <string name="startup_signin_xtream">KIRJAUDU XTREAM CODES -PALVELUUN</string>
     <string name="search_main_hint">Hae live-TV:stä, elokuvista &amp; sarjoista…</string>
@@ -107,7 +107,7 @@
     <string name="side_menu_loading">Ladataan…</string>
 
     <!-- activity_settings.xml -->
-    <string name="providers">Palveluntarjoajat</string>
+    <string name="providers">Tilit</string>
     <string name="playback">Toisto</string>
     <string name="general">Yleinen</string>
     <string name="filters">Suodattimet</string>
@@ -116,11 +116,11 @@
     <string name="enabled">Käytössä</string>
     <string name="update">Päivitä</string>
     <string name="about">Tietoja</string>
-    <string name="providers_description">Käytä useita palveluntarjoajia yhdessä - ota jokainen käyttöön tai pois käytöstä erikseen</string>
-    <string name="your_providers">PALVELUNTARJOAJASI</string>
-    <string name="no_iptv_providers_added_yet">IPTV-palveluntarjoajia ei ole vielä lisätty</string>
-    <string name="add_provider">+ Lisää palveluntarjoaja</string>
-    <string name="what_kind_of_provider">Millainen palveluntarjoaja tämä on?</string>
+    <string name="providers_description">Vain yksi aktiivinen kerrallaan — vaihda vaihtaaksesi luetteloa</string>
+    <string name="your_providers">TILISI</string>
+    <string name="no_iptv_providers_added_yet">IPTV-tiliä ei ole vielä lisätty</string>
+    <string name="add_provider">+ Lisää tili</string>
+    <string name="what_kind_of_provider">Millainen tili tämä on?</string>
     <string name="provider_type_m3u">M3U/M3U8</string>
     <string name="playlist_link">Soittolistan linkki</string>
     <string name="provider_type_xtream">Xtream</string>

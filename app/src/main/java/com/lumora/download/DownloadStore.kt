@@ -2,6 +2,7 @@ package com.lumora.download
 
 import android.content.Context
 import android.util.Log
+import com.lumora.data.AccountStore
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -21,22 +22,35 @@ data class DownloadRecord(
     val status: DownloadStatus,
     val localFilePath: String? = null,
     // Live-only, never persisted - recomputed from DownloadManager each time the list is shown.
-    val progressPercent: Int = 0
+    val progressPercent: Int = 0,
+    /** Account that owns this download. Filtering is done at read time so switching accounts
+     *  shows only that account's downloads. */
+    val accountId: String? = null
 )
 
-/** Persists which VOD items have been downloaded, so the Downloads tab survives app restarts. */
+/** Persists which VOD items have been downloaded, so the Downloads tab survives app restarts.
+ *  Records are filtered by the active account at read time. */
 object DownloadStore {
 
     @Synchronized
-    fun getAll(context: Context): List<DownloadRecord> = load(context)
+    fun getAll(context: Context): List<DownloadRecord> {
+        val activeId = AccountStore.activeAccountId(
+            context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
+        )
+        return load(context).filter { it.accountId == null || it.accountId == activeId }
+    }
 
     @Synchronized
-    fun get(context: Context, id: String): DownloadRecord? = load(context).firstOrNull { it.id == id }
+    fun get(context: Context, id: String): DownloadRecord? = getAll(context).firstOrNull { it.id == id }
 
     @Synchronized
     fun add(context: Context, record: DownloadRecord) {
-        val list = load(context).filterNot { it.id == record.id }.toMutableList()
-        list.add(record)
+        val activeId = AccountStore.activeAccountId(
+            context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
+        )
+        val tagged = if (record.accountId != null) record else record.copy(accountId = activeId)
+        val list = load(context).filterNot { it.id == tagged.id }.toMutableList()
+        list.add(tagged)
         save(context, list)
     }
 
@@ -49,6 +63,12 @@ object DownloadStore {
     @Synchronized
     fun remove(context: Context, id: String) {
         save(context, load(context).filterNot { it.id == id })
+    }
+
+    /** Clear ALL accounts' downloads (full data wipe from Settings). */
+    @Synchronized
+    fun clearAll(context: Context) {
+        runCatching { File(context.filesDir, FILE_NAME).delete() }
     }
 
     @Synchronized
@@ -71,7 +91,8 @@ object DownloadStore {
                     downloadManagerId = obj.optLong("downloadManagerId"),
                     status = runCatching { DownloadStatus.valueOf(obj.optString("status", "QUEUED")) }
                         .getOrDefault(DownloadStatus.QUEUED),
-                    localFilePath = obj.optString("localFilePath", "").ifEmpty { null }
+                    localFilePath = obj.optString("localFilePath", "").ifEmpty { null },
+                    accountId = obj.optString("accountId", "").ifEmpty { null }
                 )
             }
         }
@@ -94,6 +115,7 @@ object DownloadStore {
                     put("downloadManagerId", r.downloadManagerId)
                     put("status", r.status.name)
                     put("localFilePath", r.localFilePath ?: "")
+                    r.accountId?.let { put("accountId", it) }
                 })
             }
             File(context.filesDir, FILE_NAME).writeText(arr.toString())

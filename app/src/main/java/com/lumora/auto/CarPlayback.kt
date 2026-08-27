@@ -34,10 +34,9 @@ class CarPlayback(private val context: Context) {
     val isPlaying: Boolean get() = player.isPlaying
 
     /**
-     * Live channels that can be played from a URL alone. Stalker commands and the media
-     * servers' negotiated streams (Jellyfin, Plex) need a round trip through code that lives
-     * in the Activity, so they are left out rather than offered as rows that fail on tap.
-     * Plex additionally has no live channels at all - see MainActivityPlex.
+     * Live channels that can be played from a URL alone. Stalker commands and other negotiated
+     * streams need a round trip through code that lives in the Activity, so they are left out
+     * rather than offered as rows that fail on tap.
      *
      * Synchronized: Media-browse callbacks now load this on background threads, and concurrent
      * calls must not double-read the disk cache or interleave writes to [channels].

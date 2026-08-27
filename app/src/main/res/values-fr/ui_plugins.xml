@@ -8,12 +8,8 @@
     <!-- Provider loading statuses (MainActivityProviders) -->
     <string name="plug_connecting_to">Connexion à %1$s...</string>
     <string name="plug_connecting_to_n">Connexion à %1$d comptes...</string>
-    <string name="plug_connecting_to_jellyfin">Connexion à Jellyfin...</string>
-    <string name="plug_connecting_to_plex">Connexion à Plex...</string>
     <string name="plug_item_count">%1$d éléments</string>
 
-    <!-- Jellyfin playback (MainActivityJellyfin) -->
-    <string name="plug_couldnt_switch_audio">Impossible de changer la piste audio</string>
 
     <!-- Catalog status (MainActivityCatalog) -->
     <string name="plug_trial_prefix">Essai ·</string>

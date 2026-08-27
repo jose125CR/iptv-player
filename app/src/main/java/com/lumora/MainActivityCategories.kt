@@ -143,15 +143,9 @@ internal fun MainActivity.showCategoryContextMenu(category: CategoryFilter) {
     // filtering it. Pin is inert for them and Hide is destructive-and-unrecoverable, so
     // they get no menu at all rather than one with two bad options.
     if (id in UTILITY_ROW_IDS) return
-    // The Jellyfin/Plex library rows are always first by construction, so "Pin to top"
-    // would be a
-    // no-op - hiding it is the only meaningful action. Same for the synthetic Newest and
-    // Continue Watching rows: they're prepended above the pinned block, so pinning them
-    // moves them nowhere, and pin is inert for them anyway (guards in
-    // buildCategoriesForActiveTab skip rows whose id is pinned).
-    if (id == JELLYFIN_CATEGORY_ID || id == PLEX_CATEGORY_ID || id == NEWEST_CATEGORY_ID ||
-        id == CONTINUE_WATCHING_CATEGORY_ID || id == UP_NEXT_CATEGORY_ID
-    ) {
+    // Synthetic rows (Newest, Continue Watching, Up Next) are prepended above the pinned
+    // block, so pinning them is a no-op - hiding is the only meaningful action.
+    if (id == NEWEST_CATEGORY_ID || id == CONTINUE_WATCHING_CATEGORY_ID || id == UP_NEXT_CATEGORY_ID) {
         AlertDialog.Builder(this)
             .setTitle(category.name)
             .setItems(arrayOf(getString(R.string.plug_hide))) { _, _ -> toggleHiddenSidebarCategory(category) }
@@ -208,17 +202,6 @@ internal fun MainActivity.toggleFavoriteVodItem(item: Channel) {
         if (nowFavorite) getString(R.string.plug_added_to_favourites) else getString(R.string.plug_removed_from_favourites),
         Toast.LENGTH_SHORT
     ).show()
-    // Same server push the detail screen's star does - a Jellyfin item's favourite state
-    // belongs to the server, not to this install. Plex has no equivalent per-item flag (it
-    // has ratings, which are a different thing), so a Plex star stays local.
-    if (item.isJellyfin) {
-        scope.launch {
-            val client = jellyfinClientFor(item) ?: return@launch
-            withContext(Dispatchers.IO) {
-                runCatching { client.setFavorite(com.lumora.util.rawMediaItemId(item.id), nowFavorite) }
-            }
-        }
-    }
     refreshHomeShelvesIfShowing()
     // Rebuilds the Series/Films shelves so the merged Continue Watching shelf leading the
     // Series poster - favourites are folded into it now - picks the change up without a tab
@@ -475,8 +458,7 @@ internal suspend fun MainActivity.buildCategoriesForActiveTab(tab: Int = activeT
     // Synthetic Films/Series sidebar rows are computed on the same Default thread as the
     // category pipeline: newestByDate sorts the whole tab list, and seriesContinueItems()/
     // seriesUpNextItems() read the position store and scan the catalogue for parent series.
-    // All three prepend ABOVE Jellyfin, so the sidebar leads
-    // Up Next > Continue Watching > Newest > Jellyfin > the real categories.
+    // All three prepend at the top of the sidebar.
     val synthetic = withContext(Dispatchers.Default) {
         val rows = buildCategoryRows(
             list = list,
@@ -520,7 +502,7 @@ internal suspend fun MainActivity.buildCategoriesForActiveTab(tab: Int = activeT
     }
     // Continue Watching has no channelIds/matchIds - selecting it is a special case in
     // applyCategoryFilter (its episodes are not seriesList members). Only added while it
-    // has items, like the Jellyfin row is only added while the tab has Jellyfin content.
+    // has items.
     if (tab == 1 && CONTINUE_WATCHING_CATEGORY_ID !in hiddenIds && CONTINUE_WATCHING_CATEGORY_ID !in pinned) {
         if (seriesContinue.isNotEmpty()) {
             rows.add(
@@ -919,9 +901,7 @@ internal fun MainActivity.buildCategoryRows(
                             }
                         },
                         { if (it.first.isParent) 0 else 1 },
-                        // Categories by size, biggest first - the rows right after the
-                        // Jellyfin/anime blocks are the ones people actually browse, so
-                        // the fullest category leads instead of an arbitrary alphabetical one.
+                        // Categories by size, biggest first.
                         { -it.first.count },
                         { it.first.name.lowercase() }
                     )
@@ -982,52 +962,6 @@ internal fun MainActivity.buildCategoryRows(
         // are what people actually want first there. Other tabs have no buckets, so
         // "All" just stays at the top like before.
         val result = mutableListOf<CategoryFilter>()
-        // Films/Series lead with a "Jellyfin" row when this tab has any Jellyfin-sourced
-        // items - a personal library is browsed as a library, not hunted for across the
-        // IPTV providers' categories it gets merged into. Carries explicit channelIds
-        // (same mechanism as a brand row) because provenance is per-Channel, not a
-        // provider category anything is filed under.
-        if (tab != 0 && JELLYFIN_CATEGORY_ID !in hiddenIds) {
-            // A title the Jellyfin library *and* an IPTV provider both carry is one
-            // deduped card, and the representative that wins the card is whichever copy
-            // had a poster - often the IPTV one. Matching on the representative's own
-            // isJellyfin flag alone dropped those titles out of the Jellyfin row even
-            // though the library has them, so match on any version in the group.
-            val jellyfinIds = list.filter { ch ->
-                ch.isJellyfin || versionsById[ch.id]?.any { it.isJellyfin } == true
-            }.map { it.id }.toSet()
-            if (jellyfinIds.isNotEmpty()) {
-                result.add(
-                    CategoryFilter(
-                        id = JELLYFIN_CATEGORY_ID,
-                        name = "Jellyfin",
-                        count = jellyfinIds.size,
-                        channelIds = jellyfinIds,
-                        isDynamic = true
-                    )
-                )
-            }
-        }
-        // The Plex library gets its own row on exactly the same terms. Two servers can be
-        // configured at once and "my Plex library" and "my Jellyfin library" are two
-        // different shelves to the person browsing, so they are never merged into one
-        // "own library" row.
-        if (tab != 0 && PLEX_CATEGORY_ID !in hiddenIds) {
-            val plexIds = list.filter { ch ->
-                ch.isPlex || versionsById[ch.id]?.any { it.isPlex } == true
-            }.map { it.id }.toSet()
-            if (plexIds.isNotEmpty()) {
-                result.add(
-                    CategoryFilter(
-                        id = PLEX_CATEGORY_ID,
-                        name = "Plex",
-                        count = plexIds.size,
-                        channelIds = plexIds,
-                        isDynamic = true
-                    )
-                )
-            }
-        }
         if (tab != 0) {
             // Sidebar collapse utility row, mirroring the classic-layout toggle
             // (count = -1 so no shelf/count machinery treats it as a category, and
@@ -1080,7 +1014,7 @@ internal fun MainActivity.buildCategoryRows(
         // now keyed by id. Fold any stored value that names a real row (case-
         // insensitively) into that row's id so pre-migration pins/hides keep working.
         // Only title folds are applied here - id-keyed entries already did their job
-        // during construction (leaves, Jellyfin, Anime), so re-filtering them post-hoc
+        // during construction (leaves, Anime), so re-filtering them post-hoc
         // would change the sidebar's existing hide semantics for bucket/brand/group rows.
         val knownRowIds = result.mapNotNullTo(mutableSetOf()) { it.id }
         val idForName = mutableMapOf<String, String>()
@@ -1909,11 +1843,7 @@ internal fun MainActivity.updateProgress() {
     // Ticks every ~1s while playing; persist progress every ~5s instead of every tick.
     progressTickCount++
     if (progressTickCount % 5 == 0) saveCurrentPlaybackPosition()
-    // Jellyfin expects a heartbeat roughly every 10s - it's what keeps the server's
-    // resume point current and stops it reaping an active transcode as abandoned.
     if (progressTickCount % 10 == 0) {
-        reportJellyfinProgress()
-        reportPlexProgress()
         // Trakt is not a heartbeat API - it wants transitions, so this only sends anything
         // when the play/pause state has actually moved since the last report.
         traktReportProgress()

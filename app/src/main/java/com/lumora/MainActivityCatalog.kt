@@ -483,7 +483,7 @@ internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivi
  *  to items (empty after pin/hide) are dropped, mirroring a sidebar click on them.
  *
  *  Item resolution mirrors applyCategoryFilter()'s two branches: an explicit
- *  channelIds set (Jellyfin, anime, genre buckets, brand rows) filters by channel id;
+ *  channelIds set (anime, genre buckets, brand rows) filters by channel id;
  *  everything else (leaves, group: parents, clustered service categories) filters by
  *  filterKey() against matchIds. */
 internal fun MainActivity.shelvesFromCategoryRows(rows: List<CategoryFilter>, list: List<Channel>): List<ContentShelf> {
@@ -502,10 +502,6 @@ internal fun MainActivity.shelvesFromCategoryRows(rows: List<CategoryFilter>, li
         if (row.id == null) continue          // All row - the poster IS the All view
         if (row.isChild) continue             // content already in the parent's union
         if (row.count <= 0) continue          // toggle/utility rows (classic-layout toggle, etc.)
-        // The dedicated Jellyfin/Plex rows stay in the sidebar for browsing but don't get a
-        // poster shelf - their titles are already interleaved into Newest and the genre
-        // shelves, and a whole shelf of one provider read as clutter in the poster view.
-        if (row.id == JELLYFIN_CATEGORY_ID || row.id == PLEX_CATEGORY_ID) continue
         // Indexed lookup, not a scan per row: with ~500 rows over a 20k-title catalogue
         // the old `list.filter` per row was ~10M predicate evaluations (seconds on a TV
         // stick). Both branches re-sort by the item's position in `list` so the shelf

@@ -67,18 +67,15 @@ internal fun MainActivity.onHomeItemClick(channel: Channel) {
 }
 
 /** Resolves the series a Home-tile episode belongs to: exact categoryId (the series id
- *  Xtream parseEpisode and the Jellyfin/Plex toChannel both stamp on episodes) match through the
- *  catalog first, then the "{series} · {episode}" name-prefix fallback for snapshots that
- *  predate categoryId. Null if unresolvable - callers fall back to direct play. */
+ *  Xtream parseEpisode stamps on episodes) match through the catalog first, then the
+ *  "{series} · {episode}" name-prefix fallback for snapshots that predate categoryId.
+ *  Null if unresolvable - callers fall back to direct play. */
 internal fun MainActivity.resolveHomeTileSeries(channel: Channel): Channel? {
-    // Exact series-id match. Ids are provider-scoped (Xtream series id, Jellyfin item id,
-    // Plex rating key), so cross-matching is impossible - matching the source flags is the
-    // only guard needed, with sourceProviderId compared only when the snapshot carries one
-    // (older saves don't).
+    // Exact series-id match. Ids are provider-scoped, so sourceProviderId is compared
+    // only when the snapshot carries one (older saves don't).
     channel.categoryId?.takeIf { it.isNotBlank() }?.let { id ->
         allChannels.firstOrNull {
             it.mediaType == MediaType.SERIES && it.id == id &&
-                it.isJellyfin == channel.isJellyfin && it.isPlex == channel.isPlex &&
                 (channel.sourceProviderId == null || it.sourceProviderId == channel.sourceProviderId)
         }?.let { return it }
     }
@@ -87,14 +84,13 @@ internal fun MainActivity.resolveHomeTileSeries(channel: Channel): Channel? {
     return allChannels
         .filter {
             it.mediaType == MediaType.SERIES &&
-                it.isJellyfin == channel.isJellyfin && it.isPlex == channel.isPlex &&
                 (channel.sourceProviderId == null || it.sourceProviderId == channel.sourceProviderId)
         }
         .filter { it.name.isNotBlank() && channel.name.startsWith(it.name + " · ") }
         .maxByOrNull { it.name.length }
 }
 
-/** A Home tile can be one episode standing alone (Continue Watching, Jellyfin Next Up),
+/** A Home tile can be one episode standing alone (Continue Watching),
  *  played with no queue - so when it ends nothing auto-advances. Back-fill the series'
  *  full episode chain (all seasons, season-major then episode-major, the order the detail
  *  page plays) and index it from the played episode. Any failure leaves the queue empty,
@@ -102,10 +98,6 @@ internal fun MainActivity.resolveHomeTileSeries(channel: Channel): Channel? {
 internal fun MainActivity.populateHomeTileEpisodeQueue(channel: Channel) {
     val playedId = channel.id
     if (playedId.isBlank()) return
-    // A media server's chain comes from the server itself (getEpisodes/getSeasons), not
-    // Xtream getSeriesFull - and those tiles resolve to the series detail page anyway, so
-    // this fallback never needs to build a Jellyfin or Plex queue.
-    if (channel.isOwnLibrary) return
     scope.launch {
         val ordered = withContext(Dispatchers.IO) {
             val seriesId = channel.categoryId ?: return@withContext emptyList<Channel>()
@@ -138,33 +130,11 @@ internal fun MainActivity.toggleHiddenHomeShelf(title: String) {
 
 /** X on the "Continue Watching" shelf clears the resume data itself, not just hides the
  *  shelf on the tab it was pressed on. Home, Series and Films all read the same store, so
- *  one clear empties the row everywhere. Media-server resume lives on the server, so those
- *  entries are dropped there too (best effort) and removed from memory immediately. Also
- *  un-hides the CW shelf so future watching isn't stuck behind a stale hide flag. */
+ *  one clear empties the row everywhere. Also un-hides the CW shelf so future watching
+ *  isn't stuck behind a stale hide flag. */
 internal fun MainActivity.clearContinueWatching() {
     PlaybackPositionStore.clearAll(this)
     clearUpNextMemo()
-    // Grouped by the account each entry came from: with several media servers configured, an
-    // item id only means anything to its own server, and clearing it against another would at
-    // best 404 and at worst clear an unrelated title that happens to share the id.
-    val jellyfinIdsByServer = jellyfinResumeItems.groupBy(
-        { it.sourceProviderId.orEmpty() },
-        { com.lumora.util.rawMediaItemId(it.id) }
-    )
-    val plexIdsByServer = plexResumeItems.groupBy(
-        { it.sourceProviderId.orEmpty() },
-        { com.lumora.util.rawMediaItemId(it.id) }
-    )
-    jellyfinResumeByServer.clear()
-    plexResumeByServer.clear()
-    for ((serverId, ids) in jellyfinIdsByServer) {
-        val client = jellyfinClients[serverId] ?: jellyfinClients.values.singleOrNull() ?: continue
-        scope.launch(Dispatchers.IO) { ids.forEach { id -> runCatching { client.clearUserData(id) } } }
-    }
-    for ((serverId, ids) in plexIdsByServer) {
-        val client = plexClients[serverId] ?: plexClients.values.singleOrNull() ?: continue
-        scope.launch(Dispatchers.IO) { ids.forEach { id -> runCatching { client.clearUserData(id) } } }
-    }
     getHiddenHomeShelves().let { if (it.remove(getString(R.string.category_continue_watching))) prefs.edit().putStringSet("hidden_home_shelves", it).apply() }
     getHiddenCategories(1).let { if (it.remove("Continue Watching")) prefs.edit().putStringSet(hiddenCategoriesPrefsKey(1), it).apply() }
     getHiddenCategories(2).let { if (it.remove("Continue Watching")) prefs.edit().putStringSet(hiddenCategoriesPrefsKey(2), it).apply() }
@@ -220,22 +190,7 @@ internal fun MainActivity.buildUpNextSeriesTiles(): List<Channel> {
     // shelf build (clear/watch toggle paths, the player's side menu listing another tab's
     // categories) shouldn't kick six network fetches for a row that isn't visible.
     if (!showingHome && activeTab != 1) return emptyList()
-    // Which series the servers' own Next Up lists already answer for, by parent series id
-    // (qualified, as toChannel stamps it on an episode). Only those are skipped.
-    //
-    // Own-library trails used to be dropped wholesale on the grounds that the server-side
-    // row covered them. It doesn't, for two compounding reasons: those lists are only
-    // re-pulled on a catalog load or at the end of a play, so nothing refreshes them when an
-    // episode is *marked* watched rather than played through; and the server answers only
-    // for shows it considers in progress, which a show whose episodes were all ticked off
-    // isn't. A Jellyfin/Plex series marked watched therefore fell through both halves - no
-    // local tile because it was skipped, no server tile because nothing had asked the server
-    // since - and never reached Up Next at all. Resolving it locally costs the same one
-    // episode-list call as any other series: loadSeriesContent speaks Jellyfin and Plex too.
-    val serverCovered = (jellyfinNextUpItems + plexNextUpItems)
-        .mapNotNullTo(HashSet()) { it.categoryId?.takeIf { id -> id.isNotBlank() } }
     val trails = PlaybackPositionStore.getCompletedSeriesTrails(this)
-        .filterNot { it.categoryId in serverCovered }
     val pending = trails
         .mapNotNull { it.categoryId?.takeIf { id -> id !in upNextTiles && id !in upNextFetching } }
         .take(MAX_UP_NEXT_SERIES)
@@ -246,7 +201,7 @@ internal fun MainActivity.buildUpNextSeriesTiles(): List<Channel> {
 }
 
 /** Fetches the episode lists for up to [MAX_UP_NEXT_SERIES] series (one network call each,
- *  through loadSeriesContent, so Xtream/Stalker/Jellyfin/Plex all resolve here), computes
+ *  through loadSeriesContent), computes
  *  each series' next unwatched episode, and rebuilds the Home shelves once. Results commit atomically only
  *  if the memo epoch hasn't moved (see [clearUpNextMemo]) - a fetch that outlives a
  *  watched-state change must not write pre-change tiles.
@@ -300,23 +255,18 @@ internal fun MainActivity.fetchUpNextSeries(seriesIds: List<String>) {
     }
 }
 
-/** Series-tab "Next Up" - the next *unwatched* episode of everything in flight. Two
- *  sources, same as Home: the media servers' own Next Up lists (they track playback from
- *  every other client), and [buildUpNextSeriesTiles] for locally-tracked series whose
- *  watched trail ends on a completed episode. Distinct from Continue Watching, which only
- *  holds episodes stopped part-way through.
+/** Series-tab "Next Up" - the next *unwatched* episode of everything in flight, resolved by
+ *  [buildUpNextSeriesTiles] for locally-tracked series whose watched trail ends on a completed
+ *  episode. Distinct from Continue Watching, which only holds episodes stopped part-way through.
  *
  *  Labelled and postered from the parent series by [continueWatchingTiles], so a bare
  *  "S02E03" reads as the show it belongs to. Clicking a tile opens that show's detail page
  *  - see onHomeItemClick. Shared by the Series sidebar row, its content grid, and the
  *  Series poster shelf. */
 internal fun MainActivity.seriesUpNextItems(): List<Channel> {
-    val server = (jellyfinNextUpItems + plexNextUpItems).filter { it.mediaType == MediaType.SERIES }
     val local = buildUpNextSeriesTiles()
     return continueWatchingTiles(
-        (server + local)
-            .distinctBy { it.id.ifBlank { it.url } }
-            .filterNot(::isAdultHomeItem)
+        local.filterNot(::isAdultHomeItem)
     )
 }
 
@@ -349,31 +299,20 @@ internal fun MainActivity.buildHomeShelves(): List<ContentShelf> {
     val shelves = mutableListOf<ContentShelf>()
     val hidden = getHiddenHomeShelves()
 
-    // The media servers' own resume lists lead Continue Watching: they know about playback
-    // from every other client, which a purely local position store never can. Local
-    // entries follow, minus anything a server already covered (same item, one card).
-    val localContinue = PlaybackPositionStore.getAllInProgress(this)
-    val serverContinue = jellyfinResumeItems + plexResumeItems
     // Up-next series tiles: series whose watched trail ends at a completed episode have
     // no in-progress entry, so they'd otherwise drop out of Continue Watching entirely.
     // buildUpNextSeriesTiles returns what's already resolved and kicks the async fetch
     // for the rest - the row fills in as episodes arrive.
+    val localContinue = PlaybackPositionStore.getAllInProgress(this)
     val upNext = buildUpNextSeriesTiles().filterNot(::isAdultHomeItem)
     // Labelled and postered from the parent series - see continueWatchingTiles. Applied after
     // the dedupe so the catalogue pass runs over the final row, not the raw merge.
     val continueItems = continueWatchingTiles(
-        (serverContinue + localContinue + upNext)
+        (localContinue + upNext)
             .distinctBy { it.id.ifBlank { it.url } }
             .filterNot(::isAdultHomeItem)
     )
     if (continueItems.isNotEmpty()) shelves.add(ContentShelf(getString(R.string.category_continue_watching), continueItems))
-
-    // "Next Up" is the row that makes a series library usable - the next unwatched episode
-    // of everything in flight, straight from the server's own tracking.
-    val nextUpItems = (jellyfinNextUpItems + plexNextUpItems)
-        .distinctBy { it.id.ifBlank { it.url } }
-        .filterNot(::isAdultHomeItem)
-    if (nextUpItems.isNotEmpty()) shelves.add(ContentShelf(getString(R.string.category_next_up), nextUpItems))
 
     val recentItems = RecentlyPlayedStore.getRecentIds(this)
         .mapNotNull { id -> liveChannels.firstOrNull { it.id == id } }
@@ -398,16 +337,13 @@ internal fun MainActivity.buildHomeShelves(): List<ContentShelf> {
     return shelves.filter { it.title !in hidden }
 }
 
-/** Series-only Continue Watching for the Series tab - same merge as the Home shelf
- *  (server resume list first, then local in-progress entries minus anything the server
- *  already covered), filtered down to series and adult-dropped. Shared by the Series
+/** Series-only Continue Watching for the Series tab, filtered down to series and
+ *  adult-dropped. Shared by the Series
  *  sidebar row, its content grid, and the Series poster shelf. */
 internal fun MainActivity.seriesContinueItems(): List<Channel> {
     val local = PlaybackPositionStore.getAllInProgress(this).filter { it.mediaType == MediaType.SERIES }
-    val server = (jellyfinResumeItems + plexResumeItems).filter { it.mediaType == MediaType.SERIES }
-    val serverIds = server.map { it.id }.toSet()
     return continueWatchingTiles(
-        (server + local.filterNot { it.id in serverIds }).filterNot(::isAdultHomeItem)
+        local.filterNot(::isAdultHomeItem)
     )
 }
 
@@ -441,9 +377,6 @@ internal val ANY_SEASON_MARKER_REGEX = Regex("""(?i)\bS(\d{1,2})E\d{1,3}\b""")
  * instead ("SAS Rogue Heroes - S03E03 - Title"), so fall back to finding it anywhere. That
  * looser match is confined to this label: a false positive here misprints a tile, whereas
  * [seasonNumberOf] feeds episode-queue and find-stream decisions and should stay strict.
- *
- * Jellyfin and Plex episodes state the season as a field that [Channel] has nowhere to keep,
- * and their names carry no marker at all - those tiles get a bare episode number.
  */
 internal fun tileSeasonNumber(episode: Channel): Int? =
     seasonNumberOf(episode)
@@ -471,8 +404,7 @@ internal fun MainActivity.continueWatchingTiles(items: List<Channel>): List<Chan
         val episode = item.episodeNum ?: return@map item
         val seriesId = item.categoryId?.takeIf { it.isNotBlank() } ?: return@map item
         val series = candidates[seriesId]?.firstOrNull {
-            it.isJellyfin == item.isJellyfin && it.isPlex == item.isPlex &&
-                (item.sourceProviderId == null || it.sourceProviderId == item.sourceProviderId)
+            item.sourceProviderId == null || it.sourceProviderId == item.sourceProviderId
         } ?: return@map item
         val seriesName = cleanVodTitle(series.name).ifBlank { return@map item }
         val marker = tileSeasonNumber(item)

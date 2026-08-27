@@ -130,7 +130,7 @@ object PlaybackPositionStore {
      *  the Home "up next" tiles: a series whose watched trail ends at a completed episode
      *  has nothing in Continue Watching today (it filters near-complete entries out), so
      *  its next episode would be silently unreachable from Home.
-     *  Requires the parent-series id on the snapshot - only Xtream and Jellyfin episodes
+     *  Requires the parent-series id on the snapshot - only Xtream episodes
      *  carry it (Stalker/Anime don't stamp categoryId), so those providers are naturally
      *  skipped here. */
     fun getCompletedSeriesTrails(context: Context): List<Channel> {
@@ -197,8 +197,6 @@ object PlaybackPositionStore {
                                 categoryName = c.optString("categoryName", null),
                                 episodeNum = c.optInt("episodeNum", -1).takeIf { it >= 0 },
                                 categoryId = c.optString("categoryId", null),
-                                isJellyfin = c.optBoolean("isJellyfin", false),
-                                isPlex = c.optBoolean("isPlex", false),
                                 sourceProviderId = c.optString("sourceProviderId", null),
                                 streamHeaders = c.optJSONObject("streamHeaders")?.let { h ->
                                     h.keys().asSequence().associateWith { k -> h.getString(k) }
@@ -243,8 +241,6 @@ object PlaybackPositionStore {
                             ch.categoryName?.let { put("categoryName", it) }
                             ch.episodeNum?.let { put("episodeNum", it) }
                             ch.categoryId?.let { put("categoryId", it) }
-                            put("isJellyfin", ch.isJellyfin)
-                            put("isPlex", ch.isPlex)
                             ch.sourceProviderId?.let { put("sourceProviderId", it) }
                             ch.streamHeaders?.takeIf { it.isNotEmpty() }?.let { headers ->
                                 put("streamHeaders", JSONObject(headers as Map<*, *>))

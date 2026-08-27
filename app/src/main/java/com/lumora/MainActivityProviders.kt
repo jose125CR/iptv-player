@@ -9,9 +9,7 @@ import com.lumora.model.MediaType
 import com.lumora.model.Provider
 import com.lumora.model.ProviderType
 import com.lumora.model.AccountConfig
-import com.lumora.model.MediaServerConfig
 import com.lumora.data.AccountStore
-import com.lumora.data.MediaServerStore
 import com.lumora.parser.M3uParser
 import com.lumora.parser.XtreamClient
 import com.lumora.util.normalizeServerUrl
@@ -29,35 +27,12 @@ internal fun MainActivity.localBackupFile(): File {
     return File(dir, "lumora_backup.json")
 }
 
-/** IPTV (Xtream/M3U/Stalker - still mutually exclusive among themselves, that's what
- *  [provider] represents) and Jellyfin are independent provider slots that can each be
- *  configured and enabled at the same time - their catalogs get merged. */
 internal fun MainActivity.hasIptvConfigured(): Boolean = AccountStore.load(prefs).isNotEmpty()
 
-/** Every configured media-server account, of both kinds. Any number of each can exist and be
- *  active at once; their catalogs merge into the same browsing experience as the IPTV ones. */
-internal fun MainActivity.mediaServers(): List<MediaServerConfig> =
-    MediaServerStore.load(prefs).filter { it.isComplete }
+internal fun MainActivity.hasProviderConfigured(): Boolean = hasIptvConfigured()
 
-internal fun MainActivity.jellyfinServers(): List<MediaServerConfig> =
-    mediaServers().filter { it.isJellyfin }
-
-/** Plex accounts. Complete means signed in *and* bound to a reachable server endpoint - both
- *  halves are written together at the end of the sign-in flow, so either one alone means the
- *  flow never finished (see MediaServerConfig.isComplete). */
-internal fun MainActivity.plexServers(): List<MediaServerConfig> =
-    mediaServers().filter { it.isPlex }
-
-internal fun MainActivity.hasJellyfinConfigured(): Boolean = jellyfinServers().isNotEmpty()
-
-internal fun MainActivity.hasPlexConfigured(): Boolean = plexServers().isNotEmpty()
-
-internal fun MainActivity.hasProviderConfigured(): Boolean =
-    hasIptvConfigured() || mediaServers().isNotEmpty()
-
-/** An active IPTV account or any enabled media server — something the user can browse. */
 internal fun MainActivity.hasProviderEnabled(): Boolean =
-    AccountStore.activeAccount(prefs) != null || mediaServers().any { it.enabled }
+    AccountStore.activeAccount(prefs) != null
 
 /** Search and the tab bar are useful once there's an enabled provider to browse - with none,
  *  they point at nothing, so hide them and leave just the Settings button as the way in.
@@ -119,61 +94,10 @@ internal fun MainActivity.providerAllowsMovies(cfg: AccountConfig): Boolean = !i
 
 internal fun MainActivity.providerAllowsSeries(cfg: AccountConfig): Boolean = !isVodDisabled() && cfg.seriesEnabled
 
-/** Per-media-server content-type gates, the same shape as the IPTV ones above: the server's
- *  own flag, with Movies/Series additionally subject to the global VOD gate. */
-internal fun MainActivity.jellyfinAllowsLive(cfg: MediaServerConfig): Boolean = cfg.liveEnabled
-
-internal fun MainActivity.jellyfinAllowsMovies(cfg: MediaServerConfig): Boolean =
-    !isVodDisabled() && cfg.moviesEnabled
-
-internal fun MainActivity.jellyfinAllowsSeries(cfg: MediaServerConfig): Boolean =
-    !isVodDisabled() && cfg.seriesEnabled
-
-/** Plex's gates. There is deliberately no live one: Plex Live TV is a tuner-session flow that
- *  Lumora's URL-per-channel live model can't express, so a Plex server never produces live
- *  channels to gate. */
-internal fun MainActivity.plexAllowsMovies(cfg: MediaServerConfig): Boolean =
-    !isVodDisabled() && cfg.moviesEnabled
-
-internal fun MainActivity.plexAllowsSeries(cfg: MediaServerConfig): Boolean =
-    !isVodDisabled() && cfg.seriesEnabled
-
-/** The media-server account a channel came from, looked up in [servers]. Null for anything
- *  that isn't a Jellyfin/Plex item, and for one whose account has since been removed - the
- *  cache outlives the config, so that is a real state and its items should stop showing.
- *
- *  An item with no source id at all comes from a cache written before media servers became a
- *  list; with exactly one account of that kind configured there is no ambiguity about which
- *  it is, so it resolves rather than disappearing until the next refresh re-stamps it. */
-internal fun MainActivity.mediaServerOwner(ch: Channel, servers: List<MediaServerConfig>): MediaServerConfig? {
-    if (!ch.isOwnLibrary) return null
-    val type = if (ch.isJellyfin) "jellyfin" else "plex"
-    val ofType = servers.filter { it.type == type }
-    return ofType.firstOrNull { it.id == ch.sourceProviderId }
-        ?: if (ch.sourceProviderId == null) ofType.singleOrNull() else null
-}
-
-/** True when a channel survives the per-provider content-type gates for its owner.
- *  Used by the cold-start cache filter and cache resurrection - the cache is saved
- *  unfiltered, so a channel whose type was switched off since it was written would
- *  otherwise come back here. A channel with no configured owner passes, except for a
- *  media-server item, whose owner is what says the account still exists at all. */
 internal fun MainActivity.isTypeAllowed(
     ch: Channel,
     configs: List<AccountConfig>,
-    servers: List<MediaServerConfig> = mediaServers()
 ): Boolean {
-    if (ch.isOwnLibrary) {
-        val server = mediaServerOwner(ch, servers) ?: return false
-        if (!server.enabled) return false
-        return when (ch.mediaType) {
-            // Plex never produces live channels (no tuner support), so a cached one can only
-            // be stale data - its own gate is the Jellyfin-shaped one either way.
-            MediaType.LIVE -> jellyfinAllowsLive(server)
-            MediaType.MOVIE -> jellyfinAllowsMovies(server)
-            MediaType.SERIES -> jellyfinAllowsSeries(server)
-        }
-    }
     val owner = ch.sourceProviderId?.let { id -> configs.firstOrNull { it.id == id } }
     return when (ch.mediaType) {
         MediaType.LIVE -> owner?.let { providerAllowsLive(it) } ?: true
@@ -223,7 +147,7 @@ internal fun MainActivity.applySimpleModeUi() {
     updateChromeFocusChain()
 }
 
-/** Home/Live are provider catalog views with nothing to show once there's no IPTV/Jellyfin
+/** Home/Live are provider catalog views with nothing to show once there's no IPTV
  *  provider - Live has no channels and Home's shelves are built from the same catalog.
  *  Series/Films go with them: without Discover or the plugins there is nothing else to
  *  browse, so with no provider enabled the empty state owns the screen. */
@@ -318,12 +242,10 @@ internal fun MainActivity.applyProviderToggle(enabled: Boolean, belongsToProvide
  *  so the cache itself stays display-unfiltered. */
 internal suspend fun MainActivity.persistCatalog(channels: List<Channel>) = withContext(Dispatchers.IO) {
     val configs = AccountStore.load(prefs)
-    val servers = mediaServers()
     val configuredIds = configs.map { it.id }.toSet()
     // Fast path: no content-type gate is active (per-provider flags fold the global VOD
     // gate in via isVodDisabled), so the cache can be saved unfiltered.
-    val anyGateOff = configs.any { !providerAllowsLive(it) || !providerAllowsMovies(it) || !providerAllowsSeries(it) } ||
-        servers.any { !jellyfinAllowsLive(it) || !jellyfinAllowsMovies(it) || !jellyfinAllowsSeries(it) }
+    val anyGateOff = configs.any { !providerAllowsLive(it) || !providerAllowsMovies(it) || !providerAllowsSeries(it) }
     if (!anyGateOff) {
         ChannelCache.save(this@persistCatalog, channels)
         return@withContext
@@ -339,11 +261,9 @@ internal suspend fun MainActivity.persistCatalog(channels: List<Channel>) = with
     // dropped/removed providers and of types that are ON do not resurrect.
     val resurrect = old.filter { ch ->
         if (ch.id in known) return@filter false
-        val ownerConfigured =
-            if (ch.isOwnLibrary) mediaServerOwner(ch, servers) != null
-            else ch.sourceProviderId != null && ch.sourceProviderId in configuredIds
+        val ownerConfigured = ch.sourceProviderId != null && ch.sourceProviderId in configuredIds
         if (!ownerConfigured) return@filter false
-        !isTypeAllowed(ch, configs, servers)
+        !isTypeAllowed(ch, configs)
     }
     ChannelCache.save(this@persistCatalog, channels + resurrect)
 }
@@ -363,11 +283,10 @@ internal fun MainActivity.isCatalogStale(): Boolean {
 }
 
 /** The one place that loads whatever's configured+enabled across every IPTV provider
- *  (any number of them now, not just one) plus Jellyfin, and merges the result - every
- *  settings Save/Quick Connect/reload call site routes through here instead of assuming
- *  a single active provider. [forceRefresh] skips the on-disk cache (used after a
- *  settings change, where showing stale content would be actively wrong) and re-fetches
- *  from the network(s) directly. */
+ *  (any number of them now, not just one), and merges the result - every settings
+ *  Save/reload call site routes through here instead of assuming a single active provider.
+ *  [forceRefresh] skips the on-disk cache (used after a settings change, where showing
+ *  stale content would be actively wrong) and re-fetches from the network(s) directly. */
 internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = false) {
     // With nothing configured, classifyAndShow's own hasContent check lands on
     // showEmptyState() - the first-run chooser - rather than auto-opening Settings
@@ -411,11 +330,10 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 // Both lists are read once, not per channel: each is a JSON parse, and this
                 // filter runs across a catalogue of tens of thousands of items.
                 val typeGates = listOfNotNull(AccountStore.activeAccount(prefs))
-                val serverGates = mediaServers()
                 cached = if (isVodDisabled()) {
-                    cached.filter { it.mediaType == MediaType.LIVE && isTypeAllowed(it, typeGates, serverGates) }
+                    cached.filter { it.mediaType == MediaType.LIVE && isTypeAllowed(it, typeGates) }
                 } else {
-                    cached.filter { isTypeAllowed(it, typeGates, serverGates) }
+                    cached.filter { isTypeAllowed(it, typeGates) }
                 }
                 cached = stripLegacyAnimeRows(cached)
                 // Paint the cached catalog immediately (Live first, films/series in background),
@@ -461,25 +379,6 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
         // remove/toggle that left one stale provider behind therefore read as the whole app
         // freezing for minutes. Each is still individually bounded by the same timeout and
         // reported as failed on its own if it can't answer in time.
-        // Jellyfin fetches alongside the IPTV providers rather than after all of them. It used
-        // to run sequentially once awaitAll() returned, so its connect didn't even begin until
-        // the slowest IPTV provider finished - up to PROVIDER_FETCH_TIMEOUT_MS of waiting
-        // before the first Jellyfin byte moved, which is most of "Jellyfin takes a while".
-        // Started here so it overlaps; awaited below with the rest.
-        // Every configured Jellyfin/Plex account, each on its own - one dead server can't hold
-        // up another's catalog, and a per-account failure is reported as its own.
-        val enabledServers = mediaServers().filter { it.enabled }
-        val mediaServerDeferred = enabledServers.map { server ->
-            // Bounded like every other provider. Unbounded, one unresponsive server held the
-            // whole load open indefinitely, and because the loader cancelAndJoins the previous
-            // run before starting a new one, every retry queued behind that stuck fetch
-            // instead of replacing it.
-            server to async {
-                withTimeoutOrNull(PROVIDER_FETCH_TIMEOUT_MS) {
-                    if (server.isPlex) fetchPlexChannels(server) else fetchJellyfinChannels(server)
-                } ?: FetchResult.Failure("${server.name}: timed out")
-            }
-        }
         val fetchResults = enabledConfigs.map { config ->
             async {
                 val result = withTimeoutOrNull(PROVIDER_FETCH_TIMEOUT_MS) {
@@ -501,28 +400,13 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
         }.awaitAll()
         // Enabled ids are re-read here rather than reusing the pre-loop snapshot: toggling
         // a provider off mid-refresh drops its id from this set, so the channels it just
-        // fetched can't slip back into the catalog. Items with no sourceProviderId
-        // (Jellyfin/Plex/anime) always pass.
+        // fetched can't slip back into the catalog.
         val enabledProviderIds = AccountStore.activeAccountId(prefs)?.let { setOf(it) } ?: emptySet()
         for ((config, result) in fetchResults) {
             when (result) {
                 is FetchResult.Success ->
                     combined += result.channels.filter { it.sourceProviderId == null || it.sourceProviderId in enabledProviderIds }
                 is FetchResult.Failure -> errors += "${config.name}: ${result.message}"
-            }
-        }
-        for ((server, deferred) in mediaServerDeferred) {
-            if (!uiPainted) {
-                setStatus(
-                    getString(
-                        if (server.isPlex) R.string.plug_connecting_to_plex else R.string.plug_connecting_to_jellyfin
-                    ),
-                    visible = true
-                )
-            }
-            when (val result = deferred.await()) {
-                is FetchResult.Success -> combined += result.channels
-                is FetchResult.Failure -> errors += result.message
             }
         }
 
@@ -540,7 +424,7 @@ internal fun MainActivity.loadAllConfiguredProviders(forceRefresh: Boolean = fal
                 filmsSeriesDeriveJob?.cancel()
             }
             // classifyAndShow() has to run even when nothing above changed allChannels -
-            // skipping this call left a provider-less setup (no IPTV/Jellyfin channels,
+            // skipping this call left a provider-less setup (no IPTV channels,
             // empty/no disk cache) with nothing ever painted past the toolbar: uiPainted
             // stays false and no later event re-triggers a render.
             classifyAndShow(preserveUi = shouldPreserveUiOnLoad())

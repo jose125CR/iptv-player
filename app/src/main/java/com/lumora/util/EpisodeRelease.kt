@@ -5,8 +5,8 @@ import java.util.Calendar
 import java.util.concurrent.TimeUnit
 
 /** Leading ISO date of an air/release date field, as every source states it: Xtream sends a
- *  bare "2021-05-14", Jellyfin a full "2021-05-14T00:00:00.0000000Z", TMDB a bare date again.
- *  Anything not starting with an ISO date is left alone rather than guessed at. */
+ *  bare "2021-05-14", TMDB a bare date again. Anything not starting with an ISO date is left
+ *  alone rather than guessed at. */
 private val ISO_DATE_PREFIX = Regex("""^(\d{4})-(\d{2})-(\d{2})""")
 
 /**
@@ -37,8 +37,8 @@ fun daysUntilAirDate(raw: String?): Int? {
  * True when an episode row is a title that has not aired yet and that nothing can play.
  *
  * Both halves are required. A blank `url` is the TMDB-built placeholder from
- * `tmdbSeasonsFor`/`mergeMissingEpisodesFromTmdb` - i.e. no configured IPTV provider and no
- * Jellyfin server carries this episode; a provider copy always has a URL, and if one exists the
+ * `tmdbSeasonsFor`/`mergeMissingEpisodesFromTmdb` - i.e. no configured IPTV provider carries
+ * this episode; a provider copy always has a URL, and if one exists the
  * episode is playable whatever TMDB thinks its air date is (panels routinely carry a title
  * before, or with a different date than, its official air date). The future air date is what
  * separates "nobody has it yet because it does not exist" from "nobody has it, go find a

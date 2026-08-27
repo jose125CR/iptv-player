@@ -36,8 +36,8 @@ object FavoritesStore {
     fun getFavoriteSeriesIds(context: Context): Set<String> = readSet(context, KEY_FAVORITE_SERIES)
 
     /** Sets membership outright rather than flipping it - for reconciling against a server
-     *  that owns the truth (Jellyfin's UserData.IsFavorite), where a toggle can't express
-     *  "the server says this is no longer a favourite". Returns true if anything changed. */
+     *  that owns the truth, where a toggle can't express "the server says this is no longer
+     *  a favourite". Returns true if anything changed. */
     fun setFavoriteSeries(context: Context, id: String, favorite: Boolean): Boolean = synchronized(lock) {
         if (id.isBlank()) return false
         val current = readSet(context, KEY_FAVORITE_SERIES)

@@ -7,14 +7,9 @@
     <string name="sett_enter_url">Entrez une URL</string>
     <string name="sett_epg_source_added">Source EPG ajoutée — téléchargement du guide</string>
 
-    <!-- MainActivitySettings.kt - statut Jellyfin Quick Connect -->
+    <!-- MainActivitySettings.kt - état de connexion -->
     <string name="sett_starting">Démarrage…</string>
-    <string name="sett_qc_couldnt_start">Impossible de démarrer Quick Connect - vérifiez l\'URL du serveur</string>
-    <string name="sett_enter_code_on_server">Saisissez le code %1$s sur votre serveur Jellyfin</string>
-    <string name="sett_qc_timed_out">Quick Connect a expiré</string>
     <string name="sett_signing_in">Connexion…</string>
-    <string name="sett_qc_signin_failed">Échec de la connexion Quick Connect</string>
-    <string name="sett_signed_in_via_quick_connect">Connecté via Quick Connect</string>
 
     <!-- MainActivitySettings.kt - assemblage des libellés de lignes de réglage -->
     <string name="sett_language_row">%1$s  ·  %2$s</string>
@@ -29,26 +24,9 @@
     <string name="sett_stalker_portal">Portail Stalker</string>
     <string name="sett_type_summary">Type : %1$s</string>
     <string name="sett_editing_provider">Modification de %1$s</string>
-    <string name="sett_editing_jellyfin">Modification de Jellyfin</string>
-    <string name="sett_editing_plex">Modification de Plex</string>
-    <string name="sett_plex_starting">Démarrage de la connexion…</string>
-    <string name="sett_plex_scan_code">Allez sur plex.tv/link et saisissez %1$s</string>
-    <string name="sett_plex_link_instructions">Sur votre téléphone, allez sur plex.tv/link et saisissez le code ci-dessus — ou scannez le QR pour l\'ouvrir avec le code déjà rempli.</string>
-    <string name="sett_plex_couldnt_start">Impossible de démarrer la connexion Plex</string>
-    <string name="sett_plex_timed_out">Délai de connexion dépassé — réessayez</string>
-    <string name="sett_plex_finding_servers">Recherche de vos serveurs…</string>
-    <string name="sett_plex_no_servers">Aucun serveur Plex sur ce compte</string>
-    <string name="sett_plex_connecting_server">Connexion à %1$s…</string>
-    <string name="sett_plex_unreachable">Impossible de joindre %1$s depuis ce réseau</string>
-    <string name="sett_plex_choose_server">Choisissez un serveur Plex</string>
-    <string name="sett_plex_signed_in">Connecté à %1$s</string>
     <string name="sett_provider_row_detail">%1$s · %2$s</string>
     <string name="sett_remove_provider_confirm">Supprimer %1$s ?</string>
     <string name="sett_remove_provider_message">Les chaînes de ce compte n\'apparaîtront plus.</string>
-    <string name="sett_remove_plex_confirm">Supprimer Plex ?</string>
-    <string name="sett_remove_plex_message">Ses films et séries n\'apparaîtront plus.</string>
-    <string name="sett_remove_jellyfin_confirm">Supprimer Jellyfin ?</string>
-    <string name="sett_remove_jellyfin_message">Ses chaînes n\'apparaîtront plus.</string>
     <string name="sett_choose_provider_type_first">Choisissez d\'abord un type de compte</string>
     <string name="sett_enter_m3u_url">Entrez une URL M3U</string>
     <string name="sett_enter_server_url">Entrez une URL de serveur</string>

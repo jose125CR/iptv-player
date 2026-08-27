@@ -10,7 +10,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.qrcode.QRCodeWriter
 import com.lumora.R
-import com.lumora.util.normalizeServerUrl
+
 import kotlinx.coroutines.*
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -51,26 +51,6 @@ class QrPairingManager(private val context: Context) {
     var onProviderReceived: ((type: String, formData: Map<String, String>) -> Unit)? = null
     var onError: ((String) -> Unit)? = null
     var onServerReady: ((url: String, port: Int) -> Unit)? = null
-
-    /** Starts a Jellyfin Quick Connect session against the submitted server URL - wired by
-     *  MainActivity (which owns the actual Jellyfin network client) so this class stays
-     *  provider-agnostic. Called synchronously while handling the phone's POST /submit, so
-     *  the resulting code/secret can be shown in the response *and* handed to the TV -
-     *  both sides need the same pair, not two independently-started ones. */
-    var onJellyfinQuickConnect: (suspend (serverUrl: String) -> QuickConnectStart)? = null
-
-    data class QuickConnectStart(val code: String?, val secret: String?, val error: String?)
-
-    /** Starts a Plex account sign-in on behalf of the phone, for the same reason
-     *  [onJellyfinQuickConnect] exists: the code has to be the *same* one on both screens, so
-     *  it is minted once, here, while the phone's POST is still being handled - and the TV
-     *  polls that same PIN. Wired by MainActivity, which owns the Plex client.
-     *
-     *  Unlike Jellyfin there is no server URL to submit: a Plex account is what says which
-     *  servers exist, so the phone form has nothing to fill in beyond choosing the type. */
-    var onPlexPinLogin: (suspend () -> PlexPinStart)? = null
-
-    data class PlexPinStart(val code: String?, val authUrl: String?, val error: String?)
 
     data class PairingResult(
         val url: String,
@@ -222,38 +202,8 @@ class QrPairingManager(private val context: Context) {
                     }
                     val type = form["type"] ?: "m3u"
                     Log.d(TAG, "Provider submitted: type=$type name=${form["name"]}")
-                    if (type == "jellyfin" && form["authMethod"] == "quickconnect") {
-                        // Quick Connect's code has to match on both screens - start it here,
-                        // synchronously, so the same code/secret pair can be shown on the
-                        // phone (this response) and handed to the TV to poll/complete,
-                        // instead of each side minting its own separate code.
-                        val serverUrl = form["jellyfinServerUrl"]?.let { normalizeServerUrl(it, defaultScheme = "https") } ?: ""
-                        val starter = onJellyfinQuickConnect
-                        val result = starter?.invoke(serverUrl)
-                        if (result?.code == null || result.secret == null) {
-                            writeHtml(c.getOutputStream(), 200, errorPage(result?.error ?: "Couldn't start Quick Connect - check the server URL"))
-                        } else {
-                            onProviderReceived?.invoke(
-                                "jellyfin_quickconnect",
-                                form + mapOf("serverUrl" to serverUrl, "code" to result.code, "secret" to result.secret)
-                            )
-                            writeHtml(c.getOutputStream(), 200, quickConnectPage(result.code))
-                        }
-                    } else if (type == "plex") {
-                        // Same one-code-two-screens problem as Quick Connect: the PIN is
-                        // started here so the phone can show it and open the Plex sign-in
-                        // page for it, while the TV polls that exact PIN.
-                        val result = onPlexPinLogin?.invoke()
-                        if (result?.code == null || result.authUrl == null) {
-                            writeHtml(c.getOutputStream(), 200, errorPage(result?.error ?: "Couldn't start Plex sign-in"))
-                        } else {
-                            onProviderReceived?.invoke("plex_pin", form + mapOf("code" to result.code))
-                            writeHtml(c.getOutputStream(), 200, plexLinkPage(result.code, result.authUrl))
-                        }
-                    } else {
-                        onProviderReceived?.invoke(type, form)
-                        writeHtml(c.getOutputStream(), 200, successPage("Provider details received! Check your TV."))
-                    }
+                    onProviderReceived?.invoke(type, form)
+                    writeHtml(c.getOutputStream(), 200, successPage("Provider details received! Check your TV."))
                 }
                 else -> writeHtml(c.getOutputStream(), 404, "Not found")
             }
@@ -276,9 +226,7 @@ class QrPairingManager(private val context: Context) {
     private fun createQrBitmap(value: String): Bitmap = Companion.createQrBitmap(value)
 
     companion object {
-        /** Encodes any string as a QR bitmap. Public because the Plex sign-in shows a QR of
-         *  a plex.tv link with no pairing server behind it - there is nothing for the phone
-         *  to POST back to, so it needs the encoder without the rest of this class. */
+        /** Encodes any string as a QR bitmap. */
         fun createQrBitmap(value: String): Bitmap {
             val hints = EnumMap<EncodeHintType, Any>(EncodeHintType::class.java).apply {
                 put(EncodeHintType.MARGIN, 2)
@@ -429,27 +377,6 @@ button:active{background:#1565c0}
   </div>
   <div class="hint">Register this MAC on your portal, or paste one you already have.</div>
 </div>
-<div id="jellyfinFields" class="field-group ${if (presetType == "jellyfin") "active" else ""}">
-  <label>Server URL</label>
-  <input name="jellyfinServerUrl" placeholder="http://192.168.1.100:8096">
-  <label>Sign in with</label>
-  <select name="authMethod" id="authMethod" onchange="updateAuthMethod()">
-    <option value="password">Username &amp; Password</option>
-    <option value="quickconnect">Quick Connect</option>
-  </select>
-  <div id="jellyfinPasswordFields" class="field-group active">
-    <label>Username</label>
-    <input name="jellyfinUsername">
-    <label>Password</label>
-    <input name="jellyfinPassword" type="password">
-  </div>
-  <div id="jellyfinQuickConnectHint" class="field-group">
-    <div class="hint">After sending, a code appears here and on your TV - enter it on your Jellyfin server's Quick Connect page to finish signing in.</div>
-  </div>
-</div>
-<div id="plexFields" class="field-group ${if (presetType == "plex") "active" else ""}">
-  <div class="hint">Nothing to fill in - Plex signs in with your account, and your account is what tells the TV which servers you have. Tap Send to TV and finish signing in on the next page.</div>
-</div>
 <button type="submit">Send to TV</button>
 </form>
 </main>
@@ -457,14 +384,9 @@ button:active{background:#1565c0}
 function updateType(){const t=document.getElementById('type').value;
 document.getElementById('m3uFields').classList.toggle('active',t==='m3u');
 document.getElementById('xtreamFields').classList.toggle('active',t==='xtream');
-document.getElementById('stalkerFields').classList.toggle('active',t==='stalker');
-document.getElementById('jellyfinFields').classList.toggle('active',t==='jellyfin');
-document.getElementById('plexFields').classList.toggle('active',t==='plex');}
+document.getElementById('stalkerFields').classList.toggle('active',t==='stalker');}
 function genMac(){function o(){return('0'+Math.floor(Math.random()*256).toString(16).toUpperCase()).slice(-2);}
 document.getElementById('stalkerMac').value='00:1A:79:'+o()+':'+o()+':'+o();}
-function updateAuthMethod(){const m=document.getElementById('authMethod').value;
-document.getElementById('jellyfinPasswordFields').classList.toggle('active',m==='password');
-document.getElementById('jellyfinQuickConnectHint').classList.toggle('active',m==='quickconnect');}
 </script>
 </body></html>
 """.trimIndent()
@@ -475,42 +397,6 @@ document.getElementById('jellyfinQuickConnectHint').classList.toggle('active',m=
 main{max-width:520px;margin:auto;background:#1a1a1a;border-radius:16px;padding:24px}
 h1{color:#4caf50}</style>
 </head><body><main><h1>Sent to TV</h1><p>${msg.escapeHtml()}</p></main></body></html>"""
-
-    private fun quickConnectPage(code: String) = """<!doctype html>
-<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lumora Pairing</title>
-<style>body{font-family:-apple-system,sans-serif;background:#0d0d0d;color:#eee;padding:28px;text-align:center}
-main{max-width:520px;margin:auto;background:#1a1a1a;border-radius:16px;padding:28px}
-h1{color:#fff;font-size:20px;margin:0 0 4px}
-p{color:#9e9e9e;line-height:1.4}
-.code{font-size:48px;font-weight:700;letter-spacing:6px;color:#2979ff;background:#0d0d0d;border-radius:12px;padding:20px;margin:20px 0}
-</style></head><body><main>
-<h1>Quick Connect</h1>
-<p>Enter this code on your Jellyfin server to finish signing in on your TV.</p>
-<div class="code">${code.escapeHtml()}</div>
-<p>This page can be closed once you've entered it.</p>
-</main></body></html>"""
-
-    /** Shown to the phone once a Plex PIN has been minted: plex.tv/link with the code already
-     *  filled in, as a button to tap (the whole point of doing this from a phone rather than
-     *  typing on a TV remote), plus the 4-character code in text for anyone who would rather
-     *  open plex.tv/link themselves. */
-    private fun plexLinkPage(code: String, authUrl: String) = """<!doctype html>
-<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lumora Pairing</title>
-<style>body{font-family:-apple-system,sans-serif;background:#0d0d0d;color:#eee;padding:28px;text-align:center}
-main{max-width:520px;margin:auto;background:#1a1a1a;border-radius:16px;padding:28px}
-h1{color:#fff;font-size:20px;margin:0 0 4px}
-p{color:#9e9e9e;line-height:1.4}
-a.btn{display:block;margin:20px 0;padding:16px;border-radius:12px;background:#e5a00d;color:#111;font-weight:700;font-size:17px;text-decoration:none}
-.code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:40px;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:#e5a00d;background:#0d0d0d;border-radius:12px;padding:18px;margin:16px 0}
-</style></head><body><main>
-<h1>Sign in to Plex</h1>
-<p>Tap below to open plex.tv/link with the code filled in - your TV is waiting for it.</p>
-<a class="btn" href="${authUrl.escapeHtml()}">Sign in at plex.tv/link</a>
-<p>Or go to plex.tv/link yourself and enter:</p>
-<div class="code">${code.escapeHtml()}</div>
-</main></body></html>"""
 
     private fun errorPage(msg: String) = """<!doctype html>
 <html><head><meta name="viewport" content="width=device-width,initial-scale=1">

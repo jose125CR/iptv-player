@@ -30,7 +30,6 @@ import com.lumora.player.VideoAspectFrameLayout
 import com.lumora.util.extractLeadingTag
 import com.lumora.util.isAdultCategory
 import com.lumora.util.normalizeServerUrl
-import com.lumora.util.rawMediaItemId
 import com.lumora.data.remote.stalker.StalkerProvider
 import kotlinx.coroutines.*
 import okhttp3.Request
@@ -127,7 +126,6 @@ internal fun MainActivity.setupPlayerControls() {
     binding.sideMenuCategoryList.adapter = sideMenuCategoryAdapter
     binding.btnAudioTrack.setOnClickListener { showTrackPicker(isAudio = true) }
     binding.btnSubtitleTrack.setOnClickListener { showTrackPicker(isAudio = false) }
-    binding.btnChapters.setOnClickListener { showChapterPicker() }
     binding.btnLiveVersions.setOnClickListener { showVersionPicker() }
     binding.btnRewind.setOnClickListener { playerManager.seekBy(-15_000); showControls() }
     binding.btnFastForward.setOnClickListener { playerManager.seekBy(30_000); showControls() }
@@ -316,7 +314,6 @@ internal fun MainActivity.setupPlayerControls() {
             val duration = playerManager.duration
             if (duration <= 0) return
             val target = duration * p / 100
-            showTrickplayPreview(target)
             // A touch drag commits its seek in onStopTrackingTouch, but D-pad presses
             // never fire that callback - the bar is focused, not touched, so the thumb
             // just slid with no effect. A touched bar is `pressed`; a key-driven one
@@ -334,13 +331,8 @@ internal fun MainActivity.setupPlayerControls() {
                 playerManager.seekTo((playerManager.duration * (s?.progress ?: 0)) / 100)
                 resetStallTracking()
             }
-            hideTrickplayPreview()
         }
     })
-    // D-pad seeking never goes through onStopTrackingTouch (no touch involved), so the
-    // preview has to be dismissed on focus loss too or it stays up over the video.
-    binding.seekBar.setOnFocusChangeListener { _, hasFocus -> if (!hasFocus) hideTrickplayPreview() }
-
     // Safe to build here (not as field initializers): the Activity context is fully
     // attached by setupPlayerControls time, so GestureDetector's getResources() call
     // in its constructor cannot NPE.
@@ -464,19 +456,9 @@ internal fun MainActivity.setupPlayerControls() {
             resetStallTracking()
             blackFrameStreak = 0
             if (!tryNextQualityVersion()) {
-                val liveChannel = nowPlayingChannel?.takeIf { it.mediaType == MediaType.LIVE && !it.isOwnLibrary }
-                val vodChannel = nowPlayingChannel?.takeIf { it.mediaType != MediaType.LIVE && !it.isOwnLibrary }
-                // Media-server direct-play: one fresh-URL re-resolve before giving up - a
-                // transient server timeout or an expired direct-play URL often recovers.
-                if (nowPlayingChannel?.isJellyfin == true && !jellyfinRetryAttempted) {
-                    retryJellyfinPlayback()
-                } else if (nowPlayingChannel?.isPlex == true && !plexRetryAttempted) {
-                    // A container Media3 cannot demux is not transient - re-negotiating on the
-                    // same terms reproduces it exactly, because the server's direct-play answer
-                    // was about what *it* can serve, not what this client can parse. Ask for the
-                    // HLS transcode instead, which is the one thing that changes the outcome.
-                    retryPlexPlayback(forceTranscode = isContainerParsingError(error))
-                } else if (vodChannel != null && retryCurrentVodStream(vodChannel, error)) {
+                val liveChannel = nowPlayingChannel?.takeIf { it.mediaType == MediaType.LIVE }
+                val vodChannel = nowPlayingChannel?.takeIf { it.mediaType != MediaType.LIVE }
+                if (vodChannel != null && retryCurrentVodStream(vodChannel, error)) {
                     // Quiet same-URL retry: spinner only, no toast - a film that comes back on
                     // the second attempt should look like a stall, not like an error the user
                     // has to answer. Nothing else to do here; the retry either plays or comes
@@ -501,8 +483,8 @@ internal fun MainActivity.setupPlayerControls() {
                         )
                     }, delayMs)
                 } else {
-                    // Every internal recovery is spent: retries, version failover and
-                    // Jellyfin's re-resolve (if any) all failed. Another player on the device
+                    // Every internal recovery is spent: retries and version failover
+                    // all failed. Another player on the device
                     // is the last thing left to try, so offer it rather than leaving the user
                     // on a dead screen with a two-word toast.
                     showPlaybackFailed(getString(R.string.play_stream_error_reason, error.errorCodeName))
@@ -702,26 +684,10 @@ internal fun MainActivity.showPlayerFor(
     // Stalker VOD carries a base64 play command, not a URL - it must be create_link'd at
     // play time (the resolved link is short-lived and per-session). Everything else has a
     // direct url already.
-    // Reset per-play Jellyfin state before anything below can populate it - a chapters
-    // button left over from the last title would otherwise seek into the wrong film.
-    jellyfinPlaySession = null
-    jellyfinPlayingItemId = null
-    jellyfinPlayingServerId = null
-    jellyfinRetryAttempted = false
-    plexPlaySession = null
-    plexPlayingItemId = null
-    plexPlayingServerId = null
-    plexPlayingDurationMs = null
-    plexRetryAttempted = false
     liveRetryAttempt = 0
     liveVersionSwitchAttempt = 0
     vodRetryAttempt = 0
-    playbackChapters = emptyList()
-    jellyfinTrickplay = null
-    trickplayTileCache = null
-    updateChaptersButtonVisibility()
     updateVersionsButtonVisibility()
-    hideTrickplayPreview()
 
     when {
         startVersion.url.isBlank() && !startVersion.stalkerCmd.isNullOrBlank() -> scope.launch {
@@ -742,98 +708,6 @@ internal fun MainActivity.showPlayerFor(
                 )
             }
             resumeFromMs?.let { playerManager.seekTo(it) }
-        }
-        // Jellyfin VOD/episodes ask the server how to play them rather than assuming the
-        // file is directly playable: `?static=true` hands the raw file over untouched, so
-        // anything this device has no decoder for (HEVC 10-bit, TrueHD, DTS) opened to a
-        // black screen or silence. PlaybackInfo picks direct play where it fits and an
-        // HLS transcode where it doesn't, and brings the subtitle tracks with it.
-        startVersion.isJellyfin && startVersion.mediaType != MediaType.LIVE && startVersion.id.isNotBlank() -> scope.launch {
-            val startAt = resumeFromMs ?: 0L
-            // The server only knows its own bare item id; the catalogue's is qualified with
-            // which account it came from (see qualifiedMediaItemId).
-            val itemId = rawMediaItemId(startVersion.id)
-            val serverId = jellyfinConfigFor(startVersion)?.id
-            val jellyfin = jellyfinClientFor(startVersion)
-            // The audio-language setting has to travel with the negotiation, not just with
-            // the player: a transcoded source arrives with the single audio track the server
-            // chose, so a track selection made afterwards has nothing to select.
-            val wantedAudioLanguage = prefs.getString(PREF_AUDIO_LANGUAGE, "en") ?: "en"
-            val resolved = if (jellyfin == null) null else withContext(Dispatchers.IO) {
-                runCatching {
-                    jellyfin.resolveStream(
-                        itemId,
-                        startAt,
-                        preferredAudioLanguage = wantedAudioLanguage
-                    )
-                }.getOrNull()
-            }
-            if (nowPlayingChannel?.id != channel.id) return@launch
-            // A failed negotiation is not a failed play: the plain static URL is what the
-            // app always used, and for most files it works - so fall back to it rather
-            // than refusing to open the title.
-            playerManager.playUrl(
-                resolved?.url ?: startVersion.url,
-                startVersion.streamUserAgent,
-                subtitles = resolved?.let(::externalSubtitlesFor) ?: emptyList(),
-                startPositionMs = startAt,
-                audio = audio,
-                preferAudioLanguage = startVersion.mediaType != MediaType.LIVE
-            )
-            jellyfinPlaySession = resolved
-            jellyfinPlayingItemId = itemId
-            jellyfinPlayingServerId = serverId
-            reportJellyfinStart(itemId, resolved, startAt)
-            loadJellyfinPlaybackExtras(itemId)
-        }
-        // Plex asks the server the same question Jellyfin's PlaybackInfo answers, through the
-        // transcode-decision endpoint: direct play where the file is playable as-is, an HLS
-        // transcode where it isn't, plus the sidecar subtitle tracks that come with it.
-        startVersion.isPlex && startVersion.mediaType != MediaType.LIVE && startVersion.id.isNotBlank() -> scope.launch {
-            val startAt = resumeFromMs ?: 0L
-            val itemId = rawMediaItemId(startVersion.id)
-            val serverId = plexConfigFor(startVersion)?.id
-            val plex = plexClientFor(startVersion)
-            // The audio-language setting has to travel with the negotiation, not just with the
-            // player: a transcoded source arrives with the single audio track the server
-            // chose, so a track selection made afterwards has nothing to select.
-            val wantedAudioLanguage = prefs.getString(PREF_AUDIO_LANGUAGE, "en") ?: "en"
-            val resolved = if (plex == null) null else withContext(Dispatchers.IO) {
-                runCatching {
-                    plex.resolveStream(
-                        itemId,
-                        startAt,
-                        preferredAudioLanguage = wantedAudioLanguage
-                    )
-                }.getOrNull()
-            }
-            if (nowPlayingChannel?.id != channel.id) return@launch
-            // A failed negotiation is not a failed play: the catalogue already carries the
-            // part path, so the plain file is still worth trying rather than refusing to open
-            // the title.
-            val url = resolved?.url ?: plexFallbackUrl(startVersion)
-            if (url == null) {
-                binding.bufferingSpinner.visibility = View.GONE
-                Toast.makeText(this@showPlayerFor, getString(R.string.play_couldnt_open_title), Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-            playerManager.playUrl(
-                url,
-                startVersion.streamUserAgent,
-                subtitles = resolved?.let(::externalSubtitlesForPlex) ?: emptyList(),
-                startPositionMs = startAt,
-                audio = audio,
-                preferAudioLanguage = true,
-                // Plex writes segment paths into its HLS playlists with no token on them, so
-                // without this a transcode plays one segment and then 401s.
-                maintainTokenQuery = resolved?.tokenQuery
-            )
-            plexPlaySession = resolved
-            plexPlayingItemId = itemId
-            plexPlayingServerId = serverId
-            plexPlayingDurationMs = resolved?.runtimeMs
-            reportPlexStart(itemId, resolved, startAt)
-            loadPlexPlaybackExtras(itemId)
         }
         else -> {
             playerManager.playUrl(
@@ -903,16 +777,11 @@ internal fun MainActivity.xtreamProviderFor(channel: Channel): Provider? {
     )
 }
 
-/** The name of the provider a Channel came from, for labelling version chips. A media-server
- *  item is labelled with its account's own name, since several Jellyfin/Plex accounts can be
- *  configured at once and "Jellyfin" alone wouldn't say which library the version is in.
- *  Everything else is an AccountConfig matched by sourceProviderId. Null when the config
+/** The name of the provider a Channel came from, for labelling version chips.
+ *  Everything is an AccountConfig matched by sourceProviderId. Null when the config
  *  has since been deleted (cached items outlive it). */
-internal fun MainActivity.providerNameFor(channel: Channel): String? = when {
-    channel.isOwnLibrary -> mediaServerOwner(channel, mediaServers())?.name?.takeIf { it.isNotBlank() }
-        ?: if (channel.isJellyfin) "Jellyfin" else "Plex"
-    else -> channel.sourceProviderId?.let { providerNamesById[it] }?.takeIf { it.isNotBlank() }
-}
+internal fun MainActivity.providerNameFor(channel: Channel): String? =
+    channel.sourceProviderId?.let { providerNamesById[it] }?.takeIf { it.isNotBlank() }
 
 internal fun MainActivity.streamKey(channel: Channel) = channel.id.ifBlank { channel.url }
 
@@ -964,40 +833,6 @@ internal fun MainActivity.clearStreamDead(channel: Channel) {
 /** Retries playback with the next-best quality version of the current live channel, if
  *  any - the one being left behind failed (that's why this got called), so it's marked
  *  dead for a cooldown window instead of being tried again a few seconds later. */
-/** One-shot Jellyfin direct-play recovery: a source error (server read timeout, expired
- *  direct-play URL) re-resolves the item for a fresh URL rather than erroring out - the
- *  failed URL is short-lived and per-session, so a fresh resolveStream is the right fix. */
-internal fun MainActivity.retryJellyfinPlayback() {
-    val channel = nowPlayingChannel ?: return
-    if (!channel.isJellyfin || channel.id.isBlank()) return
-    jellyfinRetryAttempted = true
-    val itemId = rawMediaItemId(channel.id)
-    scope.launch {
-        val startAt = playerManager.currentPosition
-        val jellyfin = jellyfinClientFor(channel)
-        val resolved = if (jellyfin == null) null else withContext(Dispatchers.IO) {
-            runCatching {
-                jellyfin.resolveStream(
-                    itemId,
-                    startAt,
-                    preferredAudioLanguage = prefs.getString(PREF_AUDIO_LANGUAGE, "en") ?: "en"
-                )
-            }.getOrNull()
-        }
-        if (nowPlayingChannel?.id != channel.id) return@launch
-        playerManager.playUrl(
-            resolved?.url ?: channel.url,
-            channel.streamUserAgent,
-            subtitles = resolved?.let(::externalSubtitlesFor) ?: emptyList(),
-            startPositionMs = startAt,
-            preferAudioLanguage = channel.mediaType != MediaType.LIVE
-        )
-        jellyfinPlaySession = resolved
-        jellyfinPlayingItemId = itemId
-        jellyfinPlayingServerId = jellyfinConfigFor(channel)?.id
-    }
-}
-
 internal fun MainActivity.tryNextQualityVersion(message: String? = null): Boolean {
     if (nowPlayingChannel?.mediaType != MediaType.LIVE) return false
     // Capped separately from the dead-stream scan below: a provider-wide throttle (the same
@@ -1032,18 +867,6 @@ internal fun MainActivity.tryNextQualityVersion(message: String? = null): Boolea
  * is not the transport's fault ([isRetryablePlaybackError]), or there is nothing to replay
  * (a local download, whose data source this cannot rebuild).
  */
-/**
- * True when the player rejected the *bytes* rather than failing to fetch them: no extractor
- * recognised the container, or the one that did couldn't read it.
- *
- * Worth separating from a transport failure because the remedy is opposite. A read timeout
- * wants the same request again; this wants a different one, since the same file will fail the
- * same way every time.
- */
-internal fun isContainerParsingError(error: PlaybackException): Boolean =
-    error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ||
-        error.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED
-
 internal fun MainActivity.retryCurrentVodStream(channel: Channel, error: PlaybackException): Boolean {
     if (vodRetryAttempt >= VOD_RETRY_DELAYS_MS.size) return false
     if (!isRetryablePlaybackError(error)) return false
@@ -1168,7 +991,7 @@ internal fun MainActivity.switchToVersionIndex(index: Int, message: String? = nu
  *
  *  The XML chain is static and links straight through buttons that get hidden at runtime:
  *  btnCast is GONE on TV (the TV is a Cast receiver, not a sender) and btnChapters is GONE
- *  unless a Jellyfin item has chapters. From API 26 FocusFinder walks a GONE link onward to
+ *  at all times. From API 26 FocusFinder walks a GONE link onward to
  *  that view's own nextFocus target, so the chain self-heals; on API 25 and below (Fire TV
  *  7.1) it hands the GONE view straight back and requestFocus() on it fails - RIGHT out of
  *  Sleep did nothing at all and every button past it (External, Diag, Rec, Versions, Fit,
@@ -1354,7 +1177,7 @@ internal suspend fun MainActivity.switchToSeriesVersion(
     val (_, seasons) = runCatching { loadSeriesContent(target) }.getOrElse { null to emptyList() }
     // The target's own season number, taken from its episodes first (they carry the same
     // "S04E01" marker) and from the season label as the fallback, since a provider may label a
-    // season anything ("Series 4", a Jellyfin custom name).
+    // season anything ("Series 4", a custom name).
     fun seasonNumberFor(label: String, eps: List<Channel>): Int? =
         eps.firstNotNullOfOrNull { seasonNumberOf(it) }
             ?: Regex("""\d+""").find(label)?.value?.toIntOrNull()
@@ -1607,7 +1430,7 @@ internal fun MainActivity.saveCurrentPlaybackPosition() {
     if (pos == androidx.media3.common.C.TIME_UNSET || pos < 0) return
     if (dur <= 0) return
     val key = channel.id.ifBlank { channel.url }
-    // Jellyfin episodes carry no series id of their own (toChannel drops it), so stamp
+    // Episodes may carry no series id of their own (toChannel drops it), so stamp
     // the parent series id here - the detail page sets currentSeriesVersionContext for
     // its plays - letting a later Continue Watching click resolve the series page.
     // Movies and live channels are untouched.
@@ -1629,15 +1452,10 @@ internal fun MainActivity.hidePlayer() {
     saveCurrentPlaybackPosition()
     // Watched state may have moved during playback - the Home up-next memo is stale.
     clearUpNextMemo()
-    // Before nowPlayingChannel is cleared: the server turns this final position into a
-    // watched mark or a resume point, and closes out any transcode it started.
-    if (reportJellyfinStopped()) refreshJellyfinRowsAfterPlayback()
-    if (reportPlexStopped()) refreshPlexRowsAfterPlayback()
-    // Same ordering constraint, for the same reason: Trakt turns the progress in this report
+    // Same ordering constraint: Trakt turns the progress in this report
     // into either a watched mark (>=80%) or a resume point, so it has to read the real
     // position before the player is torn down.
     traktReportStopped()
-    hideTrickplayPreview()
     // What was playing is the best preview target when nothing in the guide was ever
     // focused - a launch that resumes straight into the player never fires a focus
     // event, so lastFocusedLiveChannel is null and the preview pane came back blank.
@@ -1678,7 +1496,7 @@ internal fun MainActivity.hidePlayer() {
         val previewTarget = lastFocusedLiveChannel ?: wasPlaying
         previewTarget?.let { requestPreviewLoad(it) }
         // Backing out lands in the channel's own dynamic row (Sports/News bucket, brand
-        // row, Jellyfin) when it belongs to one - that's the list it was picked from, so
+        // row) when it belongs to one - that's the list it was picked from, so
         // returning to whatever filter happened to be selected loses the user's place.
         val dynamicRow = previewTarget?.let { dynamicCategoryFor(it) }
         if (dynamicRow != null && dynamicRow.id != selectedRowId) {

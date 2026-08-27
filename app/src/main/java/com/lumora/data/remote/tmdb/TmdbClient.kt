@@ -81,10 +81,10 @@ class TmdbClient {
 
     /**
      * Resolves a catalog title (no TMDB id of its own) to a `(mediaType, id)` pair via search,
-     * so provider/Jellyfin content can still look up a trailer. Matches on year when known.
+     * so provider content can still look up a trailer. Matches on year when known.
      */
     suspend fun resolveId(title: String, year: String?, isSeries: Boolean): Pair<String, Int>? {
-        // IPTV/Jellyfin titles often carry quality/language/source tags ("Movie Name 4K
+        // IPTV titles often carry quality/language/source tags ("Movie Name 4K
         // [MULTI]", "Movie Name (2026) HDR") that TMDB's search tolerates poorly - strip
         // anything in brackets/parens and trailing quality/audio tags before searching.
         val cleaned = title

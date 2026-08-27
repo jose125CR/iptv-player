@@ -28,10 +28,7 @@ import com.lumora.parser.XtreamClient
 import com.lumora.util.cleanVodTitle
 import com.lumora.util.extractLeadingTag
 import com.lumora.util.isUnreleasedEpisode
-import com.lumora.util.rawMediaItemId
 import com.lumora.data.remote.stalker.StalkerProvider
-import com.lumora.data.remote.jellyfin.JellyfinProvider
-import com.lumora.data.remote.plex.PlexProvider
 import kotlinx.coroutines.*
 import okhttp3.Request
 import java.util.Locale
@@ -355,9 +352,9 @@ internal fun MainActivity.playItem(channel: Channel) {
     if (idx >= 0) { currentIndex = idx; showPlayerFor(channel) }
 }
 
-/** One series' details and season/episode lists, whichever backend it came from. Jellyfin
- *  and Stalker carry plot/date/rating on the catalog item itself (no per-series detail
- *  endpoint); Xtream's get_series_info returns both in one call.
+/** One series' details and season/episode lists, whichever backend it came from. Stalker
+ *  carries plot/date/rating on the catalog item itself (no per-series detail endpoint);
+ *  Xtream's get_series_info returns both in one call.
  *
  *  Shared by the detail screen and the in-player version picker - the picker has to pull
  *  a *different* provider's copy of the same show on demand to find its matching episode,
@@ -374,62 +371,6 @@ internal suspend fun MainActivity.loadSeriesContent(
     )
     val stalkerConfig = stalkerConfigFor(item)
     return when {
-        item.isJellyfin -> {
-            val cfg = jellyfinConfigFor(item)
-            val jellyfin = jellyfinClientOrConnect(cfg)
-            val seriesId = rawMediaItemId(item.id)
-            val (episodes, seasons) = if (jellyfin != null) {
-                withContext(Dispatchers.IO) { jellyfin.getEpisodes(seriesId) to jellyfin.getSeasons(seriesId) }
-            } else {
-                emptyList<JellyfinProvider.JellyfinItem>() to emptyList()
-            }
-            val stub = jellyfinProviderStub(cfg?.let { jellyfinServerUrl(it) })
-            // Watched/resume state for these episodes comes from the same UserData the
-            // catalog fetch reads, so an episode list opened here shows progress made in
-            // any other client (EpisodeAdapter reads it out of PlaybackPositionStore).
-            if (cfg != null) importJellyfinUserState(episodes, cfg, includePlayed = true)
-            // Season *names* come from the server - grouping on ParentIndexNumber alone
-            // can only ever produce "Season 0" for specials, which is not what any
-            // Jellyfin library calls that row.
-            val seasonNames = seasons.mapNotNull { season ->
-                season.indexNumber?.let { it to season.name }
-            }.toMap()
-            itemDetails to episodes
-                .groupBy { it.seasonNumber ?: 0 }
-                .toSortedMap()
-                .map { (num, eps) ->
-                    val label = seasonNames[num] ?: if (num == 0) "Specials" else "Season $num"
-                    label to eps.map { JellyfinProvider.toChannel(it, stub, sourceId = cfg?.id) }
-                }
-        }
-        item.isPlex -> {
-            val cfg = plexConfigFor(item)
-            val plex = plexClientOrConnect(cfg)
-            val seriesId = rawMediaItemId(item.id)
-            val (episodes, seasons) = if (plex != null) {
-                withContext(Dispatchers.IO) { plex.getEpisodes(seriesId) to plex.getSeasons(seriesId) }
-            } else {
-                emptyList<PlexProvider.PlexItem>() to emptyList()
-            }
-            val stub = plexProviderStub(cfg?.let { plexServerUrl(it) })
-            // Watched/resume state for these episodes comes from the same fields the catalog
-            // crawl reads, so an episode list opened here shows progress made in any other
-            // Plex client (EpisodeAdapter reads it out of PlaybackPositionStore).
-            if (cfg != null) importPlexUserState(episodes, cfg, includePlayed = true)
-            // Season *names* come from the server - grouping on parentIndex alone can only
-            // ever produce "Season 0" for specials, which is not what any Plex library calls
-            // that row.
-            val seasonNames = seasons.mapNotNull { season ->
-                season.indexNumber?.let { it to season.name }
-            }.toMap()
-            itemDetails to episodes
-                .groupBy { it.seasonNumber ?: 0 }
-                .toSortedMap()
-                .map { (num, eps) ->
-                    val label = seasonNames[num] ?: if (num == 0) "Specials" else "Season $num"
-                    label to eps.map { PlexProvider.toChannel(it, stub, sourceId = cfg?.id) }
-                }
-        }
         stalkerConfig != null -> {
             val stalker = StalkerProvider(BaseApplication.instance.okHttpClient)
             itemDetails to withContext(Dispatchers.IO) {
@@ -594,17 +535,6 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
         favoriteButton.setOnClickListener {
             val nowFavorite = FavoritesStore.toggleFavoriteSeries(this, item.id)
             refreshFavoriteIcon()
-            // A Jellyfin item's favourite state belongs to the server - push it so the
-            // star shows up in every other client, and survives a reinstall here. Plex has
-            // no equivalent per-item flag, so a Plex star stays local to this install.
-            if (item.isJellyfin && item.id.isNotBlank()) {
-                scope.launch {
-                    val client = jellyfinClientFor(item) ?: return@launch
-                    withContext(Dispatchers.IO) {
-                        runCatching { client.setFavorite(rawMediaItemId(item.id), nowFavorite) }
-                    }
-                }
-            }
             scope.launch { classifyAndShow() }
         }
     }
@@ -717,8 +647,8 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
             refreshSeasonChipStates(detailSeasons)
             playButtonRefresh?.invoke()
         },
-        // Watched state is cross-provider: the same episode on Plex, on Jellyfin and on any
-        // number of IPTV panels is one thing, and finishing any copy counts for all of them.
+        // Watched state is cross-provider: finishing the same episode on any number of IPTV
+        // panels counts for all of them.
         isWatched = { episode -> isItemWatched(episode) },
         applyWatched = { episode, watched -> setItemWatched(episode, watched) }
     )
@@ -824,7 +754,7 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
                         ?.takeIf { it.first == "tv" }?.second
             }.also { tmdbTvIdJob = it }
             val tvId = idJob.await() ?: return@launch
-            // Season label is the provider's ("Season 3", "S3", a Jellyfin custom name);
+            // Season label is the provider's ("Season 3", "S3", a custom name);
             // its number is what TMDB indexes by, and position is the fallback for a label
             // carrying no digits at all.
             val seasonNumber = Regex("""\d+""").find(label)?.value?.toIntOrNull() ?: (index + 1)
@@ -962,7 +892,6 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
     playButtonRefresh = { if (detailSeasons.isNotEmpty()) wirePlayButton(detailSeasons, refocus = false) }
 
     val requestedItemId = item.id
-    val isJellyfin = item.isJellyfin
     scope.launch {
         try {
             val client = XtreamClient(BaseApplication.instance.okHttpClient)
@@ -1053,19 +982,12 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
                     wirePlayButton(seasons)
                 }
             } else {
-                // Xtream has a separate get_vod_info call for a film's plot/cast/genre;
-                // Jellyfin has no equivalent (nor any need for one) - the item already
-                // carries all of that from the catalog fetch, same as the series branch
-                // above. Calling getVodInfo() here regardless of provider used to send
-                // an Xtream-shaped request with a Jellyfin item id to an Xtream-only
-                // endpoint, which is why overview/cast/genre came back empty for every
-                // Jellyfin film.
-                // getVodInfo is an Xtream-only call. Jellyfin and Stalker both carry the
-                // film's plot/date/rating on the catalog item itself, so use that - sending
+                // getVodInfo is an Xtream-only call. Stalker carries the film's
+                // plot/date/rating on the catalog item itself, so use that - sending
                 // an Xtream-shaped get_vod_info for a Stalker item hit the wrong endpoint
                 // and came back empty, which is why overview/release date were blank.
                 val itemXtream = xtreamProviderFor(item)
-                val details = if (isJellyfin || item.isPlex || itemXtream == null) {
+                val details = if (itemXtream == null) {
                     XtreamClient.ContentDetails(
                         plot = item.description,
                         genre = item.categoryName,
@@ -1138,7 +1060,7 @@ internal fun MainActivity.showContentDetail(item: Channel, versionGroup: List<Ch
     nowShowingDetailId = item.id
 }
 
-/** The "S01E04 · " marker both Xtream and Jellyfin bake onto an episode name. */
+/** The "S01E04 · " marker Xtream bakes onto an episode name. */
 private val EPISODE_NAME_PREFIX_REGEX = Regex("""^S\d+E\d+ · """)
 private val EPISODE_SEASON_REGEX = Regex("""^S(\d+)E\d+""")
 
@@ -1279,43 +1201,6 @@ internal fun MainActivity.loadDetailImage(url: String?, imageView: ImageView) {
 
 internal fun MainActivity.showTrackPicker(isAudio: Boolean) {
     val player = playerManager.getExoPlayer()
-    // A transcoded Jellyfin source is handed over with exactly one audio track, unnamed -
-    // hence the lone "Track 1" the picker used to show for an item that has three
-    // languages in it. The server knows all of them, so on that path the list comes from
-    // the negotiation and picking one re-negotiates instead of overriding a track that
-    // isn't there.
-    val jellyfinAudio = jellyfinPlaySession
-        ?.takeIf { isAudio && it.playMethod == "Transcode" && it.audioStreams.size > 1 }
-    if (jellyfinAudio != null) {
-        val streams = jellyfinAudio.audioStreams
-        val current = streams.indexOfFirst { it.index == jellyfinAudio.audioStreamIndex }
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.list_audio_track))
-            .setSingleChoiceItems(streams.map(::jellyfinAudioLabel).toTypedArray(), current) { dialog, which ->
-                dialog.dismiss()
-                if (which != current) switchJellyfinAudioStream(streams[which].index)
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
-        return
-    }
-    // Same story on the Plex side: a transcode carries the one track the server picked, and
-    // the only way to another is to ask the server to rebuild the stream around it.
-    val plexAudio = plexPlaySession
-        ?.takeIf { isAudio && it.playMethod == "Transcode" && it.audioStreams.size > 1 }
-    if (plexAudio != null) {
-        val streams = plexAudio.audioStreams
-        val current = streams.indexOfFirst { it.id == plexAudio.audioStreamId }
-        AlertDialog.Builder(this)
-            .setTitle(getString(R.string.list_audio_track))
-            .setSingleChoiceItems(streams.map(::plexAudioLabel).toTypedArray(), current) { dialog, which ->
-                dialog.dismiss()
-                if (which != current) switchPlexAudioStream(streams[which].id)
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .show()
-        return
-    }
     val tracks = if (isAudio) trackController.audioTracks(player) else trackController.subtitleTracks(player)
 
     val labels = mutableListOf<String>()

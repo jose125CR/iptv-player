@@ -625,13 +625,12 @@
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/text_caption" />
 
-            <!-- First run: no provider configured yet, so nothing above knows what the user
-                 is here for. An IPTV provider is required before there is anything to browse,
-                 and it comes in exactly two flavors - each button opens the provider form with
-                 that type already selected (Stalker/Jellyfin/Plex stay reachable only through
-                 their backends until those are removed). nextFocus targets are fixed explicitly
-                 since a GONE sibling (this whole block hides the moment a provider exists) must
-                 never be left as an implicit focus-search target. -->
+                 <!-- First run: no provider configured yet, so nothing above knows what the user
+                      is here for. An IPTV provider is required before there is anything to browse,
+                      and it comes in exactly two flavors - each button opens the provider form with
+                      that type already selected. nextFocus targets are fixed explicitly
+                      since a GONE sibling (this whole block hides the moment a provider exists) must
+                      never be left as an implicit focus-search target. -->
             <LinearLayout
                 android:id="@+id/emptyStartupChooser"
                 android:layout_width="match_parent"
@@ -1788,20 +1787,6 @@
                             android:tint="@color/text_primary" />
                     </LinearLayout>
 
-                    <!-- Seek-preview thumbnail (Jellyfin trickplay tiles). Sits above the
-                         seek row, hidden until a scrub actually has a frame to show. -->
-                    <ImageView
-                        android:id="@+id/trickplayPreview"
-                        android:layout_width="176dp"
-                        android:layout_height="99dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="4dp"
-                        android:background="@drawable/card_surface_background"
-                        android:contentDescription="@string/seek_preview"
-                        android:padding="2dp"
-                        android:scaleType="fitCenter"
-                        android:visibility="gone" />
-
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -2057,8 +2042,8 @@
                                 android:textColor="@color/text_primary"
                                 android:textSize="@dimen/text_tiny" />
 
-                            <!-- Only shown for an item the server actually has chapters for
-                                 (Jellyfin or Plex) - see updateChaptersButtonVisibility. -->
+                            <!-- Only shown for an item the server actually has chapters
+                                 for - see updateChaptersButtonVisibility. -->
                             <TextView
                                 android:id="@+id/btnChapters"
                                 android:layout_width="wrap_content"

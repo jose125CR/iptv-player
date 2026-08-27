@@ -18,8 +18,7 @@ import org.json.JSONObject
  * Lumora runs on TV sticks with no browser worth typing a password into and no reliable way to
  * receive an OAuth redirect. Trakt's Device Authorization Grant (RFC 8628) is built for exactly
  * that: the app asks for a short code, the user types it at trakt.tv/activate on a phone or
- * laptop, and the app polls until the authorisation lands. Same shape as the Plex PIN flow this
- * app already runs (see PlexProvider.startPinLogin), and it reuses the same QR trick - the
+ * laptop, and the app polls until the authorisation lands. It reuses the same QR trick - the
  * verification URL with the code already in it, so scanning skips the typing.
  *
  * ## Credentials
@@ -34,8 +33,7 @@ import org.json.JSONObject
  * Trakt keys everything on its own ids plus imdb/tmdb/tvdb. A Channel from an IPTV panel has
  * none of those - it has a name and maybe a year - so the bridge is TMDB: TmdbClient.resolveId()
  * already turns a catalogue title into a tmdb id for the Discover matching, and Trakt accepts
- * `ids: { tmdb: N }` directly. Jellyfin and Plex items go through the same path rather than a
- * provider-specific one, because their own external-id fields aren't carried on [Channel].
+ * `ids: { tmdb: N }` directly.
  *
  * An episode is always sent as *show ids + season + number*, never as episode ids. Trakt's own
  * documentation prefers this shape, and it keeps working when the episode isn't in Trakt's

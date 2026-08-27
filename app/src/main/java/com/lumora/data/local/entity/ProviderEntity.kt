@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 data class ProviderEntity(
     @PrimaryKey val id: String,
     val name: String,
-    val type: String, // m3u, xtream, stalker, jellyfin
+    val type: String, // m3u, xtream, stalker
     val serverUrl: String? = null,
     val username: String? = null,
     val passwordEncrypted: String? = null,
@@ -15,8 +15,8 @@ data class ProviderEntity(
     val userAgent: String? = null,
     val macAddress: String? = null, // Stalker
     val serialNumber: String? = null, // Stalker
-    val jellyfinToken: String? = null, // Jellyfin
-    val jellyfinUserId: String? = null, // Jellyfin
+    val jellyfinToken: String? = null, // unused (kept for Room schema compatibility)
+    val jellyfinUserId: String? = null, // unused (kept for Room schema compatibility)
     val active: Boolean = true,
     val syncEnabled: Boolean = true,
     val epgSyncEnabled: Boolean = true,

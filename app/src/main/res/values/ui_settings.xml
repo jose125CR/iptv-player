@@ -7,14 +7,9 @@
     <string name="sett_enter_url">Enter a URL</string>
     <string name="sett_epg_source_added">EPG source added — downloading guide</string>
 
-    <!-- MainActivitySettings.kt - Jellyfin Quick Connect status -->
+    <!-- MainActivitySettings.kt - sign-in status -->
     <string name="sett_starting">Starting…</string>
-    <string name="sett_qc_couldnt_start">Couldn\'t start Quick Connect - check the server URL</string>
-    <string name="sett_enter_code_on_server">Enter code %1$s on your Jellyfin server</string>
-    <string name="sett_qc_timed_out">Quick Connect timed out</string>
     <string name="sett_signing_in">Signing in…</string>
-    <string name="sett_qc_signin_failed">Quick Connect sign-in failed</string>
-    <string name="sett_signed_in_via_quick_connect">Signed in via Quick Connect</string>
 
     <!-- MainActivitySettings.kt - settings row label assembly -->
     <string name="sett_language_row">%1$s  ·  %2$s</string>
@@ -29,26 +24,9 @@
     <string name="sett_stalker_portal">Stalker Portal</string>
     <string name="sett_type_summary">Type: %1$s</string>
     <string name="sett_editing_provider">Editing %1$s</string>
-    <string name="sett_editing_jellyfin">Editing Jellyfin</string>
-    <string name="sett_editing_plex">Editing Plex</string>
-    <string name="sett_plex_starting">Starting sign-in…</string>
-    <string name="sett_plex_scan_code">Go to plex.tv/link and enter %1$s</string>
-    <string name="sett_plex_link_instructions">On your phone, go to plex.tv/link and enter the code above — or scan the QR to open it with the code already filled in.</string>
-    <string name="sett_plex_couldnt_start">Couldn\'t start Plex sign-in</string>
-    <string name="sett_plex_timed_out">Sign-in timed out — try again</string>
-    <string name="sett_plex_finding_servers">Finding your servers…</string>
-    <string name="sett_plex_no_servers">No Plex servers on this account</string>
-    <string name="sett_plex_connecting_server">Connecting to %1$s…</string>
-    <string name="sett_plex_unreachable">Couldn\'t reach %1$s from this network</string>
-    <string name="sett_plex_choose_server">Choose a Plex server</string>
-    <string name="sett_plex_signed_in">Signed in to %1$s</string>
     <string name="sett_provider_row_detail">%1$s · %2$s</string>
     <string name="sett_remove_provider_confirm">Remove %1$s?</string>
     <string name="sett_remove_provider_message">This account\'s channels will no longer appear.</string>
-    <string name="sett_remove_plex_confirm">Remove Plex?</string>
-    <string name="sett_remove_plex_message">Its films and shows will no longer appear.</string>
-    <string name="sett_remove_jellyfin_confirm">Remove Jellyfin?</string>
-    <string name="sett_remove_jellyfin_message">Its channels will no longer appear.</string>
     <string name="sett_choose_provider_type_first">Choose an account type first</string>
     <string name="sett_enter_m3u_url">Enter an M3U URL</string>
     <string name="sett_enter_server_url">Enter a server URL</string>

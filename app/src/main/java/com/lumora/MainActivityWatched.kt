@@ -1,38 +1,24 @@
 package com.lumora
 
-import android.util.Log
 import com.lumora.cache.PlaybackPositionStore
 import com.lumora.cache.WatchedStore
 import com.lumora.model.Channel
 import com.lumora.model.MediaType
 import com.lumora.util.cleanVodTitle
 import com.lumora.util.normalizeTitleForGrouping
-import com.lumora.util.rawMediaItemId
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-// ── Cross-provider watched state ──
+// ── Watched state ──
 //
-// Extracted from MainActivity.kt; see that file's header.
-//
-// The problem this solves: PlaybackPositionStore is keyed by a provider-scoped id, which is
-// correct for a resume position (that really is per-file) but wrong for "have I seen this".
-// The same episode present on Plex, on Jellyfin and across three IPTV panels has five ids, so
-// finishing it left the other four looking untouched - and the next-unwatched Play button on
-// each of those copies kept offering an episode already seen.
-//
-// So a watched mark is stored a second time under a key derived from the title and the
-// season/episode numbers, which every copy computes identically. Reads consult both: the
-// per-copy position entry first (it is the precise answer for the copy actually played) and
-// the shared mark second.
+// A watched mark is stored under a key derived from the title and season/episode
+// numbers. Reads consult the per-copy position entry first and the shared mark second.
 
 /**
  * The provider-independent key for [item], or null when one can't be built.
  *
  * Uses [normalizeTitleForGrouping] - the same normalisation that decides two catalogue entries
  * are the same title when duplicate versions are grouped - so "4K-AMZ - SAS Rogue Heroes" and
- * a Plex library's "SAS Rogue Heroes" land on one key.
+ * a "SAS Rogue Heroes" land on one key.
  *
  * Null for anything that isn't a single watchable title: a top-level series entry (the series
  * as a whole is not a thing you finish), a live channel, or an episode whose series name or
@@ -56,33 +42,12 @@ internal fun movieWatchedKey(title: String): String? =
 
 /**
  * [watchedKeyFor] for an episode, from the parts rather than a [Channel].
- *
- * This is the form the media-server imports use: a JellyfinItem/PlexItem already states its
- * series name, season and episode, so their played marks can be keyed without resolving
- * anything through the catalogue - which matters, because an import runs over a whole season
- * at a time and the catalogue lookup is a linear scan.
  */
 internal fun episodeWatchedKey(seriesName: String?, season: Int?, episode: Int?): String? {
     if (episode == null) return null
     val normalized = normalizeForWatchedKey(seriesName ?: return null) ?: return null
     return "e|$normalized|s${season ?: 0}|e$episode"
 }
-
-/** Shared watched key for a Jellyfin item, straight off the fields the server sent. */
-internal fun sharedWatchedKeyFor(item: com.lumora.data.remote.jellyfin.JellyfinProvider.JellyfinItem): String? =
-    when (item.mediaType) {
-        "Movie" -> movieWatchedKey(item.name)
-        "Episode" -> episodeWatchedKey(item.seriesName, item.seasonNumber, item.episodeNumber)
-        else -> null
-    }
-
-/** Shared watched key for a Plex item, straight off the fields the server sent. */
-internal fun sharedWatchedKeyFor(item: com.lumora.data.remote.plex.PlexProvider.PlexItem): String? =
-    when (item.mediaType) {
-        "Movie" -> movieWatchedKey(item.name)
-        "Episode" -> episodeWatchedKey(item.seriesName, item.seasonNumber, item.episodeNumber)
-        else -> null
-    }
 
 private fun normalizeForWatchedKey(title: String): String? {
     val normalized = normalizeTitleForGrouping(cleanVodTitle(title))
@@ -125,15 +90,10 @@ internal fun MainActivity.isItemWatched(item: Channel): Boolean {
 }
 
 /**
- * Records [item] as watched (or not) everywhere it exists.
+ * Records [item] as watched (or not).
  *
- * Three things happen: the per-copy position entry is written or cleared as before, the shared
- * title key is set so every other copy in the catalogue reads the new state immediately, and -
- * best effort, in the background - the matching item on each configured Jellyfin/Plex server is
- * marked so their other clients agree.
- *
- * [alsoPushToServers] is off for state arriving *from* a server, which would otherwise echo
- * straight back to it.
+ * The per-copy position entry is written or cleared, and the shared title key is set so every
+ * other copy in the catalogue reads the new state immediately.
  */
 internal fun MainActivity.setItemWatched(
     item: Channel,
@@ -160,7 +120,6 @@ internal fun MainActivity.setItemWatched(
         clearSiblingCopyPositions(item, shared)
     }
     if (alsoPushToServers) {
-        pushWatchedToMediaServers(item, watched)
         // Trakt gets the same mark, under its own toggle. A play that went through the player
         // was already scrobbled; Trakt de-duplicates a history add against that scrobble, so
         // the overlap costs a request rather than a duplicate entry.
@@ -187,95 +146,3 @@ private fun MainActivity.clearSiblingCopyPositions(item: Channel, sharedKey: Str
     }
 }
 
-/**
- * Marks the equivalent item played on every configured Jellyfin and Plex server.
- *
- * A film resolves straight out of the catalogue - the server's own copy is already a Channel
- * there. An episode does not: the catalogue holds media-server *series*, and their episode
- * lists are only fetched when a series is opened, so the matching episode has to be looked up
- * over the network. That is one request per server per mark, in the background, and a failure
- * is silent - the local shared mark has already made every copy read as watched, and this is
- * only about agreeing with other clients.
- */
-private fun MainActivity.pushWatchedToMediaServers(item: Channel, watched: Boolean) {
-    val shared = watchedKeyFor(item) ?: return
-    if (jellyfinClients.isEmpty() && plexClients.isEmpty()) return
-    val normalizedTitle = shared.substringAfter('|').substringBefore('|')
-    scope.launch {
-        for (candidate in allChannels) {
-            if (!candidate.isOwnLibrary) continue
-            val sourceId = candidate.sourceProviderId ?: continue
-            val rawId = rawMediaItemId(candidate.id)
-            if (rawId.isBlank()) continue
-
-            if (item.mediaType == MediaType.MOVIE) {
-                // A film's server copy is already in the catalogue - no lookup needed.
-                if (candidate.mediaType != MediaType.MOVIE) continue
-                if (candidate.id == item.id) continue
-                if (watchedKeyFor(candidate) != shared) continue
-                markOnServer(candidate.isJellyfin, sourceId, rawId, watched, candidate.name)
-                continue
-            }
-
-            // Episodes: the catalogue holds media-server *series*, whose episode lists are
-            // only fetched when a series is opened - so the matching episode has to be looked
-            // up over the network, one request per server that carries the show.
-            if (candidate.mediaType != MediaType.SERIES || candidate.episodeNum != null) continue
-            if (normalizeTitleForGrouping(cleanVodTitle(candidate.name)) != normalizedTitle) continue
-            val season = tileSeasonNumber(item)
-            val episodeNum = item.episodeNum ?: return@launch
-            val targetId = runCatching {
-                serverEpisodeId(candidate.isJellyfin, sourceId, rawId, season, episodeNum)
-            }.getOrNull() ?: continue
-            markOnServer(candidate.isJellyfin, sourceId, targetId, watched, candidate.name)
-        }
-    }
-}
-
-/**
- * The server's own id for season [season] episode [episodeNum] of series [seriesRawId], or null
- * if that server doesn't have it.
- *
- * Matched on the servers' own season/episode fields rather than by parsing a name: both
- * JellyfinItem and PlexItem carry them, which is the whole reason this goes to the raw items
- * instead of converting to Channels first. A season of null on the source (flat-numbered
- * strands, or a provider that never stated one) matches on episode number alone.
- */
-private suspend fun MainActivity.serverEpisodeId(
-    isJellyfin: Boolean,
-    sourceId: String,
-    seriesRawId: String,
-    season: Int?,
-    episodeNum: Int
-): String? = withContext(Dispatchers.IO) {
-    if (isJellyfin) {
-        jellyfinClients[sourceId]?.getEpisodes(seriesRawId)?.firstOrNull {
-            it.episodeNumber == episodeNum && (season == null || it.seasonNumber == season)
-        }?.id
-    } else {
-        plexClients[sourceId]?.getEpisodes(seriesRawId)?.firstOrNull {
-            it.episodeNumber == episodeNum && (season == null || it.seasonNumber == season)
-        }?.id
-    }
-}
-
-/** Applies the mark to one media-server item. Best effort: the local shared mark has already
- *  made every copy read as watched, so this only decides whether other clients agree. */
-private suspend fun MainActivity.markOnServer(
-    isJellyfin: Boolean,
-    sourceId: String,
-    rawId: String,
-    watched: Boolean,
-    label: String
-) {
-    val ok = withContext(Dispatchers.IO) {
-        if (isJellyfin) {
-            jellyfinClients[sourceId]?.setPlayed(rawId, watched)
-        } else {
-            plexClients[sourceId]?.let {
-                if (watched) it.markWatched(rawId) else it.clearUserData(rawId)
-            }
-        }
-    }
-    if (ok != true) Log.d("LumoraWatched", "server mark failed for $label (watched=$watched)")
-}

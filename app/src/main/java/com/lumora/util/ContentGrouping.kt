@@ -88,7 +88,7 @@ private val ENGLISH_LANGUAGE_CODES = setOf("IE", "GB", "UK", "EN", "US", "CA", "
 // Region/quality tag in round parens, the way IPTV catalogues suffix a title after the year:
 // "Stuart Fails to Save the Universe (2026) (US)", "Naked and Afraid (US)", "... (FHD)".
 // Only the year form was stripped for grouping, so an IPTV copy carrying one of these never
-// matched the Jellyfin copy of the same title and both got their own card. Uppercase-only
+// matched another copy of the same title and both got their own card. Uppercase-only
 // (BRACKET_REGEX already handles the square-bracket style) so a real parenthesised title
 // word isn't eaten - this only ever feeds the grouping key, never what's displayed.
 private val PAREN_TAG_REGEX = Regex("""\([A-Z]{2,5}\)""")
@@ -176,31 +176,12 @@ fun groupDuplicateMovies(movies: List<Channel>): Pair<List<Channel>, Map<String,
     return representatives to versionsById
 }
 
-/** The user's own media-server library (Jellyfin or Plex) always outranks an IPTV copy of
- *  the same title: it's the copy they curated, and it streams off their own server. Ordering
- *  the group this way makes it the first (default-played) version chip; ties keep provider
- *  order, so with both servers configured whichever loaded first stays first. */
-private fun ownLibraryFirst(versions: List<Channel>): List<Channel> =
-    if (versions.size > 1 && versions.any { it.isOwnLibrary }) {
-        versions.sortedBy { if (it.isOwnLibrary) 0 else 1 }
-    } else {
-        versions
-    }
+private fun ownLibraryFirst(versions: List<Channel>): List<Channel> = versions
 
 /** The copy that gets the card. A poster is what makes the card look right, so it wins among
- *  equally-ranked copies - but never at the cost of demoting the own-library version, which
- *  is already first in [versions]. */
-private fun pickRepresentative(versions: List<Channel>): Channel {
-    val preferred = versions.firstOrNull()?.takeIf { it.isOwnLibrary }
-    val ownWithPoster = if (preferred != null) {
-        versions.firstOrNull { it.isOwnLibrary && !it.posterUrl.isNullOrBlank() } ?: preferred
-    } else {
-        null
-    }
-    return ownWithPoster
-        ?: versions.firstOrNull { !it.posterUrl.isNullOrBlank() }
-        ?: versions.first()
-}
+ *  equally-ranked copies. */
+private fun pickRepresentative(versions: List<Channel>): Channel =
+    versions.firstOrNull { !it.posterUrl.isNullOrBlank() } ?: versions.first()
 
 /**
  * Same title-reposted-under-different-source-tags problem as movies: one card per
@@ -496,15 +477,9 @@ fun groupLiveQualityVersions(channels: List<Channel>): Pair<List<Channel>, Map<S
     val representatives = mutableListOf<Channel>()
     val versionsById = mutableMapOf<String, List<Channel>>()
     for (versions in groups.values) {
-        // Quality first, own-library only as the tie-break. Live TV is the one place where
-        // "prefer my own server" and "prefer the best feed" genuinely conflict: a Jellyfin
-        // server fed by the same IPTV sources carries its own RAW/HD copies of a channel, and
-        // ranking those above everything buried the provider's 4K feed several entries down
-        // and auto-tuned a lower-quality stream. Films and series have no quality ladder, so
-        // they keep the plain own-library-first rule.
-        val ranked = versions.sortedWith(
-            compareByDescending<Channel> { liveQualityScore(it.name) }.thenBy { if (it.isOwnLibrary) 0 else 1 }
-        )
+        // Quality first: Live TV is the one place where "prefer the best feed" matters most
+        // — ranking by quality score ensures the best version is auto-tuned.
+        val ranked = versions.sortedByDescending { liveQualityScore(it.name) }
         val best = ranked.first()
         // Version list (picker/failover) keeps full raw names, since "NOW:" vs "VIP:"
         // is a real distinguishing detail there - only the row people actually browse

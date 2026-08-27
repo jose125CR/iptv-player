@@ -12,11 +12,10 @@ private const val MAX_ENTRIES = 20_000
 /**
  * Watched marks keyed by *what was watched* rather than by which copy of it played.
  *
- * [PlaybackPositionStore] is keyed by a provider-scoped id (an Xtream stream id, a qualified
- * Jellyfin item id, a Plex rating key), which is the right key for a resume position - that is
- * genuinely per-file - but the wrong one for "have I seen this". A library with the same show
- * on Plex, on Jellyfin and across three IPTV panels has five ids for one episode, so watching
- * it left the other four looking untouched.
+ * [PlaybackPositionStore] is keyed by a provider-scoped id (an Xtream stream id), which is the
+ * right key for a resume position - that is genuinely per-file - but the wrong one for "have I
+ * seen this". The same show across three IPTV panels has three ids for one episode, so watching
+ * it left the other two looking untouched.
  *
  * The key here is instead derived from the title and the season/episode numbers (see
  * `MainActivity.watchedKeyFor`), using the same normalisation that already decides two catalogue

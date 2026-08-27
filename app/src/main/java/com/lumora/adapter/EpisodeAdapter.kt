@@ -47,7 +47,7 @@ class EpisodeAdapter(
     private val onWatchedToggle: ((Channel, Boolean) -> Unit)? = null,
     // Watched state is asked of the host rather than read straight out of
     // PlaybackPositionStore, because "watched" is not a per-copy fact: the same episode can
-    // exist on Plex, on Jellyfin and on several IPTV panels, and finishing any one of them
+    // exist on several IPTV panels, and finishing any one of them
     // counts (MainActivity.isItemWatched / setItemWatched). The defaults keep the old
     // per-copy behaviour for any host that doesn't care.
     private val isWatched: ((Channel) -> Boolean)? = null,
@@ -315,16 +315,16 @@ class EpisodeAdapter(
 
 private val EPISODE_PREFIX_REGEX = Regex("""^S\d+E\d+ · """)
 
-/** Both Xtream and Jellyfin bake "S01E04 · " onto the front of episode names (see
- *  XtreamClient.parseEpisode / JellyfinProvider.parseMediaItem) - stripped here purely
- *  for display since the episode number now has its own badge on the thumbnail, but
- *  `name` itself stays untouched since Up Next/search/watch history all key off it. */
+/** Both Xtream bake "S01E04 · " onto the front of episode names (see
+ *  XtreamClient.parseEpisode) - stripped here purely for display since the episode number now
+ *  has its own badge on the thumbnail, but `name` itself stays untouched since Up Next/search/
+ *  watch history all key off it. */
 private fun stripEpisodePrefix(name: String): String = name.replaceFirst(EPISODE_PREFIX_REGEX, "")
 
 /** Leading ISO date of a release/air date field. Every source that states one states it
- *  this way, but with different amounts after it: Xtream sends a bare "2021-05-14",
- *  Jellyfin a full "2021-05-14T00:00:00.0000000Z". Anything that doesn't start with an
- *  ISO date is left out rather than guessed at - a mis-parsed date reads as fact. */
+ *  this way, but with different amounts after it: Xtream sends a bare "2021-05-14". Anything
+ *  that doesn't start with an ISO date is left out rather than guessed at - a mis-parsed
+ *  date reads as fact. */
 private val ISO_DATE_PREFIX_REGEX = Regex("""^(\d{4})-(\d{2})-(\d{2})""")
 
 /** The air date as DD-MM-YY, or null when the source didn't state one. */

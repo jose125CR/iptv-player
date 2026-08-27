@@ -149,7 +149,7 @@ internal fun MainActivity.traktReportStart(channel: Channel) {
 }
 
 /**
- * Called off the same tick the Jellyfin/Plex heartbeats use, but Trakt is not a heartbeat API -
+ * Called off the same tick as provider heartbeats, but Trakt is not a heartbeat API -
  * it wants transitions. So this only sends when the paused state has actually changed since the
  * last report: pausing sends `pause`, resuming sends `start` again with the new position.
  */
@@ -169,7 +169,7 @@ internal fun MainActivity.traktReportProgress() {
 /**
  * End of a play. The progress sent here is what Trakt turns into either a watched mark (at or
  * above 80%) or a resume point (below it), so it has to go out before the player state is torn
- * down - same ordering constraint as reportJellyfinStopped().
+ * down - same ordering constraint as reportProviderStopped().
  */
 internal fun MainActivity.traktReportStopped() {
     val target = traktScrobbleTarget
@@ -477,7 +477,7 @@ private fun MainActivity.buildWatchedTitleIndex(): Map<String, WatchedTitle> {
  * Runs a full device-code sign-in, reporting progress through the callbacks so the caller owns
  * the presentation.
  *
- * The shape is the same as [performPlexSignIn]: mint a code, show it (as text to type at
+ * The shape is the same: mint a code, show it (as text to type at
  * trakt.tv/activate and as a QR of the same URL with the code already in it), then poll until
  * the user finishes on their phone. Trakt signals the whole flow through HTTP status codes
  * rather than a body, which [TraktClient.pollDeviceToken] maps to cases.

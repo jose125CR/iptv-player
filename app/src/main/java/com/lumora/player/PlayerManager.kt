@@ -56,8 +56,8 @@ class PlayerManager(
     private var oneShotForcedSubtitleListener: Player.Listener? = null
 
     /**
-     * What the player was last asked to play, as it was finally resolved (Stalker commands,
-     * Jellyfin/Plex negotiation and plugin resolves all rewrite the URL before it gets here).
+     * What the player was last asked to play, as it was finally resolved (Stalker commands
+     * and plugin resolves all rewrite the URL before it gets here).
      * Kept so the stream can be handed to an external player - see ExternalPlayer - which
      * otherwise has no way to know what the app is actually playing.
      */
@@ -114,7 +114,7 @@ class PlayerManager(
         val httpFactory = DefaultHttpDataSource.Factory()
             .setAllowCrossProtocolRedirects(true)
             .setConnectTimeoutMs(15_000)
-            // 60s read: slow remote Jellyfin/Plex/transcode servers can take a while to start
+            // 60s read: slow remote transcode servers can take a while to start
             // sending the stream - 20s made a cold server start read as "Playback error".
             .setReadTimeoutMs(60_000)
 
@@ -151,7 +151,7 @@ class PlayerManager(
 
     /**
      * A subtitle track that lives outside the media container - a sidecar file, or one the
-     * server extracts on request (Jellyfin does both). Sideloading these is the only way they
+     * server extracts on request. Sideloading these is the only way they
      * reach the track picker at all: nothing in the stream itself advertises them.
      */
     data class ExternalSubtitle(

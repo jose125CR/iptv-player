@@ -61,8 +61,7 @@ import com.lumora.util.groupDuplicateSeries
 import com.lumora.data.local.LumoraDatabase
 import com.lumora.data.sync.EpgSyncWorker
 import com.lumora.data.backup.BackupManager
-import com.lumora.data.remote.jellyfin.JellyfinProvider
-import com.lumora.data.remote.plex.PlexProvider
+
 import com.lumora.player.playback.PlayerDiagnostics
 import com.lumora.data.update.AppUpdateChecker
 import com.lumora.data.update.AppUpdateInstaller
@@ -189,7 +188,7 @@ internal const val NEWEST_CATEGORY_ID = "__newest__"
  *  are not seriesList members (a grid-filter on seriesList would come up empty). */
 internal const val CONTINUE_WATCHING_CATEGORY_ID = "__continue_watching__"
 /** Series sidebar row for what to watch next: the next *unwatched* episode of everything in
- *  flight - the media servers' own Next Up lists plus the locally resolved up-next tiles.
+ *  flight - the locally resolved up-next tiles.
  *  Series only, because "next episode" is the whole idea: a film has no next anything, and a
  *  row of part-watched films is Continue Watching under a name that doesn't fit it. Like
  *  Continue Watching it renders its own grid: the episodes it carries are not seriesList
@@ -210,13 +209,7 @@ internal const val PREF_SETTINGS_RAIL_COLLAPSED = "settings_nav_rail_collapsed"
  *  that same row. The hidden-id filter in buildCategoryRows skips these too, so anyone who
  *  already hid one gets it back. */
 internal val UTILITY_ROW_IDS = setOf(CLASSIC_LAYOUT_TOGGLE_ID, COLLAPSE_CATEGORIES_TOGGLE_ID)
-/** Films/Series sidebar row that filters the tab down to Jellyfin-sourced items only.
- *  Only built when the tab actually contains Jellyfin content. */
-internal const val JELLYFIN_CATEGORY_ID = "__jellyfin__"
-/** The same row for the Plex slot. Separate from the Jellyfin one on purpose: both servers
- *  can be configured at once, and "my Plex library" and "my Jellyfin library" are two
- *  different shelves to the person browsing, not one merged "own library". */
-internal const val PLEX_CATEGORY_ID = "__plex__"
+
 /** Films/Series sidebar row collecting every category too thin to be worth its own row, so
  *  the long tail of near-empty categories costs one line instead of a dozen. Expandable -
  *  the categories themselves are its children. */
@@ -410,16 +403,6 @@ class MainActivity : AppCompatActivity() {
     /** The version group [detailReturnItem] was opened with, so re-opening its detail page shows
      *  the same set of alternate versions/episodes rather than re-deriving a narrower one. */
     internal var detailReturnGroup: List<Channel>? = null
-    // Kept around after a successful Jellyfin content load so a series' detail page can
-    // fetch its episodes without re-authenticating - Jellyfin's episode API has no
-    // Xtream equivalent, so this is the only path a Jellyfin series' episodes ever load through.
-    //
-    // Keyed by MediaServerConfig.id: any number of Jellyfin accounts can be configured at once,
-    // and an item only opens against the server it came from (see jellyfinClientOrConnect).
-    internal val jellyfinClients = mutableMapOf<String, JellyfinProvider>()
-    /** Same role for the Plex accounts: a Plex series' episodes only ever load through one of
-     *  these clients, so they outlive the catalog fetch that created them. */
-    internal val plexClients = mutableMapOf<String, PlexProvider>()
     internal var currentIndex = -1
     // Which episode queue (if any) is currently playing, so Next/Prev and
     // auto-advance-on-end know what "next episode" means. -1 = not playing an episode.
@@ -544,26 +527,6 @@ class MainActivity : AppCompatActivity() {
     internal var skipResumePrompt = false
     internal var progressTickCount = 0
 
-    // ── Jellyfin server-side state ──────────────
-    /** The server's own Continue Watching / Next Up, refreshed with the catalog. Kept apart
-     *  from [allChannels] because these are ordered *views* of items already in the catalog,
-     *  not extra content - merging them in would duplicate every partly-watched title. */
-    // Per configured Jellyfin account (MediaServerConfig.id), because the servers are fetched
-    // concurrently: one flat list would be written by whichever fetch finished last rather
-    // than merged. The flattened views below are what the Home rows read.
-    internal val jellyfinResumeByServer = mutableMapOf<String, List<Channel>>()
-    internal val jellyfinNextUpByServer = mutableMapOf<String, List<Channel>>()
-    internal val jellyfinResumeItems: List<Channel> get() = jellyfinResumeByServer.values.flatten()
-    internal val jellyfinNextUpItems: List<Channel> get() = jellyfinNextUpByServer.values.flatten()
-
-    // ── Plex server-side state ──────────────────
-    /** Plex's On Deck, split the same way Jellyfin's Resume/Next Up are (see
-     *  PlexProvider.getResumeItems) so the Home rows can treat both servers alike. */
-    internal val plexResumeByServer = mutableMapOf<String, List<Channel>>()
-    internal val plexNextUpByServer = mutableMapOf<String, List<Channel>>()
-    internal val plexResumeItems: List<Channel> get() = plexResumeByServer.values.flatten()
-    internal val plexNextUpItems: List<Channel> get() = plexNextUpByServer.values.flatten()
-
     // ── Up-next series (Continue Watching extension) ──
     /** Bounded count of series whose episodes we'll fetch per Home build to surface
      *  "next episode" tiles - each is one network call, and the catalog is cache-first
@@ -619,13 +582,6 @@ class MainActivity : AppCompatActivity() {
     internal var traktResolveJob: Job? = null
     /** The running device-code sign-in, cancelled when its dialog closes. */
     internal var traktSignInJob: Job? = null
-    /** The negotiated stream for whatever Jellyfin item is playing (see
-     *  JellyfinProvider.resolveStream). Its PlaySessionId is what ties every progress report
-     *  to this play, and what lets the server tear a transcode down when it ends. */
-    internal var jellyfinPlaySession: JellyfinProvider.ResolvedStream? = null
-    // One-shot fresh-URL retry guard for Jellyfin direct-play: a transient server timeout or
-    // expired direct-play URL gets one re-resolve before the generic "Playback error".
-    internal var jellyfinRetryAttempted = false
     // Backoff retry count for a live channel with no other version to fail over to (see
     // tryNextQualityVersion) - a transient server-side throttle (HTTP 509 etc.) is worth
     // retrying the exact same URL for before giving up.
@@ -640,35 +596,6 @@ class MainActivity : AppCompatActivity() {
     // with an Open-in offer, leaving the user to switch source by hand for something that
     // usually plays on a second attempt.
     internal var vodRetryAttempt = 0
-    internal var jellyfinPlayingItemId: String? = null
-    /** MediaServerConfig.id of the Jellyfin account the playing item belongs to - progress and
-     *  stop reports have to reach *that* server, and with several configured there is no
-     *  single client to assume. */
-    internal var jellyfinPlayingServerId: String? = null
-    /** The negotiated stream for whatever Plex item is playing (see
-     *  PlexProvider.resolveStream) - its session identifier is what every timeline report
-     *  quotes, and what lets the server attribute a transcode to this play. */
-    internal var plexPlaySession: PlexProvider.ResolvedStream? = null
-    internal var plexPlayingItemId: String? = null
-    /** MediaServerConfig.id of the Plex server the playing item belongs to - see
-     *  [jellyfinPlayingServerId]. */
-    internal var plexPlayingServerId: String? = null
-    /** Runtime of the Plex item playing, in ms. Plex's timeline wants a duration on every
-     *  report, and the player's own duration is not available until the source is prepared. */
-    internal var plexPlayingDurationMs: Long? = null
-    // One-shot fresh-URL retry guard, matching jellyfinRetryAttempted: a direct-play URL
-    // whose part moved, or a transient server error, gets one re-resolve before the generic
-    // "Playback error".
-    internal var plexRetryAttempted = false
-    /** Chapters of whichever media-server title is playing - Jellyfin and Plex both provide
-     *  them, and the player's chapter button/picker is the same either way, so this is one
-     *  neutral list rather than a field per backend. */
-    internal var playbackChapters: List<com.lumora.model.MediaChapter> = emptyList()
-    internal var jellyfinTrickplay: JellyfinProvider.TrickplayInfo? = null
-    /** Last decoded trickplay sprite sheet, kept so scrubbing within one sheet (~100
-     *  thumbnails) doesn't re-download it on every seek step. */
-    internal var trickplayTileCache: Pair<Int, android.graphics.Bitmap>? = null
-    internal var trickplayLoadJob: kotlinx.coroutines.Job? = null
 
     // ── A/V Sync Offset ─────────────────────────
     internal val avOffsetManager by lazy { AvOffsetManager(this) }
@@ -1056,10 +983,6 @@ class MainActivity : AppCompatActivity() {
             if (isPlayerVisible) {
                 saveCurrentPlaybackPosition()
                 playerManager.pause()
-                // After the pause, so it reports the paused state: the play is still open
-                // (onResume resumes it), but the server's resume point should already be
-                // current if the process is killed while backgrounded and no stop ever lands.
-                reportJellyfinProgress()
             }
             releaseLivePreview()
         }
@@ -1715,7 +1638,7 @@ class MainActivity : AppCompatActivity() {
 }
 
 /** One provider fetch's outcome. Top-level rather than nested in MainActivity because the
- *  per-backend fetches now live in sibling files (MainActivityProviders/Jellyfin) and every
+ *  per-backend fetches now live in sibling files (MainActivityProviders) and every
  *  one of them returns it. */
 internal sealed class FetchResult {
     data class Success(val channels: List<Channel>) : FetchResult()

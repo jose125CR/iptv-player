@@ -63,7 +63,7 @@ internal fun MainActivity.showTrailerForDiscoverItem(item: Channel) {
 }
 
 /** Shows/hides the detail screen's Trailer button, resolving a catalog item to a TMDB id
- *  by title/year search since provider/Jellyfin content carries no TMDB id of its own. */
+ *  by title/year search since provider content carries no TMDB id of its own. */
 internal fun MainActivity.wireTrailerButton(item: Channel) {
     val button = binding.detailTrailerButton
     button.visibility = View.GONE

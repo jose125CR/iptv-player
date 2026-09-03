@@ -234,8 +234,6 @@
     <string name="category_all">الكل</string>
     <string name="category_collapse_categories">طيّ الفئات</string>
     <string name="category_favourites">المفضلة</string>
-    <string name="category_group_into_categories">تجميع في فئات</string>
-    <string name="category_show_all_categories">إظهار كل الفئات (قائمة كلاسيكية)</string>
     <string name="category_next_up">التالي</string>
     <string name="category_recently_played">تم تشغيلها مؤخراً</string>
     <string name="category_favourite_channels">القنوات المفضلة</string>

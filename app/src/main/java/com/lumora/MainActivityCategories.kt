@@ -453,7 +453,7 @@ internal suspend fun MainActivity.buildCategoriesForActiveTab(tab: Int = activeT
         2 -> filmVersions
         else -> emptyMap()
     }
-    val useClassicLayout = tab == 0 && prefs.getBoolean(PREF_CLASSIC_CATEGORY_LAYOUT, false)
+    val useClassicLayout = tab == 0
     val categorize = if (tab == 0) prefs.getBoolean(PREF_CATEGORIZE_LIVE, true) else prefs.getBoolean(PREF_CATEGORIZE_VOD, true)
     // Synthetic Films/Series sidebar rows are computed on the same Default thread as the
     // category pipeline: newestByDate sorts the whole tab list, and seriesContinueItems()/
@@ -974,22 +974,8 @@ internal fun MainActivity.buildCategoryRows(
             if (favoriteCount > 0) {
                 result.add(CategoryFilter(id = FAVOURITES_CATEGORY_ID, name = getString(R.string.category_favourites), count = favoriteCount))
                 result.add(CategoryFilter(id = COLLAPSE_CATEGORIES_TOGGLE_ID, name = getString(R.string.category_collapse_categories), count = -1))
-                result.add(
-                    CategoryFilter(
-                        id = CLASSIC_LAYOUT_TOGGLE_ID,
-                        name = if (useClassicLayout) getString(R.string.category_group_into_categories) else getString(R.string.category_show_all_categories),
-                        count = -1
-                    )
-                )
             } else {
                 result.add(CategoryFilter(id = COLLAPSE_CATEGORIES_TOGGLE_ID, name = getString(R.string.category_collapse_categories), count = -1))
-                result.add(
-                    CategoryFilter(
-                        id = CLASSIC_LAYOUT_TOGGLE_ID,
-                        name = if (useClassicLayout) getString(R.string.category_group_into_categories) else getString(R.string.category_show_all_categories),
-                        count = -1
-                    )
-                )
             }
         }
         // Pinned (favourite) categories always come first - above dynamic clusters,
@@ -1225,32 +1211,6 @@ internal suspend fun MainActivity.applyCategoryFilter(focusFirstLiveChannel: Boo
 internal fun MainActivity.onCategorySelected(category: CategoryFilter) {
     if (category.id == COLLAPSE_CATEGORIES_TOGGLE_ID) {
         collapseCategorySidebar()
-        return
-    }
-    if (category.id == CLASSIC_LAYOUT_TOGGLE_ID) {
-        val useClassic = prefs.getBoolean(PREF_CLASSIC_CATEGORY_LAYOUT, false)
-        prefs.edit().putBoolean(PREF_CLASSIC_CATEGORY_LAYOUT, !useClassic).apply()
-        val newClassic = !useClassic
-        scope.launch {
-            // Classic mode shows ALL live channels flat (no version grouping), so
-            // channels like SD variants that were collapsed into a higher-quality
-            // representative are individually visible and contribute to their own
-            // provider categories. Re-derive liveChannels/liveVersions before
-            // rebuilding the sidebar so categories reflect the full channel list.
-            val hideAdult = prefs.getBoolean(PREF_HIDE_ADULT, true)
-            val snapshot = allChannels
-            val rawLive = snapshot.filter { it.mediaType == MediaType.LIVE && !it.name.contains("##") }
-                .filterNot { hideAdult && isAdultCategory(it.categoryName, it.group) }
-            if (newClassic || !prefs.getBoolean(PREF_GROUP_CHANNELS, true)) {
-                liveChannels = rawLive
-                liveVersions = emptyMap()
-            } else {
-                val (grouped, vers) = groupLiveQualityVersions(rawLive)
-                liveChannels = grouped
-                liveVersions = vers
-            }
-            rebuildCategoriesForActiveTab()
-        }
         return
     }
     // A tap on a parent row always toggles its expansion (and selects it) - the old

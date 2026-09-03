@@ -234,8 +234,6 @@
     <string name="category_all">Alles</string>
     <string name="category_collapse_categories">Categorieën samenvouwen</string>
     <string name="category_favourites">Favorieten</string>
-    <string name="category_group_into_categories">Groeperen in categorieën</string>
-    <string name="category_show_all_categories">Alle categorieën tonen (klassieke lijst)</string>
     <string name="category_next_up">Volgende</string>
     <string name="category_recently_played">Recent afgespeeld</string>
     <string name="category_favourite_channels">Favoriete kanalen</string>

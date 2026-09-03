@@ -230,8 +230,6 @@
     <string name="category_all">すべて</string>
     <string name="category_collapse_categories">カテゴリを折りたたむ</string>
     <string name="category_favourites">お気に入り</string>
-    <string name="category_group_into_categories">カテゴリにグループ化</string>
-    <string name="category_show_all_categories">すべてのカテゴリを表示（クラシックリスト）</string>
     <string name="category_next_up">次に再生</string>
     <string name="category_recently_played">最近再生</string>
     <string name="category_favourite_channels">お気に入りチャンネル</string>

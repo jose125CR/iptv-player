@@ -235,8 +235,6 @@
     <string name="category_all">Όλα</string>
     <string name="category_collapse_categories">Σύμπτυξη κατηγοριών</string>
     <string name="category_favourites">Αγαπημένα</string>
-    <string name="category_group_into_categories">Ομαδοποίηση σε κατηγορίες</string>
-    <string name="category_show_all_categories">Εμφάνιση όλων των κατηγοριών (κλασική λίστα)</string>
     <string name="category_next_up">Επόμενο</string>
     <string name="category_recently_played">Πρόσφατη αναπαραγωγή</string>
     <string name="category_favourite_channels">Αγαπημένα κανάλια</string>

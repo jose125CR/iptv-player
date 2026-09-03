@@ -231,8 +231,6 @@
     <string name="category_all">सभी</string>
     <string name="category_collapse_categories">श्रेणियाँ संक्षिप्त करें</string>
     <string name="category_favourites">पसंदीदा</string>
-    <string name="category_group_into_categories">श्रेणियों में समूहित करें</string>
-    <string name="category_show_all_categories">सभी श्रेणियाँ दिखाएँ (क्लासिक सूची)</string>
     <string name="category_next_up">आगे क्या आएगा</string>
     <string name="category_recently_played">हाल ही में चलाए गए</string>
     <string name="category_favourite_channels">पसंदीदा चैनल</string>

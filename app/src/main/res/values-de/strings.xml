@@ -235,8 +235,6 @@
     <string name="category_all">Alle</string>
     <string name="category_collapse_categories">Kategorien einklappen</string>
     <string name="category_favourites">Favoriten</string>
-    <string name="category_group_into_categories">In Kategorien gruppieren</string>
-    <string name="category_show_all_categories">Alle Kategorien anzeigen (klassische Liste)</string>
     <string name="category_next_up">Als Nächstes</string>
     <string name="category_recently_played">Zuletzt abgespielt</string>
     <string name="category_favourite_channels">Lieblingskanäle</string>

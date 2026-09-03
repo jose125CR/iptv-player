@@ -233,8 +233,6 @@
     <string name="category_all">Tudo</string>
     <string name="category_collapse_categories">Recolher categorias</string>
     <string name="category_favourites">Favoritos</string>
-    <string name="category_group_into_categories">Agrupar em categorias</string>
-    <string name="category_show_all_categories">Mostrar todas as categorias (lista clássica)</string>
     <string name="category_next_up">A seguir</string>
     <string name="category_recently_played">Reproduzidos recentemente</string>
     <string name="category_favourite_channels">Canais favoritos</string>

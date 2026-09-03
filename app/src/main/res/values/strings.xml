@@ -238,8 +238,6 @@
     <string name="category_all">All</string>
     <string name="category_collapse_categories">Collapse categories</string>
     <string name="category_favourites">Favourites</string>
-    <string name="category_group_into_categories">Group into categories</string>
-    <string name="category_show_all_categories">Show all categories (classic list)</string>
     <string name="category_next_up">Next Up</string>
     <string name="category_recently_played">Recently Played</string>
     <string name="category_favourite_channels">Favourite Channels</string>

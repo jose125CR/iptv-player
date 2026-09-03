@@ -233,8 +233,6 @@
     <string name="category_all">Все</string>
     <string name="category_collapse_categories">Свернуть категории</string>
     <string name="category_favourites">Избранное</string>
-    <string name="category_group_into_categories">Группировать по категориям</string>
-    <string name="category_show_all_categories">Показать все категории (классический список)</string>
     <string name="category_next_up">Далее</string>
     <string name="category_recently_played">Недавно воспроизведённые</string>
     <string name="category_favourite_channels">Избранные каналы</string>

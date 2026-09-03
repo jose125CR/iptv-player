@@ -232,8 +232,6 @@
     <string name="category_all">Tutto</string>
     <string name="category_collapse_categories">Comprimi categorie</string>
     <string name="category_favourites">Preferiti</string>
-    <string name="category_group_into_categories">Raggruppa in categorie</string>
-    <string name="category_show_all_categories">Mostra tutte le categorie (elenco classico)</string>
     <string name="category_next_up">Successivo</string>
     <string name="category_recently_played">Riprodotti di recente</string>
     <string name="category_favourite_channels">Canali preferiti</string>

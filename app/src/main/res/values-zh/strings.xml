@@ -229,8 +229,6 @@
     <string name="category_all">全部</string>
     <string name="category_collapse_categories">收起分类</string>
     <string name="category_favourites">收藏</string>
-    <string name="category_group_into_categories">按分类分组</string>
-    <string name="category_show_all_categories">显示全部分类（经典列表）</string>
     <string name="category_next_up">接下来播放</string>
     <string name="category_recently_played">最近播放</string>
     <string name="category_favourite_channels">收藏频道</string>

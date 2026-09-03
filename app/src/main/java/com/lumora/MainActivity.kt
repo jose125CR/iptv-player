@@ -138,7 +138,6 @@ internal const val PREF_EXTERNAL_PLAYER_PACKAGE = "external_player_package"
 /** Whether the app may offer to hand a stream over when it cannot play it properly. */
 internal const val PREF_SUGGEST_EXTERNAL_PLAYER = "suggest_external_player"
 internal const val PREF_ASPECT_MODE = "player_aspect_mode"
-internal const val PREF_CLASSIC_CATEGORY_LAYOUT = "classic_category_layout"
 internal const val PREF_SIMPLE_MODE = "simple_mode"
 internal const val PREF_DISABLE_VOD = "disable_vod"
 // Catalogue presentation toggles (all default ON = enabled behavior): dynamic sidebar
@@ -195,7 +194,6 @@ internal const val CONTINUE_WATCHING_CATEGORY_ID = "__continue_watching__"
  *  members. Clicking a tile opens the show's detail page rather than playing - see
  *  onHomeItemClick. */
 internal const val UP_NEXT_CATEGORY_ID = "__up_next__"
-internal const val CLASSIC_LAYOUT_TOGGLE_ID = "__classic_layout_toggle__"
 /** Sidebar utility row that collapses the category rail; persisted so the rail stays
  *  collapsed across launches. */
 internal const val COLLAPSE_CATEGORIES_TOGGLE_ID = "__collapse_categories__"
@@ -208,7 +206,7 @@ internal const val PREF_SETTINGS_RAIL_COLLAPSED = "settings_nav_rail_collapsed"
  *  hiding one is unrecoverable, since the only way to unhide a row is the context menu on
  *  that same row. The hidden-id filter in buildCategoryRows skips these too, so anyone who
  *  already hid one gets it back. */
-internal val UTILITY_ROW_IDS = setOf(CLASSIC_LAYOUT_TOGGLE_ID, COLLAPSE_CATEGORIES_TOGGLE_ID)
+internal val UTILITY_ROW_IDS = setOf(COLLAPSE_CATEGORIES_TOGGLE_ID)
 
 /** Films/Series sidebar row collecting every category too thin to be worth its own row, so
  *  the long tail of near-empty categories costs one line instead of a dozen. Expandable -

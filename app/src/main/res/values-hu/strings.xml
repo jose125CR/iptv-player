@@ -231,8 +231,6 @@
     <string name="category_all">Mind</string>
     <string name="category_collapse_categories">Kategóriák összecsukása</string>
     <string name="category_favourites">Kedvencek</string>
-    <string name="category_group_into_categories">Kategóriákba csoportosítás</string>
-    <string name="category_show_all_categories">Összes kategória megjelenítése (klasszikus lista)</string>
     <string name="category_next_up">Következik</string>
     <string name="category_recently_played">Legutóbb lejátszott</string>
     <string name="category_favourite_channels">Kedvenc csatornák</string>

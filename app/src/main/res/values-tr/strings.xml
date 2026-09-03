@@ -231,8 +231,6 @@
     <string name="category_all">Tümü</string>
     <string name="category_collapse_categories">Kategorileri daralt</string>
     <string name="category_favourites">Favoriler</string>
-    <string name="category_group_into_categories">Kategorilere grupla</string>
-    <string name="category_show_all_categories">Tüm kategorileri göster (klasik liste)</string>
     <string name="category_next_up">Sırada</string>
     <string name="category_recently_played">Son Oynatılanlar</string>
     <string name="category_favourite_channels">Favori Kanallar</string>

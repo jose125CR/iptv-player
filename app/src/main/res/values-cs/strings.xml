@@ -232,8 +232,6 @@
     <string name="category_all">Vše</string>
     <string name="category_collapse_categories">Sbalit kategorie</string>
     <string name="category_favourites">Oblíbené</string>
-    <string name="category_group_into_categories">Seskupit do kategorií</string>
-    <string name="category_show_all_categories">Zobrazit všechny kategorie (klasický seznam)</string>
     <string name="category_next_up">Následuje</string>
     <string name="category_recently_played">Nedávno přehráno</string>
     <string name="category_favourite_channels">Oblíbené kanály</string>

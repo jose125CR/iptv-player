@@ -300,7 +300,7 @@ internal fun MainActivity.computeDerivedContent(allChannels: List<Channel>): Mai
 internal fun MainActivity.deriveLiveHalf(list: List<Channel>) {
     val startedAt = System.currentTimeMillis()
     val hideAdult = prefs.getBoolean(PREF_HIDE_ADULT, true)
-    val useClassic = prefs.getBoolean(PREF_CLASSIC_CATEGORY_LAYOUT, false)
+    val useClassic = true
     val groupChannels = prefs.getBoolean(PREF_GROUP_CHANNELS, true)
 
     // Same catalogue, same prefs, same answer - restore last time's grouping instead of

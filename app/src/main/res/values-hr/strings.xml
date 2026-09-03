@@ -231,8 +231,6 @@
     <string name="category_all">Sve</string>
     <string name="category_collapse_categories">Sažmi kategorije</string>
     <string name="category_favourites">Favoriti</string>
-    <string name="category_group_into_categories">Grupiraj u kategorije</string>
-    <string name="category_show_all_categories">Prikaži sve kategorije (klasični popis)</string>
     <string name="category_next_up">Sljedeće</string>
     <string name="category_recently_played">Nedavno reproducirano</string>
     <string name="category_favourite_channels">Favoritni kanali</string>

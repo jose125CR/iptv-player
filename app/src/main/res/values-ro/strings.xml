@@ -233,8 +233,6 @@
     <string name="category_all">Toate</string>
     <string name="category_collapse_categories">Restrânge categoriile</string>
     <string name="category_favourites">Favorite</string>
-    <string name="category_group_into_categories">Grupează în categorii</string>
-    <string name="category_show_all_categories">Afișează toate categoriile (listă clasică)</string>
     <string name="category_next_up">În continuare</string>
     <string name="category_recently_played">Redate recent</string>
     <string name="category_favourite_channels">Canale favorite</string>

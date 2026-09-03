@@ -231,8 +231,6 @@
     <string name="category_all">Kaikki</string>
     <string name="category_collapse_categories">Kutista luokat</string>
     <string name="category_favourites">Suosikit</string>
-    <string name="category_group_into_categories">Ryhmittele luokkiin</string>
-    <string name="category_show_all_categories">Näytä kaikki luokat (klassinen luettelo)</string>
     <string name="category_next_up">Seuraavaksi</string>
     <string name="category_recently_played">Äskettäin toistetut</string>
     <string name="category_favourite_channels">Suosikkikanavat</string>

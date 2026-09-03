@@ -231,8 +231,6 @@
     <string name="category_all">Alle</string>
     <string name="category_collapse_categories">Klap kategorier sammen</string>
     <string name="category_favourites">Favoritter</string>
-    <string name="category_group_into_categories">Gruppér i kategorier</string>
-    <string name="category_show_all_categories">Vis alle kategorier (klassisk liste)</string>
     <string name="category_next_up">Næste</string>
     <string name="category_recently_played">Senest afspillet</string>
     <string name="category_favourite_channels">Favoritkanaler</string>

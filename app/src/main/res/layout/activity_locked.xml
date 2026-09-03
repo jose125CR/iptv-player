@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FF0B0F17"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- App title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="#FFF1F5F9"
+            android:textSize="28sp"
+            android:fontFamily="@font/inter_bold"
+            android:letterSpacing="0.05" />
+
+        <TextView
+            android:id="@+id/lockedSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="@string/locked_subtitle"
+            android:textColor="#FF9CA3AF"
+            android:textSize="13sp"
+            android:fontFamily="@font/inter_regular" />
+
+        <!-- Loading indicator -->
+        <ProgressBar
+            android:id="@+id/lockedLoading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="40dp"
+            android:indeterminateTint="#FF3B82F6" />
+
+        <!-- Info container (hidden while loading) -->
+        <LinearLayout
+            android:id="@+id/lockedInfoContainer"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Status label -->
+            <TextView
+                android:id="@+id/lockedStatusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#FFEF4444"
+                android:textSize="16sp"
+                android:fontFamily="@font/inter_semibold"
+                android:gravity="center" />
+
+            <!-- Message -->
+            <TextView
+                android:id="@+id/lockedMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:textColor="#FF9CA3AF"
+                android:textSize="13sp"
+                android:fontFamily="@font/inter_regular"
+                android:gravity="center"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- MAC card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="#FF111827"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/locked_mac_label"
+                    android:textColor="#FF6B7280"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/lockedMacValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#FF3B82F6"
+                    android:textSize="16sp"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.15" />
+
+            </LinearLayout>
+
+            <!-- Key card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="#FF111827"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/locked_key_label"
+                    android:textColor="#FF6B7280"
+                    android:textSize="11sp"
+                    android:fontFamily="@font/inter_regular"
+                    android:letterSpacing="0.1" />
+
+                <TextView
+                    android:id="@+id/lockedKeyValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:textColor="#FF3B82F6"
+                    android:textSize="16sp"
+                    android:fontFamily="monospace"
+                    android:letterSpacing="0.1" />
+
+            </LinearLayout>
+
+            <!-- Retry button -->
+            <Button
+                android:id="@+id/lockedRetryButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="32dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#FF3B82F6"
+                android:text="@string/locked_retry"
+                android:textColor="#FFF1F5F9"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_semibold"
+                android:visibility="gone"
+                android:stateListAnimator="@animator/focus_scale_flat" />
+
+        </LinearLayout>
+
+        <!-- Version -->
+        <TextView
+            android:id="@+id/lockedVersion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:textColor="#FF6B7280"
+            android:textSize="11sp"
+            android:fontFamily="@font/inter_regular" />
+
+    </LinearLayout>
+
+</LinearLayout>

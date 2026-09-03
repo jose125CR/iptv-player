@@ -90,16 +90,19 @@
             android:supportsPictureInPicture="true"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.CAR_LAUNCHER" />
             </intent-filter>
-            <!-- Android TV's launcher, in its own filter so the car-facing one above stays
-                 identical to a known-listed car app's. -->
+        </activity>
+
+        <activity
+            android:name=".LockedActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Lumora">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+                <category android:name="android.intent.category.CAR_LAUNCHER" />
             </intent-filter>
         </activity>
 

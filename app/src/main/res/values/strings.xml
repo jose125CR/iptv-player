@@ -241,4 +241,16 @@
     <string name="category_favourite_channels">Favourite Channels</string>
     <string name="ui_not_driving_continue">I\'m not driving - continue</string>
     <string name="list_season_number">Season %1$d</string>
+
+    <!-- LockedActivity - device validation screen -->
+    <string name="locked_subtitle">IPTV Player</string>
+    <string name="locked_mac_label">DEVICE ID</string>
+    <string name="locked_key_label">KEY</string>
+    <string name="locked_not_active">Dispositivo no activado</string>
+    <string name="locked_expired">Suscripción expirada</string>
+    <string name="locked_pending">Registrado, pendiente de activación</string>
+    <string name="locked_no_connection">Error de conexión</string>
+    <string name="locked_retry_message">No se pudo conectar con el servidor. Verifique su conexión a internet.</string>
+    <string name="locked_retry">Reintentar</string>
+    <string name="locked_no_info">Contacte a su proveedor para activar su servicio.</string>
 </resources>

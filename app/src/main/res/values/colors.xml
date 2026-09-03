@@ -10,13 +10,13 @@
     <color name="surface_emphasis">#FF232A3B</color>
     <color name="surface_accent">#FF2A3347</color>
 
-    <!-- Brand / accent (indigo family) -->
-    <color name="primary">#FF6366F1</color>
-    <color name="primary_dark">#FF4F46E5</color>
-    <color name="primary_light">#FF818CF8</color>
-    <color name="primary_surface">#FF1E1B4B</color>
-    <color name="accent">#FF6366F1</color>
-    <color name="brand_muted">#1A6366F1</color>
+    <!-- Brand / accent (blue family) -->
+    <color name="primary">#FF3B82F6</color>
+    <color name="primary_dark">#FF2563EB</color>
+    <color name="primary_light">#FF60A5FA</color>
+    <color name="primary_surface">#FF1E3A5F</color>
+    <color name="accent">#FF3B82F6</color>
+    <color name="brand_muted">#1A3B82F6</color>
 
     <!-- Focus (D-pad ring) -->
     <color name="focus">#FFF1F5F9</color>
@@ -36,7 +36,7 @@
     <!-- States -->
     <color name="divider">#14F1F5F9</color>
     <color name="overlay">#B30B0F17</color>
-    <color name="ripple">#336366F1</color>
+    <color name="ripple">#333B82F6</color>
 
     <!-- Borders -->
     <color name="color_border">#14FFFFFF</color>
@@ -50,11 +50,11 @@
     <color name="scrim_bottom">#F20B0F17</color>
 
     <!-- Accent gradient -->
-    <color name="accent_gradient_start">#FF6366F1</color>
+    <color name="accent_gradient_start">#FF3B82F6</color>
     <color name="accent_gradient_end">#FF3B82F6</color>
 
     <!-- Channel initial fallback colors -->
-    <color name="channel_1">#FF6366F1</color>
+    <color name="channel_1">#FF3B82F6</color>
     <color name="channel_2">#FFEF4444</color>
     <color name="channel_3">#FF22C55E</color>
     <color name="channel_4">#FFF59E0B</color>

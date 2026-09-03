@@ -253,4 +253,5 @@
     <string name="locked_retry_message">No se pudo conectar con el servidor. Verifique su conexión a internet.</string>
     <string name="locked_retry">Reintentar</string>
     <string name="locked_no_info">Contacte a su proveedor para activar su servicio.</string>
+    <string name="sett_reset_device">Restablecer dispositivo</string>
 </resources>

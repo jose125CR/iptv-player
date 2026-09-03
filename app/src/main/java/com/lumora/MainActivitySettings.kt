@@ -2,6 +2,8 @@ package com.lumora
 
 import android.animation.AnimatorInflater
 import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import androidx.core.content.res.ResourcesCompat
 import android.net.Uri
 import android.graphics.Typeface
@@ -472,6 +474,26 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
                 else -> Toast.makeText(this@showProviderSettings, getString(R.string.sett_latest_version), Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    val resetDeviceButton = dialogView.findViewById<View>(R.id.settingsResetDevice)
+    if (BuildConfig.DEBUG) {
+        resetDeviceButton.visibility = View.VISIBLE
+        resetDeviceButton.setOnClickListener {
+            AlertDialog.Builder(this)
+                .setTitle(getString(R.string.sett_reset_device))
+                .setMessage("Esto borrará el registro del dispositivo y reiniciará la app.")
+                .setPositiveButton("Restablecer") { _, _ ->
+                    getSharedPreferences("device_identity", Context.MODE_PRIVATE).edit().clear().apply()
+                    activeSettingsOverlay?.dismiss()
+                    startActivity(Intent(this, LockedActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK))
+                    finish()
+                }
+                .setNegativeButton(getString(R.string.cancel), null)
+                .show()
+        }
+    } else {
+        resetDeviceButton.visibility = View.GONE
     }
 
     // Init UI

@@ -1804,9 +1804,7 @@ internal fun MainActivity.updateProgress() {
     progressTickCount++
     if (progressTickCount % 5 == 0) saveCurrentPlaybackPosition()
     if (progressTickCount % 10 == 0) {
-        // Trakt is not a heartbeat API - it wants transitions, so this only sends anything
-        // when the play/pause state has actually moved since the last report.
-        traktReportProgress()
+        // Trakt removed
     }
 }
 

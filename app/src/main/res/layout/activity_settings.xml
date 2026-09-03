@@ -82,19 +82,9 @@
                     <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/playback" />
                 </LinearLayout>
 
-                <LinearLayout android:id="@+id/navFilters" style="@style/Widget.Lumora.SettingsNavRow" android:tag="3" android:background="@drawable/nav_rail_item_glass">
-                    <ImageView android:layout_width="@dimen/settings_nav_icon_size" android:layout_height="@dimen/settings_nav_icon_size" android:src="@drawable/ic_filters" android:tint="@color/nav_icon_tint" />
-                    <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/filters" />
-                </LinearLayout>
-
                 <LinearLayout android:id="@+id/navPrivacy" style="@style/Widget.Lumora.SettingsNavRow" android:tag="4" android:background="@drawable/nav_rail_item_glass">
                     <ImageView android:layout_width="@dimen/settings_nav_icon_size" android:layout_height="@dimen/settings_nav_icon_size" android:src="@drawable/ic_privacy" android:tint="@color/nav_icon_tint" />
                     <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/privacy" />
-                </LinearLayout>
-
-                <LinearLayout android:id="@+id/navBackup" style="@style/Widget.Lumora.SettingsNavRow" android:tag="5" android:background="@drawable/nav_rail_item_glass">
-                    <ImageView android:layout_width="@dimen/settings_nav_icon_size" android:layout_height="@dimen/settings_nav_icon_size" android:src="@drawable/ic_backup" android:tint="@color/nav_icon_tint" />
-                    <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/backup_restore" />
                 </LinearLayout>
 
                 <LinearLayout android:id="@+id/navEpg" style="@style/Widget.Lumora.SettingsNavRow" android:tag="6" android:background="@drawable/nav_rail_item_glass">
@@ -105,11 +95,6 @@
                 <LinearLayout android:id="@+id/navDownloads" style="@style/Widget.Lumora.SettingsNavRow" android:tag="7" android:background="@drawable/nav_rail_item_glass">
                     <ImageView android:layout_width="@dimen/settings_nav_icon_size" android:layout_height="@dimen/settings_nav_icon_size" android:src="@drawable/ic_downloads" android:tint="@color/nav_icon_tint" />
                     <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/downloads" />
-                </LinearLayout>
-
-                <LinearLayout android:id="@+id/navTrakt" style="@style/Widget.Lumora.SettingsNavRow" android:background="@drawable/nav_rail_item_glass">
-                    <ImageView android:layout_width="@dimen/settings_nav_icon_size" android:layout_height="@dimen/settings_nav_icon_size" android:src="@drawable/ic_about" android:tint="@color/nav_icon_tint" />
-                    <TextView style="@style/Widget.Lumora.SettingsNavLabel" android:text="@string/trakt" />
                 </LinearLayout>
 
                 <LinearLayout android:id="@+id/navAbout" style="@style/Widget.Lumora.SettingsNavRow" android:tag="9" android:background="@drawable/nav_rail_item_glass">
@@ -225,101 +210,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- Pane: Filters -->
-            <LinearLayout
-                android:id="@+id/paneFilters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/settings_gap_l" android:text="@string/filters" style="@style/TextAppearance.Lumora.SettingsTitle" />
-
-                <CheckBox
-                    android:id="@+id/settingsHideNonEnglish"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:checked="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/hide_non_english"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium" />
-
-                <!-- Lives here, not under Privacy: it filters the catalogue exactly like the
-                     non-English toggle above it. The parental PIN that gates unchecking it
-                     stays under Privacy, which is where the PIN itself is managed. -->
-                <CheckBox
-                    android:id="@+id/settingsHideAdult"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_gap"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:checked="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/hide_adult_categories"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium" />
-
-                <CheckBox
-                    android:id="@+id/settingsCategorizeLive"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_gap"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:checked="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/categorize_live"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium" />
-
-                <CheckBox
-                    android:id="@+id/settingsCategorizeVod"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_gap"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:checked="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/categorize_vod"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium" />
-
-                <CheckBox
-                    android:id="@+id/settingsGroupChannels"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_gap"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:checked="true"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/group_channels"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium" />
-            </LinearLayout>
-
             <!-- Pane: Privacy -->
             <LinearLayout
                 android:id="@+id/panePrivacy"
@@ -355,44 +245,6 @@
                     android:gravity="center"
                     android:stateListAnimator="@animator/focus_scale_flat">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/clear_watch_history" android:textColor="@color/live_red" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Pane: Backup & Restore -->
-            <LinearLayout
-                android:id="@+id/paneBackup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/settings_gap_l" android:text="@string/backup_restore" style="@style/TextAppearance.Lumora.SettingsTitle" />
-
-                <LinearLayout
-                    android:id="@+id/settingsExportBackup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/focus_scale_flat">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/export_backup" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/settingsImportBackup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:layout_marginTop="@dimen/settings_gap_m"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/focus_scale_flat">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/import_backup" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -454,140 +306,6 @@
 
 
             <!-- Pane: About -->
-            <!-- Pane: Trakt. Three states in one pane, swapped by wireTraktPane(): an
-                 unconfigured build (no credentials compiled in), signed out (the connect row,
-                 and the code/QR this fills while the device flow runs), and connected (the
-                 username, the two toggles and sign-out). Everything below the status line is
-                 GONE until the state that owns it. -->
-            <LinearLayout
-                android:id="@+id/paneTrakt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/trakt" style="@style/TextAppearance.Lumora.SettingsTitle" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/settings_gap_s"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:text="@string/trakt_pane_caption"
-                    style="@style/TextAppearance.Lumora.SettingsSubtitle" />
-
-                <TextView
-                    android:id="@+id/traktStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_regular" />
-
-                <!-- The code, big enough to read across a room and copy onto a phone. -->
-                <TextView
-                    android:id="@+id/traktCode"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:gravity="center"
-                    android:letterSpacing="0.25"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_title"
-                    android:fontFamily="@font/inter_medium"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/traktQr"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:contentDescription="@null"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/traktSignInRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:visibility="gone">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/trakt_connect" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                </LinearLayout>
-
-                <CheckBox
-                    android:id="@+id/traktScrobbleCheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_s"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/trakt_scrobble"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium"
-                    android:visibility="gone" />
-
-                <CheckBox
-                    android:id="@+id/traktWatchedSyncCheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_l"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:text="@string/trakt_watched_sync"
-                    android:textColor="@color/text_primary"
-                    android:textSize="@dimen/settings_text_body"
-                    android:fontFamily="@font/inter_medium"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/traktSyncNowRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/settings_gap_s"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:visibility="gone">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/trakt_sync_now" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/traktSignOutRow"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center"
-                    android:stateListAnimator="@animator/focus_scale_flat"
-                    android:visibility="gone">
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/trakt_sign_out" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- Pane: About -->
             <LinearLayout
                 android:id="@+id/paneAbout"
                 android:layout_width="match_parent"
@@ -639,23 +357,6 @@
                     android:paddingHorizontal="@dimen/settings_gap_l">
                     <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/about_platform_label" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about_platform_value" android:textColor="@color/text_secondary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_regular" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/settingsDiscordLink"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:layout_marginTop="@dimen/settings_gap_m"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/settings_gap_l"
-                    android:stateListAnimator="@animator/focus_scale_flat">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/discord" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/discord_url" android:textColor="@color/primary_light" android:textSize="@dimen/settings_text_caption" android:fontFamily="@font/inter_regular" />
                 </LinearLayout>
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="@dimen/settings_gap_m" android:background="@color/divider" />

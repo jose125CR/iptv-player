@@ -247,7 +247,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     if (isPortraitPhone()) portraitSettingsRailExpanded = false
     val dialogView = layoutInflater.inflate(R.layout.activity_settings, null)
 
-    val hideNonEnglish = dialogView.findViewById<CheckBox>(R.id.settingsHideNonEnglish)
     val clearHistory = dialogView.findViewById<View>(R.id.settingsClearHistory)
 
     clearHistory.setOnClickListener {
@@ -269,66 +268,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         binding.settingsContainer,
         dialogView,
         closeButton = dialogView.findViewById(R.id.settingsCancelButton),
-        initialFocus = { hideNonEnglish }
+        initialFocus = { null }
     )
-
-    // Backup & Restore
-    val backupManager = BackupManager(this)
-    dialogView.findViewById<View>(R.id.settingsExportBackup).setOnClickListener {
-        val intent = android.content.Intent(android.content.Intent.ACTION_CREATE_DOCUMENT).apply {
-            addCategory(android.content.Intent.CATEGORY_OPENABLE)
-            type = "application/json"
-            putExtra(android.content.Intent.EXTRA_TITLE, "lumora_backup.json")
-        }
-        try {
-            startActivityForResult(intent, MainActivity.REQUEST_EXPORT_BACKUP)
-            pendingBackupManager = backupManager
-        } catch (e: android.content.ActivityNotFoundException) {
-            // Fire TV and most Android TV boxes ship no document picker at all - SAF
-            // just isn't there to launch. Fall back to a fixed app-storage location
-            // that works on every device, no picker required.
-            scope.launch {
-                val file = localBackupFile()
-                val success = withContext(Dispatchers.IO) { backupManager.exportTo(Uri.fromFile(file)) }
-                Toast.makeText(
-                    this@showProviderSettings,
-                    if (success) getString(R.string.sett_backup_saved_to, file.absolutePath) else getString(R.string.sett_export_failed),
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
-    dialogView.findViewById<View>(R.id.settingsImportBackup).setOnClickListener {
-        val intent = android.content.Intent(android.content.Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(android.content.Intent.CATEGORY_OPENABLE)
-            type = "application/json"
-        }
-        try {
-            startActivityForResult(intent, MainActivity.REQUEST_IMPORT_BACKUP)
-            pendingBackupManager = backupManager
-        } catch (e: android.content.ActivityNotFoundException) {
-            val file = localBackupFile()
-            if (!file.exists()) {
-                Toast.makeText(this@showProviderSettings, getString(R.string.sett_no_backup_file, file.absolutePath), Toast.LENGTH_LONG).show()
-            } else {
-                scope.launch {
-                    // Import is an explicit user action, so existing data isn't a decision
-                    // point - auto-confirm on the first pass's conflict result (see the
-                    // same pattern in MainActivity.REQUEST_IMPORT_BACKUP) so the import
-                    // actually applies instead of silently reporting 0 imported.
-                    var result = withContext(Dispatchers.IO) { backupManager.importFrom(Uri.fromFile(file)) }
-                    if (result.conflicts > 0 && result.providersImported == 0 && result.epgSourcesImported == 0) {
-                        result = withContext(Dispatchers.IO) { backupManager.importFrom(Uri.fromFile(file), confirmed = true) }
-                    }
-                    Toast.makeText(
-                        this@showProviderSettings,
-                        getString(R.string.sett_imported_summary, result.providersImported, result.epgSourcesImported, result.customGroupsImported),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            }
-        }
-    }
 
     // EPG Source
     dialogView.findViewById<View>(R.id.settingsAddEpgSource).setOnClickListener {
@@ -384,83 +325,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             .show()
     }
 
-    hideNonEnglish.isChecked = prefs.getBoolean(PREF_HIDE_NON_ENGLISH, true)
-    hideNonEnglish.setOnCheckedChangeListener { _, checked ->
-        prefs.edit().putBoolean(PREF_HIDE_NON_ENGLISH, checked).apply()
-        if (allChannels.isNotEmpty()) scope.launch { classifyAndShow() }
-    }
-
-    val hideAdult = dialogView.findViewById<CheckBox>(R.id.settingsHideAdult)
     val parentalPinRow = dialogView.findViewById<View>(R.id.settingsParentalPin)
     val parentalPinLabel = dialogView.findViewById<TextView>(R.id.settingsParentalPinLabel)
-    hideAdult.isChecked = prefs.getBoolean(PREF_HIDE_ADULT, true)
-    parentalPinLabel.text = if (hasParentalPin()) getString(R.string.sett_change_parental_pin) else getString(R.string.set_parental_pin)
-
-    lateinit var hideAdultListener: CompoundButton.OnCheckedChangeListener
-    fun applyHideAdult(checked: Boolean) {
-        hideAdult.setOnCheckedChangeListener(null)
-        hideAdult.isChecked = checked
-        hideAdult.setOnCheckedChangeListener(hideAdultListener)
-        prefs.edit().putBoolean(PREF_HIDE_ADULT, checked).apply()
-        if (allChannels.isNotEmpty()) scope.launch { classifyAndShow() }
-    }
-    hideAdultListener = CompoundButton.OnCheckedChangeListener { _, checked ->
-        // Turning filtering ON is always allowed. Turning it OFF needs the PIN, if one
-        // is set - otherwise the toggle is just a preference with nothing locking it.
-        if (!checked && hasParentalPin()) {
-            applyHideAdult(true)
-            promptForPin(getString(R.string.sett_enter_pin_show_adult)) { applyHideAdult(false) }
-        } else {
-            applyHideAdult(checked)
-        }
-    }
-    hideAdult.setOnCheckedChangeListener(hideAdultListener)
-    parentalPinRow.setOnClickListener {
-        if (hasParentalPin()) {
-            promptForPin(getString(R.string.sett_enter_current_pin)) { showSetPinDialog(parentalPinLabel) }
-        } else {
-            showSetPinDialog(parentalPinLabel)
-        }
-    }
-
-    val categorizeLive = dialogView.findViewById<CheckBox>(R.id.settingsCategorizeLive)
-    categorizeLive.isChecked = prefs.getBoolean(PREF_CATEGORIZE_LIVE, true)
-    categorizeLive.setOnCheckedChangeListener { _, checked ->
-        prefs.edit().putBoolean(PREF_CATEGORIZE_LIVE, checked).apply()
-        if (allChannels.isNotEmpty()) scope.launch { classifyAndShow() }
-    }
-    val categorizeVod = dialogView.findViewById<CheckBox>(R.id.settingsCategorizeVod)
-    categorizeVod.isChecked = prefs.getBoolean(PREF_CATEGORIZE_VOD, true)
-    categorizeVod.setOnCheckedChangeListener { _, checked ->
-        prefs.edit().putBoolean(PREF_CATEGORIZE_VOD, checked).apply()
-        if (allChannels.isNotEmpty()) scope.launch { classifyAndShow() }
-    }
-    val groupChannelsBox = dialogView.findViewById<CheckBox>(R.id.settingsGroupChannels)
-    groupChannelsBox.isChecked = prefs.getBoolean(PREF_GROUP_CHANNELS, true)
-    groupChannelsBox.setOnCheckedChangeListener { _, checked ->
-        prefs.edit().putBoolean(PREF_GROUP_CHANNELS, checked).apply()
-        if (allChannels.isNotEmpty()) scope.launch { classifyAndShow() }
-    }
-
-    // Dub playback preferences: prefer dub-flagged search results, and keep the
-    // sideloaded subtitles on when a stream plays back with its dubbed audio track.
-    // Both default off; the subtitles one is read by PlayerManager from the same prefs.
-    val filtersPane = dialogView.findViewById<LinearLayout>(R.id.paneFilters)
-    filtersPane.addView(dubCheckBoxRow(
-        getString(R.string.sett_prefer_dubbed_audio),
-        getString(R.string.sett_prefer_dubbed_audio_caption),
-        PREF_PREFER_DUB_AUDIO
-    ))
-    filtersPane.addView(dubCheckBoxRow(
-        getString(R.string.sett_subtitles_with_dub),
-        getString(R.string.sett_subtitles_with_dub_caption),
-        PREF_SUBTITLES_WITH_DUB
-    ))
-    filtersPane.addView(dubCheckBoxRow(
-        getString(R.string.subtitles),
-        getString(R.string.sett_subtitles_caption),
-        PREF_SUBTITLES_ENABLED
-    ))
 
     // General pane: Simple mode + Disable VOD live here, not under Filters - they shape
     // the whole app (which tabs exist, what gets fetched), not the catalogue filters.
@@ -512,21 +378,12 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // StreamVault-style nav rail: one section visible at a time.
     val navRows = listOf(
         R.id.navPlayback to R.id.panePlayback,
-        R.id.navFilters to R.id.paneFilters,
         R.id.navPrivacy to R.id.panePrivacy,
-        R.id.navBackup to R.id.paneBackup,
         R.id.navEpg to R.id.paneEpg,
         R.id.navDownloads to R.id.paneDownloads,
         R.id.navGeneral to R.id.paneGeneral,
-        R.id.navAbout to R.id.paneAbout,
-        // Appended rather than slotted in where it sits visually: selectSection()
-        // addresses these by list index, so inserting in the middle would silently
-        // renumber every section below it.
-        R.id.navTrakt to R.id.paneTrakt
+        R.id.navAbout to R.id.paneAbout
     ).map { (navId, paneId) -> dialogView.findViewById<View>(navId) to dialogView.findViewById<View>(paneId) }
-    wireTraktPane(dialogView)
-    // Last section chosen - the rail's re-expand pill refocuses it (mirrors the category
-    // rail refocusing the previously selected row).
     var activeSection = 0
     fun selectSection(index: Int) {
         activeSection = index
@@ -595,13 +452,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         val info = packageManager.getPackageInfo(packageName, 0)
         "${info.versionName} (${info.versionCode})"
     } catch (e: Exception) { getString(R.string.sett_unknown) }
-    dialogView.findViewById<View>(R.id.settingsDiscordLink).setOnClickListener {
-        try {
-            startActivity(android.content.Intent(android.content.Intent.ACTION_VIEW, Uri.parse("https://discord.gg/lumora")))
-        } catch (e: android.content.ActivityNotFoundException) {
-            Toast.makeText(this, getString(R.string.sett_no_browser_available), Toast.LENGTH_SHORT).show()
-        }
-    }
     val checkUpdateLabel = dialogView.findViewById<TextView>(R.id.settingsCheckUpdateLabel)
     dialogView.findViewById<View>(R.id.settingsCheckUpdate).setOnClickListener {
         checkUpdateLabel.text = getString(R.string.sett_checking)

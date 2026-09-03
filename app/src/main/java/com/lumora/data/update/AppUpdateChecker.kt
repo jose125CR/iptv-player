@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 class AppUpdateChecker(private val context: Context) {
 
     private val TAG = "AppUpdate"
-    private val GITHUB_REPO = "disclosurez/Lumora"
+    private val UPDATE_URL = "https://reseller-be.vercel.app/api/releases/latest"
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)
@@ -28,49 +28,35 @@ class AppUpdateChecker(private val context: Context) {
     )
 
     /**
-     * Check for updates by fetching the latest GitHub release.
+     * Check for updates by fetching the latest version from the configured backend.
      */
     suspend fun checkForUpdate(): UpdateInfo? {
         return try {
-            val url = "https://api.github.com/repos/$GITHUB_REPO/releases/latest"
+            val url = UPDATE_URL
             val request = Request.Builder().url(url)
-                .header("Accept", "application/vnd.github.v3+json")
                 .header("User-Agent", "Lumora/2.0")
                 .build()
 
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                Log.w(TAG, "GitHub API: HTTP ${response.code}")
+                Log.w(TAG, "Update API: HTTP ${response.code}")
                 return null
             }
 
             val body = response.body?.string() ?: return null
             val json = org.json.JSONObject(body)
 
-            val latestTag = json.optString("tag_name", "")?.removePrefix("v")
-            val releaseNotes = json.optString("body", "")
-            val assets = json.optJSONArray("assets")
-
-            var downloadUrl = ""
-            if (assets != null) {
-                for (i in 0 until assets.length()) {
-                    val asset = assets.getJSONObject(i)
-                    val name = asset.optString("name", "")
-                    if (name.endsWith(".apk")) {
-                        downloadUrl = asset.optString("browser_download_url", "")
-                        break
-                    }
-                }
-            }
-
+            val latestVersion = json.optString("version", "")
+            val downloadUrl = json.optString("downloadUrl", "")
+            val releaseNotes = json.optString("releaseNotes", "")
             val currentVersion = try {
-                context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
-            } catch (e: Exception) { "1.0" }
+                context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0.0"
+            } catch (e: Exception) { "1.0.0" }
 
-            val isUpdate = latestTag != null && isNewerVersion(latestTag, currentVersion)
+            val isUpdate = latestVersion.isNotBlank() && isNewerVersion(latestVersion, currentVersion)
 
             UpdateInfo(
-                latestVersion = latestTag ?: currentVersion,
+                latestVersion = latestVersion.ifBlank { currentVersion },
                 currentVersion = currentVersion,
                 downloadUrl = downloadUrl,
                 releaseNotes = releaseNotes.take(500),

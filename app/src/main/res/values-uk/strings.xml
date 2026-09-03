@@ -159,8 +159,6 @@
     <string name="browse">Переглянути</string>
     <string name="results">РЕЗУЛЬТАТИ</string>
     <string name="version">Версія</string>
-    <string name="github">GitHub</string>
-    <string name="github_url">github.com/disclosurez/Lumora</string>
     <string name="about_app_label">Застосунок</string>
     <string name="about_platform_label">Платформа</string>
     <string name="about_platform_value">Android · TV + телефон</string>

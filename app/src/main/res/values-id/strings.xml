@@ -155,8 +155,6 @@
     <string name="browse">Jelajah</string>
     <string name="results">HASIL</string>
     <string name="version">Versi</string>
-    <string name="github">GitHub</string>
-    <string name="github_url">github.com/disclosurez/Lumora</string>
     <string name="about_app_label">Aplikasi</string>
     <string name="about_platform_label">Platform</string>
     <string name="about_platform_value">Android · TV + ponsel</string>

@@ -160,8 +160,6 @@
     <string name="browse">تصفح</string>
     <string name="results">النتائج</string>
     <string name="version">الإصدار</string>
-    <string name="github">GitHub</string>
-    <string name="github_url">github.com/disclosurez/Lumora</string>
     <string name="about_app_label">التطبيق</string>
     <string name="about_platform_label">المنصة</string>
     <string name="about_platform_value">Android · TV + هاتف</string>

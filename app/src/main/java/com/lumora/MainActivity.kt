@@ -815,8 +815,7 @@ class MainActivity : AppCompatActivity() {
         requestNotificationPermissionIfNeeded()
         showCarDisclaimerIfProjected()
         pruneStoredEpg()
-        // Update check disabled for this fork - it must never offer or download a newer Lumora.
-        // checkAndPromptUpdate()
+        checkAndPromptUpdate()
         // Reconcile with Trakt once a launch. Rate-limited inside to six hours, and a no-op
         // unless the account is connected with watched sync on, so this is a prefs read in
         // every other case. Writes only to WatchedStore, which is keyed by title rather than

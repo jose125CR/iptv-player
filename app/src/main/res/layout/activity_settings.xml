@@ -1185,27 +1185,6 @@
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/about_platform_value" android:textColor="@color/text_secondary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_regular" />
                 </LinearLayout>
 
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="@dimen/settings_gap_m" android:background="@color/divider" />
-
-                <LinearLayout
-                    android:id="@+id/settingsGithubLink"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingVertical="@dimen/settings_row_padding_vertical"
-                    android:layout_marginTop="@dimen/settings_gap_m"
-                    android:background="@drawable/card_surface_background"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/settings_gap_l"
-                    android:stateListAnimator="@animator/focus_scale_flat">
-                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/github" android:textColor="@color/text_primary" android:textSize="@dimen/settings_text_body" android:fontFamily="@font/inter_medium" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/github_url" android:textColor="@color/primary_light" android:textSize="@dimen/settings_text_caption" android:fontFamily="@font/inter_regular" />
-                </LinearLayout>
-
-                <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="@dimen/settings_gap_m" android:background="@color/divider" />
-
                 <LinearLayout
                     android:id="@+id/settingsDiscordLink"
                     android:layout_width="match_parent"

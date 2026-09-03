@@ -89,11 +89,14 @@ class LockedActivity : AppCompatActivity() {
                 val prefs = getSharedPreferences("iptv_prefs", MODE_PRIVATE)
                 val existing = AccountStore.load(prefs).firstOrNull()
                 val id = existing?.id ?: AccountStore.newId()
+                val providerType = result.providerType ?: "m3u"
                 AccountStore.upsert(prefs, AccountConfig(
                     id = id,
-                    type = "m3u",
+                    type = providerType,
                     name = "Proveedor",
-                    url = result.providerUrl
+                    url = result.providerUrl,
+                    username = if (providerType == "xtream") result.username else null,
+                    password = if (providerType == "xtream") result.password else null
                 ))
                 AccountStore.setActiveAccount(prefs, id)
                 startActivity(Intent(this@LockedActivity, MainActivity::class.java))

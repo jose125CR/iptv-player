@@ -16,6 +16,9 @@ data class ValidationResult(
     val deviceId: String?,
     val key: String?,
     val providerUrl: String?,
+    val providerType: String?,
+    val username: String?,
+    val password: String?,
     val message: String?
 )
 
@@ -60,6 +63,9 @@ class DeviceValidator(private val context: Context) {
             val newDeviceId = json.optString("deviceId", null as String?)
             val newKey = json.optString("key", null as String?)
             val providerUrl = json.optString("providerUrl", null as String?)
+            val providerType = json.optString("providerType", null as String?)
+            val username = json.optString("username", null as String?)
+            val password = json.optString("password", null as String?)
             val message = json.optString("message", null as String?)
 
             if (newDeviceId != null) DeviceIdentity.saveDeviceId(context, newDeviceId)
@@ -71,6 +77,9 @@ class DeviceValidator(private val context: Context) {
                 deviceId = newDeviceId ?: deviceId,
                 key = newKey ?: deviceKey,
                 providerUrl = providerUrl,
+                providerType = providerType,
+                username = username,
+                password = password,
                 message = message
             )
         } catch (e: Exception) {

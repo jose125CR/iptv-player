@@ -149,7 +149,7 @@ internal const val PREF_GROUP_CHANNELS = "group_channels"
 // When the catalog was last fetched from the network; the cache serves every launch until
 // this is CATALOG_TTL_MS old (a provider change force-refreshes regardless).
 internal const val PREF_CATALOG_REFRESHED_AT = "catalog_refreshed_at"
-internal const val CATALOG_TTL_MS = 24 * 60 * 60 * 1000L
+internal const val CATALOG_TTL_MS = 7 * 24 * 60 * 60 * 1000L
 // How long a channel's stored guide is served without re-checking the provider. Short EPG
 // covers the next few hours, so a few hours of reuse is the useful window - long enough that
 // relaunching the app doesn't re-fetch, short enough that same-day schedule changes land.

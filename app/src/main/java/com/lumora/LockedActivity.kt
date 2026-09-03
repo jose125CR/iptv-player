@@ -87,7 +87,8 @@ class LockedActivity : AppCompatActivity() {
 
             if (result.valid && !result.providerUrl.isNullOrBlank()) {
                 val prefs = getSharedPreferences("iptv_prefs", MODE_PRIVATE)
-                val id = AccountStore.newId()
+                val existing = AccountStore.load(prefs).firstOrNull()
+                val id = existing?.id ?: AccountStore.newId()
                 AccountStore.upsert(prefs, AccountConfig(
                     id = id,
                     type = "m3u",

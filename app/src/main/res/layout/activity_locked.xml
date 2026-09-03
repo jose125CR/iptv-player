@@ -157,6 +157,21 @@
                 android:visibility="gone"
                 android:stateListAnimator="@animator/focus_scale_flat" />
 
+            <!-- Reset device (debug only) -->
+            <Button
+                android:id="@+id/lockedResetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:backgroundTint="#FFEF4444"
+                android:text="@string/sett_reset_device"
+                android:textColor="#FFF1F5F9"
+                android:textSize="14sp"
+                android:fontFamily="@font/inter_semibold"
+                android:visibility="gone"
+                android:stateListAnimator="@animator/focus_scale_flat" />
+
         </LinearLayout>
 
         <!-- Version -->

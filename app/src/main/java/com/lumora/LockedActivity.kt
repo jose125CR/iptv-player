@@ -1,5 +1,6 @@
 package com.lumora
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -25,6 +26,7 @@ class LockedActivity : AppCompatActivity() {
     private lateinit var macValue: TextView
     private lateinit var keyValue: TextView
     private lateinit var retryButton: Button
+    private lateinit var resetButton: Button
     private lateinit var versionView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +40,7 @@ class LockedActivity : AppCompatActivity() {
         macValue = findViewById(R.id.lockedMacValue)
         keyValue = findViewById(R.id.lockedKeyValue)
         retryButton = findViewById(R.id.lockedRetryButton)
+        resetButton = findViewById(R.id.lockedResetButton)
         versionView = findViewById(R.id.lockedVersion)
 
         versionView.text = try {
@@ -46,6 +49,21 @@ class LockedActivity : AppCompatActivity() {
         } catch (e: Exception) { "" }
 
         retryButton.setOnClickListener { runValidation() }
+
+        if (BuildConfig.DEBUG) {
+            resetButton.visibility = Button.VISIBLE
+            resetButton.setOnClickListener {
+                AlertDialog.Builder(this)
+                    .setTitle(getString(R.string.sett_reset_device))
+                    .setMessage("Se borrará el registro del dispositivo y se reiniciará.")
+                    .setPositiveButton("Restablecer") { _, _ ->
+                        getSharedPreferences("device_identity", MODE_PRIVATE).edit().clear().apply()
+                        recreate()
+                    }
+                    .setNegativeButton(getString(R.string.cancel), null)
+                    .show()
+            }
+        }
 
         runValidation()
     }

@@ -246,48 +246,9 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // visit is not carried into this one.
     if (isPortraitPhone()) portraitSettingsRailExpanded = false
     val dialogView = layoutInflater.inflate(R.layout.activity_settings, null)
-    // Deliberately no width cap here. Settings used to be pinned to 660dp and centred on
-    // TV, which left a wide band of the tab background down both sides - it read as a
-    // floating pop-out rather than a screen, and squeezed the two-pane layout (nav rail
-    // plus content) into a column too narrow for either. It now fills its slot, and
-    // reading measure is held by settings_content_inset on the content column instead.
-    val typeM3u = dialogView.findViewById<View>(R.id.settingsTypeM3u)
-    val typeXtream = dialogView.findViewById<View>(R.id.settingsTypeXtream)
-    val typeStalker = dialogView.findViewById<View>(R.id.settingsTypeStalker)
-    typeStalker.visibility = View.GONE
-    val showQrButton = dialogView.findViewById<View>(R.id.settingsShowQrButton)
-    val manualDivider = dialogView.findViewById<View>(R.id.settingsManualDivider)
-    val qrSection = dialogView.findViewById<View>(R.id.settingsQrSection)
-    val qrFrame = dialogView.findViewById<View>(R.id.settingsQrFrame)
-    val qrImage = dialogView.findViewById<ImageView>(R.id.settingsQrImage)
-    val qrStatus = dialogView.findViewById<TextView>(R.id.settingsQrStatus)
-    val qrTimer = dialogView.findViewById<TextView>(R.id.settingsQrTimer)
-    val m3uGroup = dialogView.findViewById<View>(R.id.settingsM3uGroup)
-    val xtreamGroup = dialogView.findViewById<View>(R.id.settingsXtreamGroup)
-    val stalkerGroup = dialogView.findViewById<View>(R.id.settingsStalkerGroup)
-    val m3uUrl = dialogView.findViewById<EditText>(R.id.settingsM3uUrl)
-    val uaInput = dialogView.findViewById<EditText>(R.id.settingsUserAgent)
-    val xtreamUrl = dialogView.findViewById<EditText>(R.id.settingsXtreamUrl)
-    val xtreamUser = dialogView.findViewById<EditText>(R.id.settingsXtreamUser)
-    val xtreamPass = dialogView.findViewById<EditText>(R.id.settingsXtreamPass)
-    val stalkerUrl = dialogView.findViewById<EditText>(R.id.settingsStalkerUrl)
-    val stalkerMac = dialogView.findViewById<EditText>(R.id.settingsStalkerMac)
+
     val hideNonEnglish = dialogView.findViewById<CheckBox>(R.id.settingsHideNonEnglish)
     val clearHistory = dialogView.findViewById<View>(R.id.settingsClearHistory)
-
-    val iptvListSection = dialogView.findViewById<View>(R.id.settingsIptvListSection)
-    val iptvProviderListContainer = dialogView.findViewById<LinearLayout>(R.id.settingsIptvProviderList)
-    val iptvProviderListEmpty = dialogView.findViewById<View>(R.id.settingsIptvProviderListEmpty)
-    val addIptvProviderButton = dialogView.findViewById<View>(R.id.settingsAddIptvProvider)
-    val iptvFormSection = dialogView.findViewById<View>(R.id.settingsIptvFormSection)
-    val iptvFieldsSection = dialogView.findViewById<View>(R.id.settingsIptvFieldsSection)
-    val typePicker = dialogView.findViewById<View>(R.id.settingsTypePicker)
-    val typeSummary = dialogView.findViewById<View>(R.id.settingsTypeSummary)
-    val typeSummaryLabel = dialogView.findViewById<TextView>(R.id.settingsTypeSummaryLabel)
-    val typeSummaryChange = dialogView.findViewById<View>(R.id.settingsTypeSummaryChange)
-    val iptvFormTitle = dialogView.findViewById<TextView>(R.id.settingsIptvFormTitle)
-    val iptvFormCancel = dialogView.findViewById<View>(R.id.settingsIptvFormCancel)
-    val providerNameInput = dialogView.findViewById<EditText>(R.id.settingsProviderName)
 
     clearHistory.setOnClickListener {
         AlertDialog.Builder(this)
@@ -308,313 +269,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         binding.settingsContainer,
         dialogView,
         closeButton = dialogView.findViewById(R.id.settingsCancelButton),
-        // Resolved lazily at show()-time (see MainActivity.FullScreenOverlay) - if nothing's
-        // configured yet, openIptvForm(null) has already run by then and hidden
-        // addIptvProviderButton, so fall back to the first type card instead.
-        initialFocus = { if (addIptvProviderButton.visibility == View.VISIBLE) addIptvProviderButton else typeM3u }
+        initialFocus = { hideNonEnglish }
     )
-
-
-    var serverRunning = false
-    // One form shared by every provider type - it used to be a
-    // separate always-visible section, but that meant asking for its server/user/pass
-    // even when someone only wanted IPTV. Now it's just another type card, and only
-    // its fields show once picked. IPTV types share one saved-config list
-    // (AccountConfig, see editingProviderId) - the list takes any number of entries.
-    // currentType is null until a card is tapped - the rest of the form (QR button,
-    // name, type-specific fields) stays hidden until then.
-    var currentType: String? = null
-    var editingProviderId: String? = null
-    val typeCards = mapOf(
-        "m3u" to typeM3u, "xtream" to typeXtream, "stalker" to typeStalker
-    )
-    val typeLabels = mapOf(
-        "m3u" to getString(R.string.provider_type_m3u),
-        "xtream" to getString(R.string.provider_type_xtream),
-        "stalker" to getString(R.string.sett_stalker_portal)
-    )
-
-    // Every place this form shows/hides a section, the view that was holding d-pad focus
-    // can be the one going GONE - and a focused view disappearing leaves nothing focused,
-    // so the d-pad stops responding entirely. requestFocus() on a view that hasn't been
-    // laid out yet no-ops silently, hence the next-frame retry (same shape as
-    // showEmptyState()'s focusFirstAction).
-    fun focusWhenReady(target: View) {
-        fun attempt(): Boolean = target.isShown && target.requestFocus()
-        target.post { if (!attempt()) target.post { attempt() } }
-    }
-
-    // Collapses the 4-card type picker to a one-line "Type: X · Change" summary once
-    // picked - keeping all 4 cards on screen while filling in fields pushed the QR
-    // code/fields below the fold, forcing a scroll right after tapping "Show QR".
-    fun selectType(type: String) {
-        currentType = type
-        typeCards.forEach { (t, card) ->
-            card.setBackgroundResource(if (t == type) R.drawable.bg_type_option_selected else R.drawable.card_surface_background)
-        }
-        typePicker.visibility = View.GONE
-        typeSummary.visibility = View.VISIBLE
-        typeSummaryLabel.text = getString(R.string.sett_type_summary, typeLabels[type] ?: "")
-        iptvFieldsSection.visibility = View.VISIBLE
-        m3uGroup.visibility = if (type == "m3u") View.VISIBLE else View.GONE
-        xtreamGroup.visibility = if (type == "xtream") View.VISIBLE else View.GONE
-        stalkerGroup.visibility = if (type == "stalker") View.VISIBLE else View.GONE
-        // Stalker portals identify a device by its MAC - leave blank for user to fill.
-        val qrEligible = type in listOf("m3u", "xtream", "stalker")
-        showQrButton.visibility = if (qrEligible) View.VISIBLE else View.GONE
-        manualDivider.visibility = if (qrEligible) View.VISIBLE else View.GONE
-        // The tapped type card just went GONE (typePicker hidden above), taking focus
-        // with it - see focusWhenReady.
-        focusWhenReady(typeSummaryChange)
-    }
-
-    fun stopQrServer() {
-        qrManager.stop()
-        serverRunning = false
-        qrSection.visibility = View.GONE
-        qrFrame.visibility = View.GONE
-        qrTimer.visibility = View.GONE
-    }
-
-    typeSummaryChange.setOnClickListener {
-        if (serverRunning) stopQrServer()
-        currentType = null
-        typeCards.values.forEach { it.setBackgroundResource(R.drawable.card_surface_background) }
-        typeSummary.visibility = View.GONE
-        typePicker.visibility = View.VISIBLE
-        iptvFieldsSection.visibility = View.GONE
-        m3uGroup.visibility = View.GONE
-        xtreamGroup.visibility = View.GONE
-        stalkerGroup.visibility = View.GONE
-        // Same reasoning as in selectType() - typeSummary (holding focus) just went
-        // GONE, so explicitly hand focus to the now-visible first card.
-        focusWhenReady(typeM3u)
-    }
-
-    fun startQrServer(type: String) {
-        if (serverRunning) return
-        serverRunning = true
-        qrSection.visibility = View.VISIBLE
-        qrFrame.visibility = View.GONE
-        qrTimer.visibility = View.GONE
-        qrStatus.text = getString(R.string.sett_starting_server)
-
-        scope.launch {
-            val result = qrManager.start(providerType = type)
-            if (result != null) {
-                qrImage.setImageBitmap(result.qrBitmap)
-                qrFrame.visibility = View.VISIBLE
-                qrTimer.visibility = View.VISIBLE
-                qrStatus.text = getString(R.string.sett_scan_qr)
-                launch {
-                    while (qrManager.result != null) {
-                        val rem = (result.expiresAtMs - System.currentTimeMillis()) / 1000
-                        if (rem <= 0) break
-                        qrTimer.text = getString(R.string.sett_expires_in, rem / 60, rem % 60)
-                        delay(1000)
-                    }
-                    if (serverRunning) {
-                        qrTimer.text = getString(R.string.sett_expired)
-                        stopQrServer()
-                    }
-                }
-            } else {
-                serverRunning = false
-                qrStatus.text = getString(R.string.sett_could_not_start_server)
-            }
-        }
-    }
-
-    qrManager.onProviderReceived = { type, form ->
-        runOnUiThread {
-            qrStatus.text = getString(R.string.sett_provider_received)
-            when (type) {
-                "m3u" -> {
-                    val url = form["m3uUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
-                    AccountStore.upsert(prefs, AccountConfig(
-                        id = AccountStore.newId(), type = "m3u", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR M3U",
-                        url = url, userAgent = form["userAgent"]
-                    ))
-                    
-                    stopQrServer()
-                    dialog.dismiss()
-                    loadAllConfiguredProviders(forceRefresh = true)
-                }
-                "xtream" -> {
-                    val su = form["serverUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
-                    AccountStore.upsert(prefs, AccountConfig(
-                        id = AccountStore.newId(), type = "xtream", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Xtream",
-                        url = su, username = form["username"], password = form["password"]
-                    ))
-                    
-                    stopQrServer()
-                    dialog.dismiss()
-                    loadAllConfiguredProviders(forceRefresh = true)
-                }
-                "stalker" -> {
-                    val su = form["stalkerUrl"]?.let { normalizeServerUrl(it) } ?: return@runOnUiThread
-                    val mac = form["stalkerMac"]?.takeIf { it.isNotBlank() } ?: return@runOnUiThread
-                    // MAC rides in userAgent - the same slot Stalker configs use for it
-                    // everywhere else (see AccountConfig / loadAllConfiguredProviders).
-                    AccountStore.upsert(prefs, AccountConfig(
-                        id = AccountStore.newId(), type = "stalker", name = form["name"]?.takeIf { it.isNotBlank() } ?: "QR Stalker",
-                        url = su, userAgent = mac
-                    ))
-                    
-                    stopQrServer()
-                    dialog.dismiss()
-                    loadAllConfiguredProviders(forceRefresh = true)
-                }
-            }
-        }
-    }
-
-    qrManager.onError = { msg ->
-        runOnUiThread { qrStatus.text = msg }
-    }
-
-    typeCards.forEach { (type, card) ->
-        card.setOnClickListener {
-            selectType(type)
-            if (serverRunning) {
-                stopQrServer()
-                startQrServer(type)
-            }
-        }
-    }
-    showQrButton.setOnClickListener { currentType?.let { startQrServer(it) } }
-
-    fun closeIptvForm() {
-        editingProviderId = null
-        currentType = null
-        typeCards.values.forEach { it.setBackgroundResource(R.drawable.card_surface_background) }
-        typeSummary.visibility = View.GONE
-        typePicker.visibility = View.VISIBLE
-        iptvFieldsSection.visibility = View.GONE
-        iptvFormSection.visibility = View.GONE
-        addIptvProviderButton.visibility = View.VISIBLE
-        iptvListSection.visibility = View.VISIBLE
-        if (serverRunning) stopQrServer()
-        // Cancel (or whatever field was focused) is inside the section just hidden.
-        focusWhenReady(addIptvProviderButton)
-    }
-
-    // Adding new (existing == null) always starts on the type picker with every
-    // field hidden - the type cards are the only thing shown until one is tapped.
-    // Editing (existing != null) skips straight to that type's fields since it's
-    // already known. The "your providers" list collapses while this is open (see
-    // settingsIptvListSection) - it's irrelevant mid-add and the space it frees up
-    // is what keeps the QR code/fields on screen without a scroll.
-    fun openIptvForm(existing: AccountConfig?) {
-        editingProviderId = existing?.id
-        addIptvProviderButton.visibility = View.GONE
-        iptvListSection.visibility = View.GONE
-        providerNameInput.setText(existing?.name ?: "")
-        if (existing != null) {
-            iptvFormTitle.text = getString(R.string.sett_editing_provider, existing.name)
-            iptvFormTitle.visibility = View.VISIBLE
-            selectType(existing.type)
-        } else {
-            iptvFormTitle.visibility = View.GONE
-            currentType = null
-            typeCards.values.forEach { it.setBackgroundResource(R.drawable.card_surface_background) }
-            typeSummary.visibility = View.GONE
-            typePicker.visibility = View.VISIBLE
-            iptvFieldsSection.visibility = View.GONE
-            m3uGroup.visibility = View.GONE
-            xtreamGroup.visibility = View.GONE
-            stalkerGroup.visibility = View.GONE
-        }
-        val type = existing?.type ?: "m3u"
-        m3uUrl.setText(if (type == "m3u") existing?.url ?: "" else "")
-        uaInput.setText(if (type == "m3u") existing?.userAgent ?: "" else "")
-        xtreamUrl.setText(if (type == "xtream") existing?.url ?: "" else "")
-        xtreamUser.setText(if (type == "xtream") existing?.username ?: "" else "")
-        xtreamPass.setText(if (type == "xtream") existing?.password ?: "" else "")
-        stalkerUrl.setText(if (type == "stalker") existing?.url ?: "" else "")
-        stalkerMac.setText(if (type == "stalker") existing?.userAgent ?: "" else "")
-        iptvFormSection.visibility = View.VISIBLE
-        // Whatever opened this ("+ Add Provider", or a list row's Edit button) just went
-        // GONE with the list, so focus has to be handed to the form explicitly. The edit
-        // path is already covered by selectType() above; the add path lands on the first
-        // type card. Without this, adding a second provider left nothing focused at all -
-        // the type cards couldn't be reached and the d-pad did nothing. First run never
-        // hit it because openIptvForm(null) runs before the overlay's show(), whose
-        // initialFocus falls back to typeM3u.
-        if (existing == null) focusWhenReady(typeM3u)
-    }
-
-
-    fun renderIptvProviderList() {
-        iptvProviderListContainer.removeAllViews()
-        val list = AccountStore.load(prefs)
-        iptvProviderListEmpty.visibility =
-            if (list.isEmpty()) View.VISIBLE else View.GONE
-        for (cfg in list) {
-            val row = layoutInflater.inflate(R.layout.item_iptv_provider_row, iptvProviderListContainer, false)
-            val enabledBox = row.findViewById<CheckBox>(R.id.rowEnabled)
-            enabledBox.isChecked = cfg.id == AccountStore.activeAccountId(prefs)
-            row.setOnClickListener {
-                AccountStore.setActiveAccount(prefs, cfg.id)
-                applyProviderToggle(true) { it.sourceProviderId == cfg.id }
-                if (hasProviderConfigured()) scope.launch { loadAllConfiguredProviders(forceRefresh = true) }
-            }
-            // Per-content-type toggles: TV / Movies / Series, one checkbox each. Persist
-            // before reloading - the reload must see the new flags, and a stale cache
-            // would resurrect the types otherwise (see the cold-start filter).
-            fun bindContentBox(box: CheckBox, checked: Boolean, write: (Boolean) -> Unit) {
-                box.isChecked = checked
-                box.setOnClickListener {
-                    write(box.isChecked)
-                    if (hasProviderConfigured()) scope.launch { loadAllConfiguredProviders(forceRefresh = true) }
-                }
-            }
-            bindContentBox(row.findViewById(R.id.rowTvBox), cfg.liveEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, live = on) }
-            bindContentBox(row.findViewById(R.id.rowMoviesBox), cfg.moviesEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, movies = on) }
-            bindContentBox(row.findViewById(R.id.rowSeriesBox), cfg.seriesEnabled) { on -> AccountStore.setContentFlags(prefs, cfg.id, series = on) }
-            row.findViewById<TextView>(R.id.rowName).text = cfg.name
-            val typeLabel = when (cfg.type) {
-                "xtream" -> getString(R.string.provider_type_xtream)
-                "stalker" -> getString(R.string.sett_stalker_portal)
-                else -> getString(R.string.provider_type_m3u)
-            }
-            row.findViewById<TextView>(R.id.rowDetail).text = getString(R.string.sett_provider_row_detail, typeLabel, cfg.url ?: "")
-            row.findViewById<View>(R.id.rowEditButton).setOnClickListener { openIptvForm(cfg) }
-            row.findViewById<View>(R.id.rowRemoveButton).setOnClickListener {
-                AlertDialog.Builder(this)
-                    .setTitle(getString(R.string.sett_remove_provider_confirm, cfg.name))
-                    .setMessage(getString(R.string.sett_remove_provider_message))
-                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                        AccountStore.remove(prefs, cfg.id)
-                        renderIptvProviderList()
-                        // The removed row's own Remove button was holding focus and is
-                        // gone now - see focusWhenReady.
-                        focusWhenReady(addIptvProviderButton)
-                        loadAllConfiguredProviders(forceRefresh = true)
-                    }
-                    .setNegativeButton(getString(R.string.cancel), null)
-                    .show()
-            }
-            iptvProviderListContainer.addView(row)
-        }
-    }
-
-    addIptvProviderButton.setOnClickListener { openIptvForm(null) }
-
-    iptvFormCancel.setOnClickListener { closeIptvForm() }
-
-    renderIptvProviderList()
-    // Exposed so the plugin-discovery pane can refresh this list after adding a provider.
-    refreshIptvProviderList = { renderIptvProviderList() }
-    // First run, nothing configured at all yet - the empty list + tiny "+ Add" button
-    // would leave the user staring at nothing to interact with, so open the form
-    // immediately (matches the old single-slot behavior of showing fields right away).
-    // A preset (startup chooser's M3U/Xtream buttons) opens it too, then skips the
-    // picker step by selecting that type outright.
-    if (AccountStore.load(prefs).isEmpty() || presetProviderType != null) {
-        openIptvForm(null)
-    }
-    if (presetProviderType != null) selectType(presetProviderType)
 
     // Backup & Restore
     val backupManager = BackupManager(this)
@@ -726,15 +382,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
             }
             .setNegativeButton(getString(R.string.cancel), null)
             .show()
-    }
-
-    val subscriptionStatus = dialogView.findViewById<TextView>(R.id.settingsSubscriptionStatus)
-    val expDate = prefs.getString("xtream_exp_date", null)?.toLongOrNull()
-    val isTrial = prefs.getBoolean("xtream_is_trial", false)
-    formatSubscriptionStatus(expDate, isTrial)?.let { status ->
-        subscriptionStatus.text = status
-        subscriptionStatus.setTextColor(getColor(if (status.startsWith("⚠")) R.color.live_red else R.color.success_green))
-        subscriptionStatus.visibility = View.VISIBLE
     }
 
     hideNonEnglish.isChecked = prefs.getBoolean(PREF_HIDE_NON_ENGLISH, true)
@@ -864,7 +511,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
 
     // StreamVault-style nav rail: one section visible at a time.
     val navRows = listOf(
-        R.id.navProviders to R.id.paneProviders,
         R.id.navPlayback to R.id.panePlayback,
         R.id.navFilters to R.id.paneFilters,
         R.id.navPrivacy to R.id.panePrivacy,
@@ -997,7 +643,6 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         traktSignInJob = null
         activeSettingsOverlay = null
         applyStatus()
-        refreshIptvProviderList = {}
         // The tab bar and search are gated on there being something to browse, and
         // classifyAndShow() deliberately skips that check while this overlay is up (it
         // would flip the chrome underneath the dialog). Adding a provider is exactly what
@@ -1040,67 +685,7 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
     // the same footer button is shared by every nav pane, most of which have nothing
     // for it to save.
     dialogView.findViewById<View>(R.id.settingsSaveButton).setOnClickListener {
-        // Save is a footer button shown on every pane, but only the provider add/edit form
-        // has anything to commit - everything else (toggles, pickers, PIN) persists as it is
-        // changed. It used to return here silently, so on the provider list, or on Playback
-        // or Filters or Plugins, pressing Save did nothing whatsoever and looked broken.
-        // Closing is what Save means once the work is already saved.
-        if (iptvFormSection.visibility != View.VISIBLE) {
-            activeSettingsOverlay?.dismiss()
-            return@setOnClickListener
-        }
-        if (currentType == null) {
-            Toast.makeText(this, getString(R.string.sett_choose_provider_type_first), Toast.LENGTH_SHORT).show(); return@setOnClickListener
-        }
-        val name = providerNameInput.text.toString().trim()
-        val id = editingProviderId ?: AccountStore.newId()
-        // The form has no per-type controls; preserve the provider's existing content
-        // flags so saving the form never silently resets a movies/series split.
-        val prevConfig = editingProviderId?.let { pid -> AccountStore.load(prefs).firstOrNull { it.id == pid } }
-        when (currentType) {
-            "m3u" -> {
-                val url = m3uUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
-                if (url.isBlank()) {
-                    Toast.makeText(this, getString(R.string.sett_enter_m3u_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener
-                }
-                AccountStore.upsert(prefs, AccountConfig(
-                    id = id, type = "m3u", name = name.ifBlank { "M3U/M3U8 Playlist" },
-                    liveEnabled = prevConfig?.liveEnabled ?: true,
-                    moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
-                    url = url, userAgent = uaInput.text.toString().trim().ifBlank { null }
-                ))
-            }
-            "xtream" -> {
-                val url = xtreamUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
-                if (url.isBlank()) { Toast.makeText(this, getString(R.string.sett_enter_server_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-                AccountStore.upsert(prefs, AccountConfig(
-                    id = id, type = "xtream", name = name.ifBlank { "Xtream" },
-                    liveEnabled = prevConfig?.liveEnabled ?: true,
-                    moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
-                    url = url, username = xtreamUser.text.toString().trim(), password = xtreamPass.text.toString().trim()
-                ))
-            }
-            "stalker" -> {
-                val url = stalkerUrl.text.toString().trim().let { if (it.isBlank()) it else normalizeServerUrl(it) }
-                if (url.isBlank()) { Toast.makeText(this, getString(R.string.sett_enter_server_url), Toast.LENGTH_SHORT).show(); return@setOnClickListener }
-                AccountStore.upsert(prefs, AccountConfig(
-                    id = id, type = "stalker", name = name.ifBlank { "Stalker Portal" },
-                    liveEnabled = prevConfig?.liveEnabled ?: true,
-                    moviesEnabled = prevConfig?.moviesEnabled ?: true, seriesEnabled = prevConfig?.seriesEnabled ?: true,
-                    url = url, userAgent = stalkerMac.text.toString().trim()
-                ))
-            }
-        }
-        
-        closeIptvForm()
-        renderIptvProviderList()
-        // The tab bar and search are gated on there being an enabled provider, and saving
-        // the first one is what changes that answer. Nothing recomputed it until Settings
-        // was dismissed, so the toolbar behind the dialog kept showing the no-provider
-        // chrome (Settings + Refresh alone) after a successful save.
-        updateTopChromeVisibility()
-        Toast.makeText(this, getString(R.string.sett_provider_saved_loading), Toast.LENGTH_SHORT).show()
-        loadAllConfiguredProviders(forceRefresh = true)
+        activeSettingsOverlay?.dismiss()
     }
 }
 

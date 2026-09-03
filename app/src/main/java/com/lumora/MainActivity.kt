@@ -321,10 +321,6 @@ class MainActivity : AppCompatActivity() {
     internal val trackController = PlayerTrackController()
     internal val qrManager by lazy { QrPairingManager(this) }
     internal var activeSettingsOverlay: FullScreenOverlay? = null
-    /** Set by showProviderSettings to its local renderIptvProviderList, so other flows that
-     *  add a provider can refresh the list - otherwise the new provider is saved but the
-     *  list stays stale. */
-    internal var refreshIptvProviderList: () -> Unit = {}
     internal var activeSearchOverlay: FullScreenOverlay? = null
     /** The Live TV tab's dropdown (Live TV / Catch Up) while it is open, so a pane switch
      *  or a second press on the tab can close it instead of leaving it hanging over the

@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit
 data class ValidationResult(
     val valid: Boolean,
     val expired: Boolean,
+    val deviceId: String?,
     val key: String?,
     val providerUrl: String?,
     val message: String?
@@ -32,10 +33,10 @@ class DeviceValidator(private val context: Context) {
             val deviceId = DeviceIdentity.getDeviceId(context)
             val deviceKey = DeviceIdentity.getKey(context)
 
-            val bodyJson = JSONObject().apply {
-                put("deviceId", deviceId)
-                deviceKey?.let { put("key", it) }
-            }
+            val bodyJson = JSONObject()
+            deviceId?.let { bodyJson.put("deviceId", it) }
+            deviceKey?.let { bodyJson.put("key", it) }
+
             val requestBody = bodyJson.toString().toRequestBody(JSON_MEDIA_TYPE)
 
             val request = Request.Builder()
@@ -55,16 +56,19 @@ class DeviceValidator(private val context: Context) {
 
             val valid = json.optBoolean("valid", false)
             val expired = json.optBoolean("expired", false)
-            val key = json.optString("key", null as String?)
+            val newDeviceId = json.optString("deviceId", null as String?)
+            val newKey = json.optString("key", null as String?)
             val providerUrl = json.optString("providerUrl", null as String?)
             val message = json.optString("message", null as String?)
 
-            if (key != null) DeviceIdentity.saveKey(context, key)
+            if (newDeviceId != null) DeviceIdentity.saveDeviceId(context, newDeviceId)
+            if (newKey != null) DeviceIdentity.saveKey(context, newKey)
 
             ValidationResult(
                 valid = valid,
                 expired = expired,
-                key = key,
+                deviceId = newDeviceId ?: deviceId,
+                key = newKey ?: deviceKey,
                 providerUrl = providerUrl,
                 message = message
             )

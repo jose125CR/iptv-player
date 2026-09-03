@@ -87,11 +87,8 @@ class LockedActivity : AppCompatActivity() {
     }
 
     private fun showLocked(valid: Boolean, expired: Boolean, message: String?) {
-        val deviceId = DeviceIdentity.getDeviceId(this)
-        val key = DeviceIdentity.getKey(this)
-
-        macValue.text = DeviceIdentity.formatAsMac(deviceId)
-        keyValue.text = key ?: "---"
+        macValue.text = DeviceIdentity.getDeviceId(this) ?: "---"
+        keyValue.text = DeviceIdentity.getKey(this) ?: "---"
 
         statusLabel.text = if (valid) {
             getString(R.string.locked_pending)
@@ -107,7 +104,7 @@ class LockedActivity : AppCompatActivity() {
     }
 
     private fun showNetworkError() {
-        macValue.text = DeviceIdentity.formatAsMac(DeviceIdentity.getDeviceId(this))
+        macValue.text = DeviceIdentity.getDeviceId(this) ?: "---"
         keyValue.text = DeviceIdentity.getKey(this) ?: "---"
         statusLabel.text = getString(R.string.locked_no_connection)
         messageView.text = getString(R.string.locked_retry_message)

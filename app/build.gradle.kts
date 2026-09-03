@@ -84,8 +84,8 @@ android {
         debug {
             isMinifyEnabled = false
             applicationIdSuffix = ".debug"
-            buildConfigField("String", "VALIDATE_URL", "\"https://mosaic-motor-copper.ngrok-free.app/api/validate\"")
-            buildConfigField("String", "UPDATE_URL", "\"https://mosaic-motor-copper.ngrok-free.app/api/releases/latest\"")
+            buildConfigField("String", "VALIDATE_URL", "\"http://10.0.2.2:4000/api/validate\"")
+            buildConfigField("String", "UPDATE_URL", "\"http://10.0.2.2:4000/api/releases/latest\"")
         }
         release {
             isMinifyEnabled = true

@@ -83,11 +83,9 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            // Distinct applicationId + label so a debug build installs alongside the release
-            // "Lumora" on a device instead of replacing it. Manifest provider authorities are
-            // already ${applicationId}-derived, so they follow the suffix automatically; the
-            // label override lives in src/debug/res/values/strings.xml.
             applicationIdSuffix = ".debug"
+            buildConfigField("String", "VALIDATE_URL", "\"https://mosaic-motor-copper.ngrok-free.app/api/validate\"")
+            buildConfigField("String", "UPDATE_URL", "\"https://mosaic-motor-copper.ngrok-free.app/api/releases/latest\"")
         }
         release {
             isMinifyEnabled = true
@@ -98,6 +96,8 @@ android {
             if (keystorePropertiesFile.exists()) {
                 signingConfig = signingConfigs.getByName("release")
             }
+            buildConfigField("String", "VALIDATE_URL", "\"https://reseller-be.vercel.app/api/validate\"")
+            buildConfigField("String", "UPDATE_URL", "\"https://reseller-be.vercel.app/api/releases/latest\"")
         }
     }
 

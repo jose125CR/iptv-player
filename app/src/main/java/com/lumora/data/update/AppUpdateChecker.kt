@@ -2,6 +2,7 @@ package com.lumora.data.update
 
 import android.content.Context
 import android.util.Log
+import com.lumora.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.concurrent.TimeUnit
@@ -10,10 +11,11 @@ import java.util.concurrent.TimeUnit
  * Checks for app updates via GitHub Releases API.
  * Auto-detects the latest release and compares with the installed version.
  */
+
 class AppUpdateChecker(private val context: Context) {
 
     private val TAG = "AppUpdate"
-    private val UPDATE_URL = "https://reseller-be.vercel.app/api/releases/latest"
+    private val UPDATE_URL = BuildConfig.UPDATE_URL
     private val client = OkHttpClient.Builder()
         .connectTimeout(10, TimeUnit.SECONDS)
         .readTimeout(10, TimeUnit.SECONDS)

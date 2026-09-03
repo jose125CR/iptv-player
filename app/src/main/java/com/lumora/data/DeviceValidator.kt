@@ -2,6 +2,7 @@ package com.lumora.data
 
 import android.content.Context
 import android.util.Log
+import com.lumora.BuildConfig
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +22,7 @@ data class ValidationResult(
 class DeviceValidator(private val context: Context) {
 
     private val TAG = "DeviceValidator"
-    private val VALIDATE_URL = "https://reseller-be.vercel.app/api/validate"
+    private val VALIDATE_URL = BuildConfig.VALIDATE_URL
     private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
     private val client = OkHttpClient.Builder()
         .connectTimeout(15, TimeUnit.SECONDS)

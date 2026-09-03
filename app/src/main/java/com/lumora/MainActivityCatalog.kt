@@ -363,7 +363,7 @@ internal fun MainActivity.perf(stage: String, startedAt: Long, detail: String = 
 
 internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivity.FilmsSeriesContent {
     val startedAt = System.currentTimeMillis()
-    val hideNonEnglish = prefs.getBoolean(PREF_HIDE_NON_ENGLISH, true)
+    val hideNonEnglish = false
     val hideAdult = prefs.getBoolean(PREF_HIDE_ADULT, true)
     val groupChannels = prefs.getBoolean(PREF_GROUP_CHANNELS, true)
     val categorizeVod = prefs.getBoolean(PREF_CATEGORIZE_VOD, true)
@@ -386,7 +386,6 @@ internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivi
     } else {
         val rawFilms = list.mapNotNull { ch ->
             if (ch.mediaType != MediaType.MOVIE) null
-            else if (hideNonEnglish && isNonEnglishTitle(ch.name)) null
             else if (isAdult(ch)) null
             else ch.withResolvedYear()
         }
@@ -424,7 +423,6 @@ internal fun MainActivity.deriveFilmsSeriesHalf(list: List<Channel>): MainActivi
     } else {
         val rawSeries = list.mapNotNull { ch ->
             if (ch.mediaType != MediaType.SERIES) null
-            else if (hideNonEnglish && isNonEnglishTitle(ch.name)) null
             else if (isAdult(ch)) null
             else ch.withResolvedYear()
         }

@@ -14,6 +14,7 @@ import android.text.style.ForegroundColorSpan
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.lumora.data.DeviceIdentity
 import com.lumora.download.DownloadStore
 import com.lumora.cache.PlaybackPositionStore
 import com.lumora.cache.RecentlyPlayedStore
@@ -452,6 +453,8 @@ internal fun MainActivity.showProviderSettings(presetProviderType: String? = nul
         val info = packageManager.getPackageInfo(packageName, 0)
         "${info.versionName} (${info.versionCode})"
     } catch (e: Exception) { getString(R.string.sett_unknown) }
+    dialogView.findViewById<TextView>(R.id.settingsDeviceMac).text = DeviceIdentity.getDeviceId(this) ?: "---"
+    dialogView.findViewById<TextView>(R.id.settingsDeviceKey).text = DeviceIdentity.getKey(this) ?: "---"
     val checkUpdateLabel = dialogView.findViewById<TextView>(R.id.settingsCheckUpdateLabel)
     dialogView.findViewById<View>(R.id.settingsCheckUpdate).setOnClickListener {
         checkUpdateLabel.text = getString(R.string.sett_checking)

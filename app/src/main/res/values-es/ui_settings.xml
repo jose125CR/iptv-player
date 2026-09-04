@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MainActivitySettings.kt - Diálogo de fuentes EPG -->
+    <string name="sett_epg_source_url_hint">URL XMLTV de la EPG</string>
+    <string name="sett_epg_source_name_hint">Nombre de la fuente</string>
+    <string name="sett_add_epg_source_title">Añadir fuente EPG</string>
+    <string name="sett_enter_url">Introduce una URL</string>
+    <string name="sett_epg_source_added">Fuente EPG añadida — descargando guía</string>
+
+    <!-- MainActivitySettings.kt - Estado de inicio de sesión -->
+    <string name="sett_starting">Iniciando…</string>
+    <string name="sett_signing_in">Iniciando sesión…</string>
+
+    <!-- MainActivitySettings.kt - Etiqueta de fila de ajustes -->
+    <string name="sett_language_row">%1$s  ·  %2$s</string>
+
+    <!-- MainActivitySettings.kt - Diálogo de borrar historial -->
+    <string name="sett_clear_history_confirm">¿Borrar historial de reproducción?</string>
+    <string name="sett_clear_history_message">Elimina las posiciones de reanudación y los canales vistos recientemente. Los favoritos no se ven afectados.</string>
+    <string name="sett_history_cleared">Historial de reproducción borrado</string>
+
+    <!-- MainActivitySettings.kt - Configuración del proveedor -->
+    <string name="sett_enter_server_url_first">Introduce primero una URL de servidor</string>
+    <string name="sett_stalker_portal">Portal Stalker</string>
+    <string name="sett_type_summary">Tipo: %1$s</string>
+    <string name="sett_editing_provider">Editando %1$s</string>
+    <string name="sett_provider_row_detail">%1$s · %2$s</string>
+    <string name="sett_remove_provider_confirm">¿Eliminar %1$s?</string>
+    <string name="sett_remove_provider_message">Los canales de esta cuenta ya no aparecerán.</string>
+    <string name="sett_choose_provider_type_first">Elige primero un tipo de cuenta</string>
+    <string name="sett_enter_m3u_url">Introduce una URL M3U</string>
+    <string name="sett_enter_server_url">Introduce una URL de servidor</string>
+    <string name="sett_provider_saved_loading">Cuenta guardada. Cargando...</string>
+
+    <!-- MainActivitySettings.kt - Servidor de emparejamiento QR -->
+    <string name="sett_starting_server">Iniciando servidor...</string>
+    <string name="sett_scan_qr">Escanea el código QR con tu teléfono</string>
+    <string name="sett_expires_in">Expira en %1$d:%2$02d</string>
+    <string name="sett_expired">Expirado</string>
+    <string name="sett_could_not_start_server">No se pudo iniciar el servidor</string>
+    <string name="sett_provider_received">¡Cuenta recibida! Cargando...</string>
+
+    <!-- MainActivitySettings.kt - Copia de seguridad y restauración -->
+    <string name="sett_backup_saved_to">Copia guardada en %1$s</string>
+    <string name="sett_export_failed">Error al exportar</string>
+    <string name="sett_no_backup_file">No se encontró archivo de copia en %1$s</string>
+    <string name="sett_imported_summary">Importados: %1$d cuentas, %2$d fuentes EPG, %3$d grupos</string>
+    <string name="sett_recording_storage_path">Almacenamiento de grabaciones: %1$s</string>
+
+    <!-- MainActivitySettings.kt - Diálogo de ajustes de reproducción -->
+    <string name="sett_external_player_summary">Reproductor externo: %1$s</string>
+    <string name="sett_suggest_external_player_on_problems">Sugerir reproductor externo ante problemas: %1$s</string>
+    <string name="sett_suggest_external_player">Sugerir reproductor externo: %1$s</string>
+    <string name="sett_on">ACTIVADO</string>
+    <string name="sett_off">DESACTIVADO</string>
+    <string name="sett_playback_settings_title">Ajustes de reproducción</string>
+    <string name="sett_av_sync_offset_title">Desfase A/V</string>
+
+    <!-- MainActivitySettings.kt - PIN parental -->
+    <string name="sett_change_parental_pin">Cambiar PIN parental</string>
+    <string name="sett_enter_pin_show_adult">Introduce el PIN para ver contenido adulto</string>
+    <string name="sett_enter_current_pin">Introduce el PIN actual</string>
+    <string name="sett_ok">OK</string>
+    <string name="sett_incorrect_pin">PIN incorrecto</string>
+    <string name="sett_pin_hint">PIN de 4 dígitos</string>
+    <string name="sett_next">Siguiente</string>
+    <string name="sett_pin_length_error">El PIN debe tener 4 dígitos</string>
+    <string name="sett_confirm_pin_hint">Confirmar PIN</string>
+    <string name="sett_confirm_pin_title">Confirmar PIN</string>
+    <string name="sett_parental_pin_set">PIN parental establecido</string>
+    <string name="sett_pins_didnt_match">Los PIN no coinciden</string>
+
+    <!-- MainActivitySettings.kt - Panel de Filtros -->
+    <string name="sett_prefer_dubbed_audio">Preferir audio doblado</string>
+    <string name="sett_prefer_dubbed_audio_caption">Mostrar resultados doblados primero cuando estén disponibles</string>
+    <string name="sett_subtitles_with_dub">Subtítulos con audio doblado</string>
+    <string name="sett_subtitles_with_dub_caption">Mostrar subtítulos también en episodios doblados</string>
+    <string name="sett_subtitles_caption">Mostrar subtítulos en todas las reproducciones</string>
+
+    <!-- MainActivitySettings.kt - Panel General -->
+    <string name="sett_simple_mode">Modo simple</string>
+    <string name="sett_simple_mode_caption">Mostrar solo TV en directo - oculta la barra de pestañas para que la EPG llene la pantalla</string>
+    <string name="sett_disable_vod">Desactivar contenido VOD</string>
+    <string name="sett_disable_vod_caption">Obtener solo TV en directo de las cuentas - las películas y series se ocultan en todas partes</string>
+    <string name="sett_audio_language">Idioma de audio</string>
+    <string name="sett_audio_language_caption">pista preferida en películas y series</string>
+    <string name="sett_subtitle_language">Idioma de subtítulos</string>
+    <string name="sett_subtitle_language_caption">también usado para subtítulos forzados</string>
+
+    <!-- MainActivitySettings.kt - Panel Acerca de / actualizaciones -->
+    <string name="sett_unknown">desconocido</string>
+    <string name="sett_no_browser_available">No hay navegador disponible</string>
+    <string name="sett_checking">Verificando…</string>
+    <string name="sett_couldnt_check_updates">No se pudo verificar actualizaciones</string>
+    <string name="sett_update_available">Actualización disponible</string>
+    <string name="sett_update_available_message">Lumora v%1$s está disponible.\nActual: v%2$s\n\n%3$s</string>
+    <string name="sett_later">Después</string>
+    <string name="sett_latest_version">Tienes la última versión</string>
+
+    <!-- MainActivityTrakt.kt - Panel Trakt (flujo OAuth, scrobbling, sincronización de vistos) -->
+    <string name="trakt_pane_caption">Comparte lo que ves en trakt.tv y mantén el estado de visto sincronizado entre dispositivos.</string>
+    <string name="trakt_not_configured">Esta compilación no tiene credenciales Trakt.</string>
+    <string name="trakt_not_connected">No conectado.</string>
+    <string name="trakt_connect">Conectar cuenta Trakt</string>
+    <string name="trakt_sign_out">Cerrar sesión de Trakt</string>
+    <string name="trakt_sync_now">Sincronizar historial ahora</string>
+    <string name="trakt_starting">Solicitando código a Trakt…</string>
+    <string name="trakt_couldnt_start">No se pudo contactar a Trakt</string>
+    <string name="trakt_enter_code_at">Ve a %1$s e introduce este código — o escanea el QR.</string>
+    <string name="trakt_denied">Inicio de sesión rechazado en Trakt</string>
+    <string name="trakt_code_expired">Ese código expiró — inténtalo de nuevo</string>
+    <string name="trakt_timed_out">Tiempo de espera agotado</string>
+    <string name="trakt_signed_in">Conectado a Trakt</string>
+    <string name="trakt_signed_in_as">Conectado como %1$s</string>
+    <string name="trakt_signed_out">Sesión cerrada de Trakt</string>
+    <string name="trakt_syncing">Sincronizando…</string>
+    <string name="trakt_scrobble">Scrobble de reproducción</string>
+    <string name="trakt_watched_sync">Sincronizar historial de vistos</string>
+    <string name="trakt_pushing">Enviando historial a Trakt…</string>
+    <string name="trakt_synced_both">Sincronizado · %1$d entrantes, %2$d salientes</string>
+    <string name="trakt_synced_both_partial">Sincronizado · %1$d entrantes, %2$d salientes · %3$d títulos no coincidentes</string>
+</resources>

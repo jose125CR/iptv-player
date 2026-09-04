@@ -451,15 +451,15 @@ class PlayerManager(
         listener.onTracksChanged(player.currentTracks)
     }
 
-    /** The user's audio language from Settings > General, defaulting to English. */
+    /** The user's audio language from Settings > General, defaulting to Spanish. */
     private fun preferredAudioLanguage(): String =
         context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
-            .getString("audio_language", "en") ?: "en"
+            .getString("audio_language", "es") ?: "es"
 
-    /** The user's subtitle language from Settings > General, defaulting to English. */
+    /** The user's subtitle language from Settings > General, defaulting to Spanish. */
     private fun preferredSubtitleLanguage(): String =
         context.getSharedPreferences("iptv_prefs", Context.MODE_PRIVATE)
-            .getString("subtitle_language", "en") ?: "en"
+            .getString("subtitle_language", "es") ?: "es"
 
     private fun attachOneShotAudioPreference(audio: String) {
         // Retire any previous audio one-shot that never got to decide (dead stream / endless

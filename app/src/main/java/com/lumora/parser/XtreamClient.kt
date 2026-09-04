@@ -301,7 +301,11 @@ class XtreamClient(private val client: OkHttpClient) {
             if (!categoryId.isNullOrBlank()) params.append("&category_id=$categoryId")
             val url = buildApiUrl(provider, params.toString())
             val json = fetchJson(url) ?: return@withContext emptyList()
-            val arr = json.optJSONArray("series") ?: json.optJSONArray("items") ?: return@withContext emptyList()
+            val arr = json.optJSONArray("series")
+                ?: json.optJSONArray("data")
+                ?: json.optJSONArray("result")
+                ?: json.optJSONArray("items")
+                ?: return@withContext emptyList()
             (0 until arr.length()).mapNotNull { i ->
                 val obj = arr.optJSONObject(i) ?: return@mapNotNull null
                 parseSeriesItem(obj)
@@ -393,9 +397,11 @@ class XtreamClient(private val client: OkHttpClient) {
 
     private fun parseSeriesItem(obj: JSONObject): Channel? {
         val seriesId = obj.optString("series_id", "")
+            .ifBlank { obj.optString("id", "") }
         if (seriesId.isBlank()) return null
         val name = obj.optString("name", "Unknown")
         val cover = obj.optString("cover", "")
+            .ifBlank { obj.optString("stream_icon", "") }
         val categoryId = resolveCategoryId(obj)
         // optString returns the literal "null" for a JSON null value on Android, not "" - treat
         // that as absent so it doesn't become a category row named "null".
@@ -405,12 +411,14 @@ class XtreamClient(private val client: OkHttpClient) {
         // Bulk get_series actually carries a real release date (unlike movies, which
         // only expose one per-item) - confirmed against a live provider.
         val releaseDate = obj.optString("releaseDate", obj.optString("release_date", ""))
+        val description = obj.optString("plot", obj.optString("description", "")).ifBlank { null }
         return Channel(
             id = seriesId,
             name = name,
             url = "",
             logoUrl = cover.ifBlank { null },
             posterUrl = cover.ifBlank { null },
+            description = description,
             categoryId = categoryId,
             categoryName = categoryName,
             mediaType = MediaType.SERIES,

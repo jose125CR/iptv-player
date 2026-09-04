@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity() {
 
     /** "system" or an ISO 639-1 code — the single source of truth for the whole app's
      *  language. Read wherever a context without an Activity to ask is needed (TMDB tag). */
-    internal fun uiLanguageCode(): String = prefs.getString(PREF_UI_LANGUAGE, "system") ?: "system"
+    internal fun uiLanguageCode(): String = prefs.getString(PREF_UI_LANGUAGE, "es") ?: "es"
 
     /** TMDB wants an xx-XX tag, not a bare xx code. "system" maps to the current locale so
      *  Discover metadata follows the device language when no explicit override is set. */

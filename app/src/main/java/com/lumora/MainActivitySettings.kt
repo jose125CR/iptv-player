@@ -108,14 +108,14 @@ internal fun MainActivity.languageChoiceRow(
     ).apply { topMargin = resources.getDimensionPixelSize(R.dimen.settings_gap_m) }
 
     fun render() {
-        val current = prefs.getString(key, "en") ?: "en"
+        val current = prefs.getString(key, "es") ?: "es"
         val display = choices.firstOrNull { it.first == current }?.second ?: current.uppercase()
         row.text = twoLineSettingsText(title, getString(R.string.sett_language_row, display, caption))
     }
     render()
     row.setOnClickListener {
         val codes = choices.map { it.first }
-        val current = prefs.getString(key, "en") ?: "en"
+        val current = prefs.getString(key, "es") ?: "es"
         AlertDialog.Builder(this)
             .setTitle(title)
             .setSingleChoiceItems(
